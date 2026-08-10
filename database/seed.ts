@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { notInArray, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { sources, teams } from "./schema";
@@ -16,27 +17,32 @@ const SOURCES = [
   { slug: "comuniate", name: "Comuniate", baseUrl: "https://www.comuniate.com" },
 ];
 
+/**
+ * Roster 26/27 (según la navegación oficial de Comuniate).
+ * El seed es idempotente (upsert por slug) y además deja la tabla de equipos
+ * limpia: elimina los slugs que ya no están en el catálogo.
+ */
 const TEAMS = [
-  { slug: "real-madrid", name: "Real Madrid", shortName: "RMA" },
-  { slug: "barcelona", name: "FC Barcelona", shortName: "BAR" },
-  { slug: "atletico-madrid", name: "Atlético de Madrid", shortName: "ATM" },
+  { slug: "alaves", name: "Deportivo Alavés", shortName: "ALA" },
   { slug: "athletic-bilbao", name: "Athletic Club", shortName: "ATH" },
-  { slug: "villarreal", name: "Villarreal CF", shortName: "VIL" },
-  { slug: "real-betis", name: "Real Betis", shortName: "BET" },
+  { slug: "atletico-madrid", name: "Atlético de Madrid", shortName: "ATM" },
+  { slug: "barcelona", name: "FC Barcelona", shortName: "BAR" },
+  { slug: "real-betis", name: "Real Betis Balompié", shortName: "BET" },
+  { slug: "celta-vigo", name: "RC Celta de Vigo", shortName: "CEL" },
+  { slug: "deportivo-la-coruna", name: "Deportivo de La Coruña", shortName: "DEP" },
+  { slug: "elche", name: "Elche CF", shortName: "ELC" },
+  { slug: "espanyol", name: "RCD Espanyol", shortName: "ESP" },
+  { slug: "getafe", name: "Getafe CF", shortName: "GET" },
+  { slug: "levante", name: "Levante UD", shortName: "LEV" },
+  { slug: "malaga", name: "Málaga CF", shortName: "MAL" },
+  { slug: "osasuna", name: "CA Osasuna", shortName: "OSA" },
+  { slug: "racing-santander", name: "Racing de Santander", shortName: "RAC" },
+  { slug: "rayo-vallecano", name: "Rayo Vallecano", shortName: "RAY" },
+  { slug: "real-madrid", name: "Real Madrid CF", shortName: "RMA" },
   { slug: "real-sociedad", name: "Real Sociedad", shortName: "RSO" },
-  { slug: "celta-vigo", name: "Celta de Vigo", shortName: "CEL" },
   { slug: "sevilla", name: "Sevilla FC", shortName: "SEV" },
   { slug: "valencia", name: "Valencia CF", shortName: "VAL" },
-  { slug: "girona", name: "Girona FC", shortName: "GIR" },
-  { slug: "osasuna", name: "CA Osasuna", shortName: "OSA" },
-  { slug: "mallorca", name: "RCD Mallorca", shortName: "MLL" },
-  { slug: "rayo-vallecano", name: "Rayo Vallecano", shortName: "RAY" },
-  { slug: "alaves", name: "Deportivo Alavés", shortName: "ALA" },
-  { slug: "getafe", name: "Getafe CF", shortName: "GET" },
-  { slug: "espanyol", name: "RCD Espanyol", shortName: "ESP" },
-  { slug: "leganes", name: "CD Leganés", shortName: "LEG" },
-  { slug: "valladolid", name: "Real Valladolid", shortName: "VLL" },
-  { slug: "oviedo", name: "Real Oviedo", shortName: "OVD" },
+  { slug: "villarreal", name: "Villarreal CF", shortName: "VIL" },
 ];
 
 async function main() {
@@ -56,6 +62,15 @@ async function main() {
   console.log("Sembrando equipos...");
   await db.insert(teams).values(TEAMS).onConflictDoNothing({ target: teams.slug });
   console.log(`  ${TEAMS.length} equipos (skipped si ya existían)`);
+
+  const canonicalSlugs = TEAMS.map((t) => t.slug);
+  const stale = await db.select().from(teams).where(notInArray(teams.slug, canonicalSlugs));
+  if (stale.length) {
+    await db.delete(teams).where(inArray(teams.slug, stale.map((t) => t.slug)));
+    console.log(`  → Eliminados ${stale.length} equipos obsoletos: ${stale.map((t) => t.slug).join(", ")}`);
+  } else {
+    console.log("  → Sin equipos obsoletos.");
+  }
 
   await pool.end();
   console.log("Seed completado.");
