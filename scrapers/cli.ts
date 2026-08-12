@@ -17,6 +17,7 @@ async function main() {
   const onlyIndex = argv.indexOf("--only");
   const only = onlyIndex >= 0 ? String(argv[onlyIndex + 1]) : undefined;
   const verbose = argv.includes("--verbose") || argv.includes("-v");
+  const skipConsensus = argv.includes("--skip-consensus");
 
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) {
@@ -41,7 +42,7 @@ async function main() {
   const startedAt = Date.now();
 
   try {
-    await orchestrate(pool, scrapers, { verbose });
+    await orchestrate(pool, scrapers, { verbose, skipConsensus });
   } finally {
     await pool.end();
   }

@@ -4,6 +4,7 @@ import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import { eq } from "drizzle-orm";
 import * as schema from "../database/schema";
 import { persistScraperResult } from "../services/persist";
+import { rebuildConsensus } from "../services/consensus";
 import { createLogger } from "./logger";
 import type { Scraper, ScraperContext } from "./types";
 
@@ -20,13 +21,17 @@ type Db = NodePgDatabase<typeof schema>;
  *  - Auditoría: cada ejecución queda en `scrape_runs` (running → success/partial/failed).
  *  - Regla de oro: si el resultado llega VACÍO, se marca el error y se conservan
  *    los datos anteriores (nunca se sobrescribe con vacío).
+ *  - Consenso: al final del ciclo, si al menos una fuente aportó datos, se
+ *    rematerializa el consenso. Un fallo del consenso NUNCA hace fallar el
+ *    ciclo (se loguea y se conserva el consenso anterior).
  */
 export async function orchestrate(
   pool: Pool,
   scrapers: Scraper[],
-  opts: { verbose?: boolean } = {},
+  opts: { verbose?: boolean; skipConsensus?: boolean } = {},
 ): Promise<void> {
   const db = drizzle(pool, { schema }) as Db;
+  let succeededSources = 0;
 
   for (const scraper of scrapers) {
     const source = await db
@@ -90,6 +95,7 @@ export async function orchestrate(
         })
         .where(eq(schema.scrapeRuns.id, runId));
 
+      succeededSources += 1;
       log.info(
         `[${scraper.id}] run ${result.partial ? "PARCIAL" : "OK"} · ${teamsProcessed} equipos · ${playersProcessed} jugadores.`,
       );
@@ -106,5 +112,23 @@ export async function orchestrate(
 
       log.errorWithCause(`Fuente "${scraper.id}" falló. Se conservan los datos anteriores.`, err);
     }
+  }
+
+  // Consenso: solo si al menos una fuente aportó datos este ciclo (evita gasto
+  // innecesario cuando todo falló). Un error de consenso nunca hace fallar el
+  // ciclo: se loguea y se conserva el consenso anterior.
+  if (!opts.skipConsensus && succeededSources > 0) {
+    try {
+      await rebuildConsensus(pool, createLogger("consensus"));
+    } catch (err) {
+      log.errorWithCause(
+        "El consenso falló. Se conserva el consenso anterior (los scrapers no se ven afectados).",
+        err,
+      );
+    }
+  } else if (opts.skipConsensus) {
+    log.info("Consenso omitido (skipConsensus).");
+  } else {
+    log.info("Ninguna fuente aportó datos este ciclo; se omite el consenso.");
   }
 }

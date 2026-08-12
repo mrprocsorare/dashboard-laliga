@@ -5,8 +5,17 @@ import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "../database/schema";
 import type { Logger } from "../scrapers/logger";
 import type { ScraperResult, TeamScrapeResult } from "../scrapers/types";
+import { isSamePlayer } from "./player-names";
 
 type Db = NodePgDatabase<typeof schema>;
+
+/** Jugador del equipo cargado en memoria para unificar nombres entre fuentes. */
+interface RosterEntry {
+  id: string;
+  name: string;
+  position: "POR" | "DEF" | "MED" | "DEL" | null;
+  photoUrl: string | null;
+}
 
 /**
  * Persiste el resultado de UNA fuente en las tablas single-source.
@@ -66,8 +75,12 @@ async function persistTeam(
   await upsertTeamInfo(tx, team, teamId, sourceId, now);
   await upsertSetPieces(tx, team, teamId, sourceId, now);
 
+  // Índice en memoria de los jugadores del equipo: permite unificar nombres
+  // entre fuentes sin repetir consultas por cada jugador.
+  const roster = await loadRoster(tx, teamId);
+
   for (const forecast of team.players) {
-    const playerId = await upsertPlayer(tx, team.teamSlug, forecast);
+    const playerId = await resolvePlayer(tx, teamId, roster, forecast);
     if (!playerId) continue;
 
     await tx
@@ -92,7 +105,7 @@ async function persistTeam(
   }
 
   for (const event of team.events) {
-    const playerId = await upsertPlayer(tx, team.teamSlug, {
+    const playerId = await resolvePlayer(tx, teamId, roster, {
       playerName: event.playerName,
     });
     if (!playerId) continue;
@@ -184,52 +197,116 @@ async function upsertSetPieces(
     });
 }
 
-/** Crea el jugador si no existe (par único team_id + name). Devuelve su id o null. */
-async function upsertPlayer(
+/** Carga los jugadores actuales del equipo para unificar nombres en memoria. */
+async function loadRoster(tx: Db, teamId: string): Promise<RosterEntry[]> {
+  const rows = await tx
+    .select({
+      id: schema.players.id,
+      name: schema.players.name,
+      position: schema.players.position,
+      photoUrl: schema.players.photoUrl,
+    })
+    .from(schema.players)
+    .where(eq(schema.players.teamId, teamId));
+  return rows.map((r) => ({
+    id: r.id,
+    name: r.name,
+    position: r.position,
+    photoUrl: r.photoUrl,
+  }));
+}
+
+/**
+ * Resuelve el jugador al que corresponde una predicción, unificando nombres
+ * entre fuentes. Orden: coincidencia exacta → match conservador por tokens →
+ * inserción nueva. Devuelve el player id o null.
+ */
+async function resolvePlayer(
   tx: Db,
-  teamSlug: string,
+  teamId: string,
+  roster: RosterEntry[],
   forecast: { playerName: string; position?: string | null; photoUrl?: string },
 ): Promise<string | null> {
-  const teamRow = await tx
-    .select({ id: schema.teams.id })
-    .from(schema.teams)
-    .where(eq(schema.teams.slug, teamSlug))
-    .limit(1);
-  if (!teamRow.length) return null;
+  const incoming = forecast.playerName.trim();
+  if (!incoming) return null;
 
-  const teamId = teamRow[0].id;
-  const existing = await tx
-    .select({ id: schema.players.id })
-    .from(schema.players)
-    .where(and(eq(schema.players.teamId, teamId), eq(schema.players.name, forecast.playerName)))
-    .limit(1);
+  // 1) Coincidencia exacta.
+  let entry = roster.find((p) => p.name === incoming);
 
-  if (existing.length) {
-    // Patch condicional: solo se pisa lo que la fuente reporta no vacío.
-    const patch: Partial<typeof schema.players.$inferInsert> = {};
-    const position = normalizePosition(forecast.position);
-    if (position) patch.position = position;
-    if (forecast.photoUrl) patch.photoUrl = forecast.photoUrl;
-    if (Object.keys(patch).length) {
-      await tx
-        .update(schema.players)
-        .set(patch)
-        .where(eq(schema.players.id, existing[0].id));
-    }
-    return existing[0].id;
+  // 2) Match conservador por tokens (misma persona, distinta grafía).
+  if (!entry) {
+    entry = roster.find((p) => isSamePlayer(p.name, incoming));
   }
 
+  if (entry) {
+    await enrichPlayer(tx, entry, forecast);
+    return entry.id;
+  }
+
+  // 3) Jugador nuevo. `onConflictDoNothing` lo hace idempotente ante carreras
+  //    (p. ej. dos ciclos de scraping concurrentes contra la misma BD): si otro
+  //    proceso ya insertó este jugador, no fallamos; lo recuperamos con un SELECT.
   const inserted = await tx
     .insert(schema.players)
     .values({
       teamId,
-      name: forecast.playerName,
+      name: incoming,
       position: normalizePosition(forecast.position),
       photoUrl: forecast.photoUrl ?? null,
     })
+    .onConflictDoNothing({ target: [schema.players.teamId, schema.players.name] })
     .returning({ id: schema.players.id });
 
-  return inserted[0]?.id ?? null;
+  let id = inserted[0]?.id ?? null;
+  if (!id) {
+    const existing = await tx
+      .select({ id: schema.players.id })
+      .from(schema.players)
+      .where(and(eq(schema.players.teamId, teamId), eq(schema.players.name, incoming)))
+      .limit(1);
+    id = existing[0]?.id ?? null;
+  }
+
+  if (id) {
+    roster.push({
+      id,
+      name: incoming,
+      position: normalizePosition(forecast.position),
+      photoUrl: forecast.photoUrl ?? null,
+    });
+  }
+  return id;
+}
+
+/**
+ * Actualiza el jugador ya existente con datos no vacíos de la fuente (posición,
+ * foto). No renombramos el jugador: la identidad ya quedó resuelta por el
+ * match fuzzy y el nombre canónico lo aporta la primera fuente que lo creó.
+ * Así evitamos cualquier colisión con la restricción única (team_id, name).
+ */
+async function enrichPlayer(
+  tx: Db,
+  entry: RosterEntry,
+  forecast: { position?: string | null; photoUrl?: string },
+): Promise<void> {
+  const patch: Partial<typeof schema.players.$inferInsert> = {};
+
+  const position = normalizePosition(forecast.position);
+  if (position && position !== entry.position) {
+    patch.position = position;
+    entry.position = position;
+  }
+  if (forecast.photoUrl && forecast.photoUrl !== entry.photoUrl) {
+    patch.photoUrl = forecast.photoUrl;
+    entry.photoUrl = forecast.photoUrl;
+  }
+
+  if (Object.keys(patch).length) {
+    await tx
+      .update(schema.players)
+      .set(patch)
+      .where(eq(schema.players.id, entry.id));
+  }
 }
 
 /** Normaliza una probabilidad a 0-100 entero. */
