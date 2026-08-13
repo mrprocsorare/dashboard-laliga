@@ -336,12 +336,17 @@ export interface SourceInfo {
 /** Mapa slug → {name, baseUrl} para enlazar cada fuente en el desglose. */
 export async function getSourceMap(): Promise<Map<string, SourceInfo>> {
   const supabase = await createClient();
+  // Supabase-js no camelCase: la columna BD es `base_url`.
   const { data } = await supabase
     .from("sources")
     .select("slug, name, base_url");
   const map = new Map<string, SourceInfo>();
-  for (const s of (data ?? []) as unknown as SourceInfo[]) {
-    map.set(s.slug, s);
+  for (const s of (data ?? []) as unknown as Array<{
+    slug: string;
+    name: string;
+    base_url: string;
+  }>) {
+    map.set(s.slug, { slug: s.slug, name: s.name, baseUrl: s.base_url });
   }
   return map;
 }
@@ -362,11 +367,21 @@ const FORMATIONS: ReadonlyArray<readonly [number, number, number]> = [
 ];
 
 /**
+ * Penalización por plaza rellenada con un jugador FUERA de su posición
+ * almacenada (p. ej. un defensa metido en la línea de delanteros). Es lo que
+ * hace que, cuando varias plantillas empatan a probabilidad total, gane la que
+ * encaja de forma natural (todos en su línea) frente a las que fuerzan
+ * jugadores a posiciones ajenas. Se aplica por plaza forzada.
+ */
+const POSITION_MISMATCH_PENALTY = 25;
+
+/**
  * Selecciona el once más probable respetando formaciones reales (4-3-3,
  * 4-4-2, 3-4-3, …). Elige la formación que maximiza la probabilidad total del
  * once, eligiendo los mejores jugadores por línea. Las plazas sin cubrir por
- * esa posición se rellenan con el mejor jugador disponible (sin posición o de
- * otra línea). Nunca produce más de 3 DEL ni dos porteros.
+ * esa posición se rellenan con el mejor jugador disponible; ese rellenado se
+ * penaliza para preferir plantillas que encajan de forma natural. Nunca
+ * produce más de 5 DEF, 5 MED, 3 DEL ni dos porteros.
  */
 export function selectXI(players: PlayerWithConsensus[]): XIPlayer[] {
   const withPc = players.filter((p) => p.consensus !== null);
@@ -392,7 +407,7 @@ export function selectXI(players: PlayerWithConsensus[]): XIPlayer[] {
     ];
 
     for (const { pos, count } of slots) {
-      // Mejores `count` jugadores de esa posición.
+      // 1) Mejores `count` jugadores de esa posición.
       for (const p of pool) {
         if (picked.length >= 10) break;
         if (used.has(p)) continue;
@@ -401,7 +416,7 @@ export function selectXI(players: PlayerWithConsensus[]): XIPlayer[] {
           picked.push({ ...p, formationPosition: pos });
         }
       }
-      // Relleno: primero jugadores sin posición, luego cualquier disponible.
+      // 2) Relleno: primero sin posición, luego cualquier disponible.
       let shortfall = count - picked.filter((x) => x.formationPosition === pos).length;
       if (shortfall > 0) {
         for (const p of pool) {
@@ -427,10 +442,16 @@ export function selectXI(players: PlayerWithConsensus[]): XIPlayer[] {
 
     if (picked.length < 10) continue; // formación inviable por falta de jugadores
 
-    const score = picked.reduce(
-      (s, p) => s + (p.consensus?.probability_pct ?? 0),
-      0,
-    );
+    // Score = probabilidad total − penalización por jugadores fuera de su
+    // posición (favorece plantillas que encajan naturalmente).
+    let score = 0;
+    for (const p of picked) {
+      score += p.consensus?.probability_pct ?? 0;
+      if (p.position !== null && p.position !== p.formationPosition) {
+        score -= POSITION_MISMATCH_PENALTY;
+      }
+    }
+
     if (!best || score > best.score) {
       best = { picked, score };
     }

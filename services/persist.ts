@@ -5,7 +5,7 @@ import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "../database/schema";
 import type { Logger } from "../scrapers/logger";
 import type { ScraperResult, TeamScrapeResult } from "../scrapers/types";
-import { isSamePlayer } from "./player-names";
+import { isSamePlayer, isSameLastNameReference } from "./player-names";
 
 type Db = NodePgDatabase<typeof schema>;
 
@@ -236,6 +236,15 @@ async function resolvePlayer(
   // 2) Match conservador por tokens (misma persona, distinta grafía).
   if (!entry) {
     entry = roster.find((p) => isSamePlayer(p.name, incoming));
+  }
+
+  // 3) Referencia por apellido: el scraper usa solo el apellido ("Balde") y
+  //    la única persona del equipo con ese apellido es la que buscamos.
+  if (!entry) {
+    const rosterNames = roster.map((r) => r.name);
+    entry = roster.find((p) =>
+      isSameLastNameReference(incoming, p.name, rosterNames),
+    );
   }
 
   if (entry) {
