@@ -45,7 +45,8 @@ export function parseLineup(html: string): ParsedLineupPlayer[] {
     const blocks = $(`#${sectionId} .jugador.jugador_campo`);
 
     blocks.each((_, el) => {
-      const nameEl = $(".nombre_jugador", el).first();
+      const nameEl = $(".nombre_jugador", el).first().clone();
+      nameEl.find(".alternativo").remove();
       const name = nameEl.text().trim().replace(/\s+/g, " ");
       if (!name) return;
 

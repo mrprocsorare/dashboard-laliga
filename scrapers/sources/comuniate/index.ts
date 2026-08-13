@@ -66,7 +66,7 @@ export class ComuniateScraper implements Scraper {
           id_equipo: teamId,
           modo: "clasico",
         }, {
-          encoding: "windows-1252",
+          encoding: "utf-8",
           timeoutMs: 25_000,
         });
 
