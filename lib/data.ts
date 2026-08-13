@@ -36,6 +36,7 @@ export interface AgreementEntry {
   source: string;
   probability: number;
   fetched_at: string;
+  forecast_type: "probable" | "confirmed";
 }
 
 export interface ConsensusInfo {
@@ -287,12 +288,16 @@ function normalizeAgreement(raw: unknown): AgreementEntry[] {
         typeof e === "object" &&
         e !== null &&
         typeof (e as AgreementEntry).source === "string" &&
-        typeof (e as AgreementEntry).probability === "number",
+        typeof (e as AgreementEntry).probability === "number" &&
+        ((e as AgreementEntry).forecast_type === "probable" ||
+          (e as AgreementEntry).forecast_type === "confirmed" ||
+          (e as AgreementEntry).forecast_type === undefined),
     )
     .map((e) => ({
       source: e.source,
       probability: e.probability,
       fetched_at: String(e.fetched_at ?? ""),
+      forecast_type: e.forecast_type ?? "probable",
     }));
   entries.sort((a, b) => b.probability - a.probability);
   return entries;

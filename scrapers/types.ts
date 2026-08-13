@@ -9,6 +9,7 @@
 export type Position = "POR" | "DEF" | "MED" | "DEL";
 export type EventType = "injury" | "suspension" | "doubt" | "transfer";
 export type Severity = "none" | "light" | "moderate" | "serious" | "out";
+export type ForecastType = "probable" | "confirmed";
 
 /** Predicción de titularidad de un jugador para el próximo partido. */
 export interface PlayerForecast {
@@ -18,6 +19,8 @@ export interface PlayerForecast {
   probabilityPct: number;
   /** True si la fuente lo da casi como seguro. */
   isCertain?: boolean;
+  /** Tipo de señal: actualmente las fuentes activas entregan probable. */
+  forecastType?: ForecastType;
   /** Nota adicional de la fuente (alternativa, condición…). */
   note?: string;
   /** URL de la foto del jugador si la fuente la expone. */

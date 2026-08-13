@@ -30,15 +30,18 @@ export function AgreementBars({
         const src = sourceMap.get(a.source);
         const label = src?.name ?? a.source;
         const pct = a.probability;
+        const confirmed = a.forecast_type === "confirmed";
         const tone =
-          pct >= 80
+          confirmed
+            ? "bg-indigo-600"
+            : pct >= 80
             ? "bg-emerald-500"
             : pct >= 60
               ? "bg-amber-500"
               : pct > 0
                 ? "bg-red-500"
                 : "bg-muted";
-        const dim = pct === 0;
+        const dim = pct === 0 && !confirmed;
         const href = src?.baseUrl;
 
         const inner = (
@@ -67,6 +70,11 @@ export function AgreementBars({
             >
               {pct > 0 ? `${pct}%` : "—"}
             </span>
+            {confirmed ? (
+              <span className="shrink-0 rounded bg-indigo-100 px-1 py-0.5 text-[10px] font-medium text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
+                Confirmada
+              </span>
+            ) : null}
           </span>
         );
 
@@ -76,7 +84,7 @@ export function AgreementBars({
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            title={`${label} (${pct}%, actualizado ${formatDateTime(a.fetched_at)})`}
+            title={`${label} (${pct}%, ${confirmed ? "alineación confirmada" : "estimación probable"}, actualizado ${formatDateTime(a.fetched_at)})`}
             className="block rounded px-1 -mx-1 transition-colors hover:bg-muted"
           >
             {inner}

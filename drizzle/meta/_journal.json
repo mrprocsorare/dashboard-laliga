@@ -8,6 +8,13 @@
       "when": 1786030021495,
       "tag": "0000_spicy_lilandra",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1786633315369,
+      "tag": "0001_gifted_mockingbird",
+      "breakpoints": true
     }
   ]
 }

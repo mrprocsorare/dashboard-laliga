@@ -90,6 +90,7 @@ async function persistTeam(
         sourceId,
         probabilityPct: clampProbability(forecast.probabilityPct),
         isCertain: forecast.isCertain ?? false,
+        forecastType: forecast.forecastType ?? "probable",
         note: forecast.note ?? null,
         fetchedAt: now,
       })
@@ -98,6 +99,7 @@ async function persistTeam(
         set: {
           probabilityPct: clampProbability(forecast.probabilityPct),
           isCertain: forecast.isCertain ?? false,
+          forecastType: forecast.forecastType ?? "probable",
           note: forecast.note ?? null,
           fetchedAt: now,
         },

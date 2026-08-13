@@ -35,6 +35,7 @@ export const runStatusEnum = pgEnum("run_status", [
   "partial",
   "failed",
 ]);
+export const forecastTypeEnum = pgEnum("forecast_type", ["probable", "confirmed"]);
 
 /**
  * Catálogo de fuentes de datos. `reliability_weight` se usa para la media
@@ -130,6 +131,7 @@ export const latestPlayerForecast = pgTable(
       .references(() => sources.id, { onDelete: "cascade" }),
     probabilityPct: integer("probability_pct").notNull(),
     isCertain: boolean("is_certain").notNull().default(false),
+    forecastType: forecastTypeEnum("forecast_type").notNull().default("probable"),
     note: text("note"),
     fetchedAt: timestamp("fetched_at", { withTimezone: true }).notNull().defaultNow(),
   },
@@ -225,7 +227,12 @@ export const playerConsensus = pgTable("player_consensus", {
   sourcesTotal: integer("sources_total").notNull().default(0),
   sourcesConsideringStarter: integer("sources_starter").notNull().default(0),
   agreement: jsonb("agreement").$type<
-    { source: string; probability: number; fetched_at: string }[]
+    {
+      source: string;
+      probability: number;
+      fetched_at: string;
+      forecast_type: "probable" | "confirmed";
+    }[]
   >(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });

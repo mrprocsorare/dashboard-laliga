@@ -18,6 +18,7 @@ interface AgreementEntry {
   source: string;
   probability: number;
   fetched_at: string;
+  forecast_type: "probable" | "confirmed";
 }
 
 /**
@@ -73,6 +74,7 @@ async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
       playerId: schema.latestPlayerForecast.playerId,
       teamId: schema.players.teamId,
       probabilityPct: schema.latestPlayerForecast.probabilityPct,
+      forecastType: schema.latestPlayerForecast.forecastType,
       fetchedAt: schema.latestPlayerForecast.fetchedAt,
       sourceSlug: schema.sources.slug,
       weight: schema.sources.reliabilityWeight,
@@ -98,7 +100,13 @@ async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
   // Agrupamos las predicciones por jugador (qué dice cada fuente que lo lista).
   const byPlayer = new Map<
     string,
-    { teamId: string; entries: Map<string, { prob: number; fetchedAt: Date }> }
+    {
+      teamId: string;
+      entries: Map<
+        string,
+        { prob: number; forecastType: "probable" | "confirmed"; fetchedAt: Date }
+      >;
+    }
   >();
   for (const f of forecasts) {
     let p = byPlayer.get(f.playerId);
@@ -106,7 +114,11 @@ async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
       p = { teamId: f.teamId, entries: new Map() };
       byPlayer.set(f.playerId, p);
     }
-    p.entries.set(f.sourceSlug, { prob: f.probabilityPct, fetchedAt: f.fetchedAt });
+    p.entries.set(f.sourceSlug, {
+      prob: f.probabilityPct,
+      forecastType: f.forecastType,
+      fetchedAt: f.fetchedAt,
+    });
   }
 
   let written = 0;
@@ -117,23 +129,39 @@ async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
     let starters = 0;
     const agreement: AgreementEntry[] = [];
 
+    // Una confirmación oficial tiene prioridad: las previsiones probables
+    // antiguas o discrepantes no deben arrastrar el consenso hacia abajo.
+    const confirmedEntries = [...entries.values()].filter(
+      (entry) => entry.forecastType === "confirmed",
+    );
+    const hasConfirmed = confirmedEntries.length > 0;
+
     // Iteramos por las fuentes que CUBREN el equipo: las que no listan al
     // jugador aportan probabilidad 0 al consenso.
     for (const [source, weight] of covering) {
       const listed = entries.get(source);
       const prob = listed ? listed.prob : 0;
-      weightedSum += prob * weight;
-      totalWeight += weight;
-      if (prob >= STARTER_THRESHOLD) starters += 1;
+      const included = !hasConfirmed || listed?.forecastType === "confirmed";
+      if (included) {
+        weightedSum += prob * weight;
+        totalWeight += weight;
+        if (prob >= STARTER_THRESHOLD) starters += 1;
+      }
       agreement.push({
         source,
         probability: prob,
         fetched_at: listed ? listed.fetchedAt.toISOString() : "",
+        forecast_type: listed?.forecastType ?? "probable",
       });
     }
 
     // Detalle ordenado por probabilidad descendente para legibilidad.
-    agreement.sort((a, b) => b.probability - a.probability);
+    agreement.sort(
+      (a, b) =>
+        Number(b.forecast_type === "confirmed") -
+          Number(a.forecast_type === "confirmed") ||
+        b.probability - a.probability,
+    );
 
     const probabilityPct =
       totalWeight > 0 ? Math.round(weightedSum / totalWeight) : 0;

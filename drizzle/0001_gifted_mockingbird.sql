@@ -1,0 +1,2 @@
+CREATE TYPE "public"."forecast_type" AS ENUM('probable', 'confirmed');--> statement-breakpoint
+ALTER TABLE "latest_player_forecast" ADD COLUMN "forecast_type" "forecast_type" DEFAULT 'probable' NOT NULL;
