@@ -310,3 +310,53 @@ function playerNameOf(v: { name: string } | { name: string }[] | null): string {
 function sourceNameOf(v: { name: string } | { name: string }[] | null): string {
   return firstRow(v)?.name ?? "Fuente";
 }
+
+export interface TeamNavInfo {
+  slug: string;
+  name: string;
+  short_name: string;
+}
+
+/** Todos los equipos ordenados por nombre (para el navegador entre equipos). */
+export async function getAllTeamsForNav(): Promise<TeamNavInfo[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("teams")
+    .select("slug, name, short_name")
+    .order("name");
+  return (data ?? []) as unknown as TeamNavInfo[];
+}
+
+/**
+ * Selecciona el once más probable: 1 portero + los 10 mejores por probabilidad
+ * restantes (sin un segundo portero). Devuelve menos de 11 si no hay datos.
+ */
+export function selectXI(players: PlayerWithConsensus[]): PlayerWithConsensus[] {
+  const withPc = players.filter((p) => p.consensus !== null);
+  if (withPc.length === 0) return [];
+
+  const sorted = [...withPc].sort(
+    (a, b) => b.consensus!.probability_pct - a.consensus!.probability_pct,
+  );
+
+  const gk = sorted.find((p) => p.position === "POR");
+  const rest = sorted.filter((p) => p !== gk);
+
+  const xi: PlayerWithConsensus[] = [];
+  if (gk) xi.push(gk);
+  for (const p of rest) {
+    if (xi.length >= 11) break;
+    xi.push(p);
+  }
+  return xi;
+}
+
+/** Deriva la formación (ej: "4-3-3") del XI seleccionado. */
+export function deriveFormation(xi: PlayerWithConsensus[]): string {
+  const nDEF = xi.filter((p) => p.position === "DEF").length;
+  const nMED = xi.filter((p) => p.position === "MED").length;
+  const nDEL = xi.filter((p) => p.position === "DEL").length;
+  const nUNK = xi.filter((p) => p.position === null).length;
+  if (nUNK > 0) return `${nDEF}-${nMED}-${nDEL}+${nUNK}`;
+  return `${nDEF}-${nMED}-${nDEL}`;
+}

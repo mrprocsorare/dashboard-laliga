@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { AppHeader } from "@/components/dashboard/app-header";
+import { DashboardShell } from "@/components/dashboard/shell";
 import {
   EventTypeBadge,
   PositionBadge,
@@ -8,6 +7,8 @@ import {
   SeverityLabel,
 } from "@/components/dashboard/badges";
 import { PlayerAvatar } from "@/components/dashboard/player-avatar";
+import { Pitch } from "@/components/dashboard/pitch";
+import { TeamNav } from "@/components/dashboard/team-nav";
 import {
   Card,
   CardContent,
@@ -24,7 +25,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  deriveFormation,
+  getAllTeamsForNav,
   getTeamData,
+  selectXI,
   type PlayerWithConsensus,
   type Severity,
   type TeamEvent,
@@ -53,19 +57,19 @@ export default async function TeamPage({
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) {
-    redirect("/login");
-  }
+  if (!user) redirect("/login");
 
-  const data = await getTeamData(slug);
-  if (!data) {
-    notFound();
-  }
+  const [data, allTeams] = await Promise.all([
+    getTeamData(slug),
+    getAllTeamsForNav(),
+  ]);
+
+  if (!data) notFound();
 
   const { team, players, events, teamConsensus } = data;
   const withConsensus = players.filter((p) => p.consensus);
-  const starters = withConsensus.slice(0, 11);
-  const bench = withConsensus.slice(11);
+  const xi = selectXI(players);
+  const formation = xi.length > 0 ? deriveFormation(xi) : null;
   const sortedEvents = [...events].sort(
     (a, b) =>
       SEVERITY_RANK[b.severity] - SEVERITY_RANK[a.severity] ||
@@ -73,21 +77,15 @@ export default async function TeamPage({
   );
 
   return (
-    <main className="mx-auto w-full max-w-6xl flex-1 space-y-8 p-6">
-      <AppHeader email={user.email} />
+    <DashboardShell email={user.email}>
+      <div className="space-y-4">
+        <TeamNav teams={allTeams} currentSlug={slug} />
 
-      <div className="space-y-2">
-        <Link
-          href="/"
-          className="text-sm text-muted-foreground hover:text-foreground"
-        >
-          ← Todos los equipos
-        </Link>
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-2xl font-semibold">{team.name}</h1>
-          {teamConsensus?.formation ? (
-            <span className="rounded-md border px-2 py-0.5 text-sm">
-              {teamConsensus.formation}
+          <h1 className="text-2xl font-bold">{team.name}</h1>
+          {formation ? (
+            <span className="rounded-md border px-2 py-0.5 text-sm font-medium">
+              {formation}
             </span>
           ) : null}
           {teamConsensus?.coach ? (
@@ -96,43 +94,48 @@ export default async function TeamPage({
             </span>
           ) : null}
         </div>
+
         {withConsensus.length > 0 ? (
           <p className="text-xs text-muted-foreground">
-            Consenso actualizado {timeAgo(withConsensus[0].consensus!.updated_at)}
+            Once actualizado {timeAgo(withConsensus[0].consensus!.updated_at)}
           </p>
-        ) : null}
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            Todavía no hay previsiones de ninguna fuente para este equipo.
+          </p>
+        )}
       </div>
 
       <section className="space-y-3">
-        <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
-          Once de consenso
+        <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          Once más probable ({xi.length})
         </h2>
-        {starters.length > 0 ? (
+        {xi.length > 0 ? (
+          <Pitch xi={xi} />
+        ) : (
           <Card>
-            <CardContent>
-              <PlayersTable players={starters} />
+            <CardContent className="py-8 text-center text-sm text-muted-foreground">
+              Sin datos suficientes para mostrar el once.
             </CardContent>
           </Card>
-        ) : (
-          <EmptyCard text="Todavía no hay previsiones de ninguna fuente para este equipo." />
         )}
       </section>
 
-      {bench.length > 0 ? (
+      {withConsensus.length > 0 ? (
         <section className="space-y-3">
-          <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
-            Resto de la convocatoria ({bench.length})
+          <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            Detalle por fuente ({withConsensus.length})
           </h2>
           <Card>
             <CardContent>
-              <PlayersTable players={bench} />
+              <PlayersTable players={withConsensus} />
             </CardContent>
           </Card>
         </section>
       ) : null}
 
       <section className="space-y-3">
-        <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+        <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           Lesiones y sanciones ({sortedEvents.length})
         </h2>
         {sortedEvents.length > 0 ? (
@@ -144,17 +147,21 @@ export default async function TeamPage({
             </CardContent>
           </Card>
         ) : (
-          <EmptyCard text="Sin eventos recientes (ventana de 48 h)." />
+          <Card>
+            <CardContent className="py-6 text-center text-sm text-muted-foreground">
+              Sin eventos recientes (ventana de 48 h).
+            </CardContent>
+          </Card>
         )}
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+        <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           Balón parado
         </h2>
         <SetPiecesCard teamConsensus={teamConsensus} />
       </section>
-    </main>
+    </DashboardShell>
   );
 }
 
@@ -178,7 +185,7 @@ function PlayersTable({ players }: { players: PlayerWithConsensus[] }) {
               <TableCell>
                 <span className="flex items-center gap-2">
                   <PlayerAvatar name={p.name} photoUrl={p.photo_url} />
-                  <span className="font-medium whitespace-normal">{p.name}</span>
+                  <span className="whitespace-normal font-medium">{p.name}</span>
                 </span>
               </TableCell>
               <TableCell>
@@ -189,10 +196,10 @@ function PlayersTable({ players }: { players: PlayerWithConsensus[] }) {
               </TableCell>
               <TableCell>
                 <span
-                  className="text-xs text-muted-foreground tabular-nums"
+                  className="text-xs tabular-nums text-muted-foreground"
                   title={`${c.sources_starter} de ${c.sources_total} fuentes lo consideran titular`}
                 >
-                  {c.sources_starter}/{c.sources_total} titular
+                  {c.sources_starter}/{c.sources_total}
                 </span>
               </TableCell>
               <TableCell className="whitespace-normal">
@@ -200,10 +207,13 @@ function PlayersTable({ players }: { players: PlayerWithConsensus[] }) {
                   {c.agreement.map((a) => (
                     <span
                       key={a.source}
-                      className="text-xs text-muted-foreground tabular-nums"
+                      className="text-xs tabular-nums text-muted-foreground"
                       title={`Actualizado ${formatDateTime(a.fetched_at)}`}
                     >
-                      {a.source} <span className="font-medium text-foreground">{a.probability}%</span>
+                      {a.source}{" "}
+                      <span className="font-medium text-foreground">
+                        {a.probability}%
+                      </span>
                     </span>
                   ))}
                 </span>
@@ -240,18 +250,26 @@ function EventRow({ event }: { event: TeamEvent }) {
 function SetPiecesCard({
   teamConsensus,
 }: {
-  teamConsensus: { set_pieces: { penalty: string[]; corner: string[]; free_kick: string[] } | null } | null;
+  teamConsensus: {
+    set_pieces: { penalty: string[]; corner: string[]; free_kick: string[] } | null;
+  } | null;
 }) {
   const pieces = teamConsensus?.set_pieces;
   const groups: { title: string; takers: string[] }[] = [
-    { title: "Penalti", takers: pieces?.penalty ?? [] },
-    { title: "Córner", takers: pieces?.corner ?? [] },
-    { title: "Falta", takers: pieces?.free_kick ?? [] },
+    { title: "Penaltis", takers: pieces?.penalty ?? [] },
+    { title: "Córners", takers: pieces?.corner ?? [] },
+    { title: "Faltas", takers: pieces?.free_kick ?? [] },
   ];
   const hasAny = groups.some((g) => g.takers.length > 0);
 
   if (!hasAny) {
-    return <EmptyCard text="Sin datos de lanzadores todavía." />;
+    return (
+      <Card>
+        <CardContent className="py-6 text-center text-sm text-muted-foreground">
+          Sin datos de lanzadores todavía.
+        </CardContent>
+      </Card>
+    );
   }
 
   return (
@@ -261,27 +279,19 @@ function SetPiecesCard({
           <CardHeader>
             <CardTitle>{g.title}</CardTitle>
             <CardDescription>
-              {g.takers.length > 0
-                ? g.takers.map((t, i) => (
-                    <span key={t} className="block text-sm">
-                      {i + 1}. {t}
-                    </span>
-                  ))
-                : "Sin datos"}
+              {g.takers.length > 0 ? (
+                g.takers.map((t, i) => (
+                  <span key={t} className="block text-sm">
+                    {i + 1}. {t}
+                  </span>
+                ))
+              ) : (
+                "Sin datos"
+              )}
             </CardDescription>
           </CardHeader>
         </Card>
       ))}
     </div>
-  );
-}
-
-function EmptyCard({ text }: { text: string }) {
-  return (
-    <Card>
-      <CardContent className="py-6 text-center text-sm text-muted-foreground">
-        {text}
-      </CardContent>
-    </Card>
   );
 }

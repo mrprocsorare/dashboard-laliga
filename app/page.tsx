@@ -1,120 +1,104 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { AppHeader } from "@/components/dashboard/app-header";
-import { RunStatusBadge } from "@/components/dashboard/badges";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardAction,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { getHomeData } from "@/lib/data";
+import { DashboardShell } from "@/components/dashboard/shell";
+import { getHomeData, type RunStatus } from "@/lib/data";
 import { timeAgo } from "@/lib/format";
+import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
+
+const STATUS_DOT: Record<RunStatus, string> = {
+  success: "bg-green-500",
+  partial: "bg-amber-500",
+  failed: "bg-red-500",
+  running: "bg-sky-500",
+};
 
 export default async function HomePage() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
+  if (!user) redirect("/login");
 
   const { teams, sources } = await getHomeData();
-  const failedSources = sources.filter((s) => s.lastRunStatus === "failed");
+  const totalConsensus = teams.reduce((s, t) => s + t.playersWithConsensus, 0);
 
   return (
-    <main className="mx-auto w-full max-w-6xl flex-1 space-y-8 p-6">
-      <AppHeader email={user.email} />
-
+    <DashboardShell email={user.email}>
       <section className="space-y-3">
         <div className="flex items-baseline justify-between gap-4">
-          <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+          <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Fuentes ({sources.length})
           </h2>
           <p className="text-xs text-muted-foreground">
             Actualización automática cada 15 min
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="flex flex-wrap gap-2">
           {sources.map((s) => (
-            <Card key={s.id} size="sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  {s.name}
-                  {!s.enabled ? (
-                    <Badge variant="outline" className="text-muted-foreground">
-                      desactivada
-                    </Badge>
-                  ) : null}
-                </CardTitle>
-                <CardDescription>
-                  {s.lastRunAt
-                    ? `Última ejecución ${timeAgo(s.lastRunAt)}`
-                    : "Aún no se ha ejecutado"}
-                  {s.lastRunStatus === "failed" && s.lastRunError
-                    ? ` · ${s.lastRunError}`
-                    : ""}
-                </CardDescription>
-                <CardAction>
-                  <RunStatusBadge status={s.lastRunStatus} />
-                </CardAction>
-              </CardHeader>
-            </Card>
+            <div
+              key={s.id}
+              className="flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs"
+            >
+              <span
+                className={cn(
+                  "size-2 shrink-0 rounded-full",
+                  s.lastRunStatus ? STATUS_DOT[s.lastRunStatus] : "bg-muted-foreground/30",
+                )}
+              />
+              <span className="font-medium">{s.name}</span>
+              <span className="text-muted-foreground">
+                {s.lastRunAt ? timeAgo(s.lastRunAt) : "—"}
+              </span>
+            </div>
           ))}
         </div>
-        {failedSources.length > 0 ? (
-          <p className="text-xs text-muted-foreground">
-            Si una fuente falla, el dashboard conserva y muestra su último dato
-            válido.
-          </p>
-        ) : null}
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
-          Equipos de LaLiga ({teams.length})
-        </h2>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {teams.map((t) => (
-            <Link key={t.id} href={`/team/${t.slug}`} className="block">
-              <Card className="h-full transition-colors hover:border-foreground/30">
-                <CardHeader>
-                  <CardTitle>{t.name}</CardTitle>
-                  <CardDescription>
-                    {t.playersWithConsensus > 0
-                      ? `${t.playersWithConsensus} jugadores con previsión · ${t.likelyStarters} probables`
-                      : "Sin datos de consenso todavía"}
-                  </CardDescription>
-                  <CardAction>
-                    {t.playersWithConsensus > 0 ? (
-                      <Badge
-                        variant="outline"
-                        className="border-green-200 bg-green-50 text-green-700 dark:border-green-900 dark:bg-green-950 dark:text-green-400"
-                      >
-                        Consenso
-                      </Badge>
-                    ) : (
-                      <Badge
-                        variant="outline"
-                        className="border-border bg-muted text-muted-foreground"
-                      >
-                        Sin datos
-                      </Badge>
+        <div className="flex items-baseline justify-between gap-4">
+          <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            Equipos ({teams.length})
+          </h2>
+          <p className="text-xs text-muted-foreground">
+            {totalConsensus} jugadores con consenso
+          </p>
+        </div>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
+          {teams.map((t) => {
+            const hasData = t.playersWithConsensus > 0;
+            return (
+              <Link
+                key={t.id}
+                href={`/team/${t.slug}`}
+                className="group rounded-xl border p-3 transition-all hover:border-foreground/20 hover:shadow-md"
+              >
+                <div className="mb-1 flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <h3 className="truncate text-sm font-semibold leading-tight">
+                      {t.name}
+                    </h3>
+                    <p className="text-xs text-muted-foreground">{t.short_name}</p>
+                  </div>
+                  <span
+                    className={cn(
+                      "mt-0.5 size-2 shrink-0 rounded-full",
+                      hasData ? "bg-green-500" : "bg-muted-foreground/20",
                     )}
-                  </CardAction>
-                </CardHeader>
-              </Card>
-            </Link>
-          ))}
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {hasData
+                    ? `${t.playersWithConsensus} previsiones · ${t.likelyStarters} probables`
+                    : "Sin datos todavía"}
+                </p>
+              </Link>
+            );
+          })}
         </div>
       </section>
-    </main>
+    </DashboardShell>
   );
 }
