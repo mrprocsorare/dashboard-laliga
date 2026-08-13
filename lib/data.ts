@@ -407,9 +407,14 @@ export function selectXI(players: PlayerWithConsensus[]): XIPlayer[] {
     ];
 
     for (const { pos, count } of slots) {
-      // 1) Mejores `count` jugadores de esa posición.
+      // 1) Mejores `count` jugadores de esa posición. Importante: parar al
+      // alcanzar `count` (no seguir cogiendo todos los que coincidan), si no
+      // un slot de 4 DEF con 6 disponibles terminaría ocupando 6 plazas.
       for (const p of pool) {
         if (picked.length >= 10) break;
+        if (picked.filter((x) => x.formationPosition === pos).length >= count) {
+          break;
+        }
         if (used.has(p)) continue;
         if (p.position === pos) {
           used.add(p);

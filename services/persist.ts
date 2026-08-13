@@ -208,12 +208,42 @@ async function loadRoster(tx: Db, teamId: string): Promise<RosterEntry[]> {
     })
     .from(schema.players)
     .where(eq(schema.players.teamId, teamId));
-  return rows.map((r) => ({
+
+  const all = rows.map((r) => ({
     id: r.id,
     name: r.name,
     position: r.position,
     photoUrl: r.photoUrl,
   }));
+
+  // Deduplicamos el roster en memoria: si un jugador aparece SOLO por su
+  // apellido ("Ede") y existe OTRO con nombre completo que termina en ese
+  // mismo apellido y NO hay otros multi-token con ese apellido (hermanos),
+  // descartamos la versión corta. Así evitamos que un forecast entrante por
+  // el apellido solo cree un duplicado cuando ya está el nombre completo.
+  const lastToken = (s: string) => {
+    const norm = s
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9\s]/g, "");
+    const tokens = norm.split(/\s+/).filter(Boolean);
+    return tokens[tokens.length - 1] ?? "";
+  };
+  const skip = new Set<string>();
+  for (const a of all) {
+    if (a.name.split(/\s+/).filter(Boolean).length !== 1) continue;
+    const last = lastToken(a.name);
+    if (!last) continue;
+    const multiWithLast = all.filter(
+      (b) =>
+        b.id !== a.id &&
+        b.name.split(/\s+/).filter(Boolean).length >= 2 &&
+        lastToken(b.name) === last,
+    );
+    if (multiWithLast.length === 1) skip.add(a.id);
+  }
+  return all.filter((p) => !skip.has(p.id));
 }
 
 /**

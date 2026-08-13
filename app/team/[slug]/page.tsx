@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/shell";
+import { AgreementBars } from "@/components/dashboard/agreement-bars";
 import {
   EventTypeBadge,
   PositionBadge,
@@ -34,7 +35,7 @@ import {
   type Severity,
   type TeamEvent,
 } from "@/lib/data";
-import { formatDateTime, timeAgo } from "@/lib/format";
+import { timeAgo } from "@/lib/format";
 import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -190,7 +191,7 @@ function PlayersTable({
           <TableHead>Pos</TableHead>
           <TableHead>Consenso</TableHead>
           <TableHead>Fuentes</TableHead>
-          <TableHead className="w-full">Detalle por fuente</TableHead>
+          <TableHead className="w-full">Acuerdo entre fuentes</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -219,42 +220,10 @@ function PlayersTable({
                 </span>
               </TableCell>
               <TableCell className="whitespace-normal">
-                <span className="flex flex-wrap gap-x-3 gap-y-1">
-                  {c.agreement.map((a) => {
-                    const src = sourceMap.get(a.source);
-                    const label = src?.name ?? a.source;
-                    const probLabel = a.probability > 0 ? `${a.probability}%` : "—";
-                    if (src) {
-                        return (
-                        <a
-                          key={a.source}
-                          href={src.baseUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs tabular-nums text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
-                          title={`Ver ${src.name} (actualizado ${formatDateTime(a.fetched_at)})`}
-                        >
-                          {label}{" "}
-                          <span className="font-medium text-foreground">
-                            {probLabel}
-                          </span>
-                        </a>
-                      );
-                    }
-                    return (
-                      <span
-                        key={a.source}
-                        className="text-xs tabular-nums text-muted-foreground"
-                        title={formatDateTime(a.fetched_at)}
-                      >
-                        {a.source}{" "}
-                        <span className="font-medium text-foreground">
-                          {probLabel}
-                        </span>
-                      </span>
-                    );
-                  })}
-                </span>
+                <AgreementBars
+                  agreement={c.agreement}
+                  sourceMap={sourceMap}
+                />
               </TableCell>
             </TableRow>
           );
