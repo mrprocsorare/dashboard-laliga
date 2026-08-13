@@ -3,7 +3,7 @@ import { ComuniateScraper } from "./sources/comuniate";
 import { FutbolFantasyScraper } from "./sources/futbolfantasy";
 import { AnaliticaFantasyScraper } from "./sources/analiticafantasy";
 import { JornadaPerfectaScraper } from "./sources/jornadaperfecta";
-import { SportsGamblerScraper } from "./sources/sportsgambler";
+import { BiwengerScraper } from "./sources/biwenger";
 
 /**
  * Registro central de scrapers. Aquí se añaden nuevas fuentes sin tocar nada
@@ -15,6 +15,6 @@ export function getRegisteredScrapers(): Scraper[] {
     new FutbolFantasyScraper(),
     new AnaliticaFantasyScraper(),
     new JornadaPerfectaScraper(),
-    new SportsGamblerScraper(),
+    new BiwengerScraper(),
   ];
 }

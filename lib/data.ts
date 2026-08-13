@@ -327,11 +327,48 @@ export async function getAllTeamsForNav(): Promise<TeamNavInfo[]> {
   return (data ?? []) as unknown as TeamNavInfo[];
 }
 
+export interface SourceInfo {
+  slug: string;
+  name: string;
+  baseUrl: string;
+}
+
+/** Mapa slug → {name, baseUrl} para enlazar cada fuente en el desglose. */
+export async function getSourceMap(): Promise<Map<string, SourceInfo>> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("sources")
+    .select("slug, name, base_url");
+  const map = new Map<string, SourceInfo>();
+  for (const s of (data ?? []) as unknown as SourceInfo[]) {
+    map.set(s.slug, s);
+  }
+  return map;
+}
+
+/** Jugador del once con la posición de formación (línea del campo) asignada. */
+export interface XIPlayer extends PlayerWithConsensus {
+  formationPosition: Position;
+}
+
+const FORMATIONS: ReadonlyArray<readonly [number, number, number]> = [
+  [4, 3, 3],
+  [4, 4, 2],
+  [3, 4, 3],
+  [4, 5, 1],
+  [3, 5, 2],
+  [5, 3, 2],
+  [5, 4, 1],
+];
+
 /**
- * Selecciona el once más probable: 1 portero + los 10 mejores por probabilidad
- * restantes (sin un segundo portero). Devuelve menos de 11 si no hay datos.
+ * Selecciona el once más probable respetando formaciones reales (4-3-3,
+ * 4-4-2, 3-4-3, …). Elige la formación que maximiza la probabilidad total del
+ * once, eligiendo los mejores jugadores por línea. Las plazas sin cubrir por
+ * esa posición se rellenan con el mejor jugador disponible (sin posición o de
+ * otra línea). Nunca produce más de 3 DEL ni dos porteros.
  */
-export function selectXI(players: PlayerWithConsensus[]): PlayerWithConsensus[] {
+export function selectXI(players: PlayerWithConsensus[]): XIPlayer[] {
   const withPc = players.filter((p) => p.consensus !== null);
   if (withPc.length === 0) return [];
 
@@ -339,24 +376,89 @@ export function selectXI(players: PlayerWithConsensus[]): PlayerWithConsensus[] 
     (a, b) => b.consensus!.probability_pct - a.consensus!.probability_pct,
   );
 
-  const gk = sorted.find((p) => p.position === "POR");
-  const rest = sorted.filter((p) => p !== gk);
+  const gk = sorted.find((p) => p.position === "POR") ?? null;
+  // El portero seleccionado NO compite por las plazas de campo.
+  const pool = sorted.filter((p) => p !== gk);
 
-  const xi: PlayerWithConsensus[] = [];
-  if (gk) xi.push(gk);
-  for (const p of rest) {
-    if (xi.length >= 11) break;
-    xi.push(p);
+  let best: { picked: XIPlayer[]; score: number } | null = null;
+
+  for (const [nDEF, nMED, nDEL] of FORMATIONS) {
+    const used = new Set<PlayerWithConsensus>();
+    const picked: XIPlayer[] = [];
+    const slots: Array<{ pos: Position; count: number }> = [
+      { pos: "DEF", count: nDEF },
+      { pos: "MED", count: nMED },
+      { pos: "DEL", count: nDEL },
+    ];
+
+    for (const { pos, count } of slots) {
+      // Mejores `count` jugadores de esa posición.
+      for (const p of pool) {
+        if (picked.length >= 10) break;
+        if (used.has(p)) continue;
+        if (p.position === pos) {
+          used.add(p);
+          picked.push({ ...p, formationPosition: pos });
+        }
+      }
+      // Relleno: primero jugadores sin posición, luego cualquier disponible.
+      let shortfall = count - picked.filter((x) => x.formationPosition === pos).length;
+      if (shortfall > 0) {
+        for (const p of pool) {
+          if (shortfall === 0 || picked.length >= 10) break;
+          if (used.has(p)) continue;
+          if (p.position === null) {
+            used.add(p);
+            picked.push({ ...p, formationPosition: pos });
+            shortfall--;
+          }
+        }
+      }
+      if (shortfall > 0) {
+        for (const p of pool) {
+          if (shortfall === 0 || picked.length >= 10) break;
+          if (used.has(p)) continue;
+          used.add(p);
+          picked.push({ ...p, formationPosition: pos });
+          shortfall--;
+        }
+      }
+    }
+
+    if (picked.length < 10) continue; // formación inviable por falta de jugadores
+
+    const score = picked.reduce(
+      (s, p) => s + (p.consensus?.probability_pct ?? 0),
+      0,
+    );
+    if (!best || score > best.score) {
+      best = { picked, score };
+    }
   }
-  return xi;
+
+  if (best && gk) {
+    return [{ ...gk, formationPosition: "POR" }, ...best.picked];
+  }
+  if (best) {
+    // Sin portero disponible: devolvemos el once de campo tal cual.
+    return best.picked;
+  }
+
+  // Fallback: no había 10 jugadores de campo suficientes para ninguna
+  // formación → devolvemos los mejores disponibles sin imponer shape.
+  const fallback = pool.slice(0, 10).map((p) => ({
+    ...p,
+    formationPosition: (p.position ?? "MED") as Position,
+  }));
+  return gk
+    ? [{ ...gk, formationPosition: "POR" as Position }, ...fallback]
+    : fallback;
 }
 
 /** Deriva la formación (ej: "4-3-3") del XI seleccionado. */
-export function deriveFormation(xi: PlayerWithConsensus[]): string {
-  const nDEF = xi.filter((p) => p.position === "DEF").length;
-  const nMED = xi.filter((p) => p.position === "MED").length;
-  const nDEL = xi.filter((p) => p.position === "DEL").length;
-  const nUNK = xi.filter((p) => p.position === null).length;
-  if (nUNK > 0) return `${nDEF}-${nMED}-${nDEL}+${nUNK}`;
+export function deriveFormation(xi: XIPlayer[]): string {
+  const nDEF = xi.filter((p) => p.formationPosition === "DEF").length;
+  const nMED = xi.filter((p) => p.formationPosition === "MED").length;
+  const nDEL = xi.filter((p) => p.formationPosition === "DEL").length;
   return `${nDEF}-${nMED}-${nDEL}`;
 }

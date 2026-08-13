@@ -58,18 +58,27 @@ export async function rebuildConsensus(
   return { players: playersWritten, teams: teamsWritten };
 }
 
-/** Media ponderada de las predicciones por jugador → player_consensus. */
+/**
+ * Media ponderada de las predicciones por jugador → player_consensus.
+ *
+ * CLAVE: una fuente que cubre el partido de un equipo pero NO lista a un
+ * jugador NO se interpreta como "sin datos", sino como "no lo ve titular"
+ * (probabilidad 0). Así, un jugador que solo una de N fuentes considera
+ * titular baja a ~100/N% en el consenso, en lugar de quedarse en 100%.
+ */
 async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
-  // Predicciones con el peso de fiabilidad de cada fuente.
+  // Todas las predicciones, con equipo y peso de cada fuente.
   const forecasts = await tx
     .select({
       playerId: schema.latestPlayerForecast.playerId,
+      teamId: schema.players.teamId,
       probabilityPct: schema.latestPlayerForecast.probabilityPct,
       fetchedAt: schema.latestPlayerForecast.fetchedAt,
       sourceSlug: schema.sources.slug,
       weight: schema.sources.reliabilityWeight,
     })
     .from(schema.latestPlayerForecast)
+    .innerJoin(schema.players, eq(schema.latestPlayerForecast.playerId, schema.players.id))
     .innerJoin(
       schema.sources,
       eq(schema.latestPlayerForecast.sourceId, schema.sources.id),
@@ -77,41 +86,53 @@ async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
 
   if (!forecasts.length) return 0;
 
-  // Agrupamos por jugador.
+  // Fuentes que cubren cada equipo (tienen al menos una predicción para ese
+  // equipo): servirán de denominador del consenso de cada jugador de ese club.
+  const sourcesByTeam = new Map<string, Map<string, number>>();
+  for (const f of forecasts) {
+    const m = sourcesByTeam.get(f.teamId) ?? new Map<string, number>();
+    if (!m.has(f.sourceSlug)) m.set(f.sourceSlug, parseWeight(f.weight));
+    sourcesByTeam.set(f.teamId, m);
+  }
+
+  // Agrupamos las predicciones por jugador (qué dice cada fuente que lo lista).
   const byPlayer = new Map<
     string,
-    { probability: number; weight: number; source: string; fetchedAt: Date }[]
+    { teamId: string; entries: Map<string, { prob: number; fetchedAt: Date }> }
   >();
   for (const f of forecasts) {
-    const list = byPlayer.get(f.playerId) ?? [];
-    list.push({
-      probability: f.probabilityPct,
-      weight: parseWeight(f.weight),
-      source: f.sourceSlug,
-      fetchedAt: f.fetchedAt,
-    });
-    byPlayer.set(f.playerId, list);
+    let p = byPlayer.get(f.playerId);
+    if (!p) {
+      p = { teamId: f.teamId, entries: new Map() };
+      byPlayer.set(f.playerId, p);
+    }
+    p.entries.set(f.sourceSlug, { prob: f.probabilityPct, fetchedAt: f.fetchedAt });
   }
 
   let written = 0;
-  for (const [playerId, entries] of byPlayer) {
+  for (const [playerId, { teamId, entries }] of byPlayer) {
+    const covering = sourcesByTeam.get(teamId) ?? new Map<string, number>();
     let weightedSum = 0;
     let totalWeight = 0;
     let starters = 0;
     const agreement: AgreementEntry[] = [];
 
-    for (const e of entries) {
-      weightedSum += e.probability * e.weight;
-      totalWeight += e.weight;
-      if (e.probability >= STARTER_THRESHOLD) starters += 1;
+    // Iteramos por las fuentes que CUBREN el equipo: las que no listan al
+    // jugador aportan probabilidad 0 al consenso.
+    for (const [source, weight] of covering) {
+      const listed = entries.get(source);
+      const prob = listed ? listed.prob : 0;
+      weightedSum += prob * weight;
+      totalWeight += weight;
+      if (prob >= STARTER_THRESHOLD) starters += 1;
       agreement.push({
-        source: e.source,
-        probability: e.probability,
-        fetched_at: e.fetchedAt.toISOString(),
+        source,
+        probability: prob,
+        fetched_at: listed ? listed.fetchedAt.toISOString() : "",
       });
     }
 
-    // Ordenamos el detalle por probabilidad descendente para legibilidad.
+    // Detalle ordenado por probabilidad descendente para legibilidad.
     agreement.sort((a, b) => b.probability - a.probability);
 
     const probabilityPct =
@@ -122,7 +143,7 @@ async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
       .values({
         playerId,
         probabilityPct,
-        sourcesTotal: entries.length,
+        sourcesTotal: covering.size,
         sourcesConsideringStarter: starters,
         agreement,
         updatedAt: now,
@@ -131,7 +152,7 @@ async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
         target: [schema.playerConsensus.playerId],
         set: {
           probabilityPct,
-          sourcesTotal: entries.length,
+          sourcesTotal: covering.size,
           sourcesConsideringStarter: starters,
           agreement,
           updatedAt: now,

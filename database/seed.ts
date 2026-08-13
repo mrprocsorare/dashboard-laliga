@@ -13,7 +13,7 @@ const SOURCES = [
   { slug: "futbolfantasy", name: "FutbolFantasy", baseUrl: "https://www.futbolfantasy.com" },
   { slug: "analiticafantasy", name: "AnalíticaFantasy", baseUrl: "https://www.analiticafantasy.com" },
   { slug: "jornadaperfecta", name: "JornadaPerfecta", baseUrl: "https://www.jornadaperfecta.com" },
-  { slug: "sportsgambler", name: "SportsGambler", baseUrl: "https://www.sportsgambler.com" },
+  { slug: "biwenger", name: "Biwenger", baseUrl: "https://biwenger.as.com" },
   { slug: "comuniate", name: "Comuniate", baseUrl: "https://www.comuniate.com" },
 ];
 
@@ -58,6 +58,21 @@ async function main() {
   console.log("Sembrando fuentes...");
   await db.insert(sources).values(SOURCES).onConflictDoNothing({ target: sources.slug });
   console.log(`  ${SOURCES.length} fuentes (skipped si ya existían)`);
+
+  // Elimina fuentes que ya no están en el catálogo (cascade borra sus datos).
+  const canonicalSourceSlugs = SOURCES.map((s) => s.slug);
+  const staleSources = await db
+    .select()
+    .from(sources)
+    .where(notInArray(sources.slug, canonicalSourceSlugs));
+  if (staleSources.length) {
+    await db
+      .delete(sources)
+      .where(inArray(sources.slug, staleSources.map((s) => s.slug)));
+    console.log(
+      `  → Eliminadas ${staleSources.length} fuentes obsoletas: ${staleSources.map((s) => s.slug).join(", ")}`,
+    );
+  }
 
   console.log("Sembrando equipos...");
   await db.insert(teams).values(TEAMS).onConflictDoNothing({ target: teams.slug });
