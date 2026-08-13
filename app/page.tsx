@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/shell";
+import { NextUpdateCountdown } from "@/components/dashboard/countdown";
 import { getHomeData, type RunStatus } from "@/lib/data";
 import { timeAgo } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -32,9 +33,7 @@ export default async function HomePage() {
           <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Fuentes ({sources.length})
           </h2>
-          <p className="text-xs text-muted-foreground">
-            Actualización automática cada 15 min
-          </p>
+          <NextUpdateCountdown />
         </div>
         <div className="flex flex-wrap gap-2">
           {sources.map((s) => (

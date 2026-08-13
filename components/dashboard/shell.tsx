@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import SignOutButton from "@/components/auth/sign-out-button";
+import { ThemeToggle } from "@/components/dashboard/theme-toggle";
 
 /**
  * Estructura común del dashboard: header sticky con backdrop-blur + contenedor
@@ -28,7 +29,10 @@ export function DashboardShell({
               </span>
             ) : null}
           </div>
-          <SignOutButton />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <SignOutButton />
+          </div>
         </header>
       </div>
       <main className="mx-auto max-w-6xl space-y-8 px-4 py-5 sm:px-6 sm:py-6">
