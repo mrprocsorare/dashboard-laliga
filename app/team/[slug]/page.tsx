@@ -27,6 +27,7 @@ import {
 import {
   deriveFormation,
   getAllTeamsForNav,
+  getSourceMap,
   getTeamData,
   selectXI,
   type PlayerWithConsensus,
@@ -59,17 +60,19 @@ export default async function TeamPage({
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const [data, allTeams] = await Promise.all([
+  const [data, allTeams, sourceMap] = await Promise.all([
     getTeamData(slug),
     getAllTeamsForNav(),
+    getSourceMap(),
   ]);
-
   if (!data) notFound();
 
   const { team, players, events, teamConsensus } = data;
   const withConsensus = players.filter((p) => p.consensus);
   const xi = selectXI(players);
   const formation = xi.length > 0 ? deriveFormation(xi) : null;
+  const xiIds = new Set(xi.map((x) => x.id));
+  const bench = withConsensus.filter((p) => !xiIds.has(p.id));
   const sortedEvents = [...events].sort(
     (a, b) =>
       SEVERITY_RANK[b.severity] - SEVERITY_RANK[a.severity] ||
@@ -82,9 +85,9 @@ export default async function TeamPage({
         <TeamNav teams={allTeams} currentSlug={slug} />
 
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-2xl font-bold">{team.name}</h1>
+          <h1 className="text-2xl font-bold tracking-tight">{team.name}</h1>
           {formation ? (
-            <span className="rounded-md border px-2 py-0.5 text-sm font-medium">
+            <span className="rounded-md border bg-muted px-2 py-0.5 text-sm font-medium tabular-nums">
               {formation}
             </span>
           ) : null}
@@ -111,7 +114,14 @@ export default async function TeamPage({
           Once más probable ({xi.length})
         </h2>
         {xi.length > 0 ? (
-          <Pitch xi={xi} />
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,28rem)_1fr] lg:items-start">
+            <Pitch xi={xi} />
+            <Card>
+              <CardContent>
+                <PlayersTable players={xi} sourceMap={sourceMap} />
+              </CardContent>
+            </Card>
+          </div>
         ) : (
           <Card>
             <CardContent className="py-8 text-center text-sm text-muted-foreground">
@@ -121,14 +131,14 @@ export default async function TeamPage({
         )}
       </section>
 
-      {withConsensus.length > 0 ? (
+      {bench.length > 0 ? (
         <section className="space-y-3">
           <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Detalle por fuente ({withConsensus.length})
+            Otras previsiones ({bench.length})
           </h2>
           <Card>
             <CardContent>
-              <PlayersTable players={withConsensus} />
+              <PlayersTable players={bench} sourceMap={sourceMap} />
             </CardContent>
           </Card>
         </section>
@@ -165,7 +175,13 @@ export default async function TeamPage({
   );
 }
 
-function PlayersTable({ players }: { players: PlayerWithConsensus[] }) {
+function PlayersTable({
+  players,
+  sourceMap,
+}: {
+  players: PlayerWithConsensus[];
+  sourceMap: Map<string, { name: string; baseUrl: string }>;
+}) {
   return (
     <Table>
       <TableHeader>
@@ -204,18 +220,40 @@ function PlayersTable({ players }: { players: PlayerWithConsensus[] }) {
               </TableCell>
               <TableCell className="whitespace-normal">
                 <span className="flex flex-wrap gap-x-3 gap-y-1">
-                  {c.agreement.map((a) => (
-                    <span
-                      key={a.source}
-                      className="text-xs tabular-nums text-muted-foreground"
-                      title={`Actualizado ${formatDateTime(a.fetched_at)}`}
-                    >
-                      {a.source}{" "}
-                      <span className="font-medium text-foreground">
-                        {a.probability}%
+                  {c.agreement.map((a) => {
+                    const src = sourceMap.get(a.source);
+                    const label = src?.name ?? a.source;
+                    const probLabel = a.probability > 0 ? `${a.probability}%` : "—";
+                    if (src) {
+                        return (
+                        <a
+                          key={a.source}
+                          href={src.baseUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs tabular-nums text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
+                          title={`Ver ${src.name} (actualizado ${formatDateTime(a.fetched_at)})`}
+                        >
+                          {label}{" "}
+                          <span className="font-medium text-foreground">
+                            {probLabel}
+                          </span>
+                        </a>
+                      );
+                    }
+                    return (
+                      <span
+                        key={a.source}
+                        className="text-xs tabular-nums text-muted-foreground"
+                        title={formatDateTime(a.fetched_at)}
+                      >
+                        {a.source}{" "}
+                        <span className="font-medium text-foreground">
+                          {probLabel}
+                        </span>
                       </span>
-                    </span>
-                  ))}
+                    );
+                  })}
                 </span>
               </TableCell>
             </TableRow>

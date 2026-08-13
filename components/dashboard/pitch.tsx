@@ -1,45 +1,35 @@
 import { PlayerAvatar } from "@/components/dashboard/player-avatar";
 import { cn } from "@/lib/utils";
-import type { PlayerWithConsensus } from "@/lib/data";
+import type { XIPlayer } from "@/lib/data";
 
 /**
  * Campo de fútbol con el once de consenso.
  * Disposición vertical (atacando hacia arriba): DEL arriba, MED, DEF, POR abajo.
- * Las líneas blancas y la paleta verde oscura buscan un look moderno y
- * sobrio, sin estridencias.
+ * Cada jugador se coloca según `formationPosition` (asignada por selectXI).
+ * Paleta verde oscura, limpia y sobria.
  */
 
 interface PitchRow {
   label: string;
-  players: PlayerWithConsensus[];
+  players: XIPlayer[];
 }
 
-export function Pitch({ xi }: { xi: PlayerWithConsensus[] }) {
+export function Pitch({ xi }: { xi: XIPlayer[] }) {
   if (xi.length === 0) return null;
 
-  const groups = {
-    DEL: xi.filter((p) => p.position === "DEL"),
-    MED: xi.filter((p) => p.position === "MED"),
-    DEF: xi.filter((p) => p.position === "DEF"),
-    POR: xi.filter((p) => p.position === "POR"),
-    UNK: xi.filter((p) => p.position === null),
-  };
-
-  // Las jugadores sin posición van al centro del campo.
   const rows: PitchRow[] = [
-    { label: "DEL", players: groups.DEL },
-    { label: "MED", players: [...groups.MED, ...groups.UNK] },
-    { label: "DEF", players: groups.DEF },
-    { label: "POR", players: groups.POR },
+    { label: "DEL", players: xi.filter((p) => p.formationPosition === "DEL") },
+    { label: "MED", players: xi.filter((p) => p.formationPosition === "MED") },
+    { label: "DEF", players: xi.filter((p) => p.formationPosition === "DEF") },
+    { label: "POR", players: xi.filter((p) => p.formationPosition === "POR") },
   ].filter((r) => r.players.length > 0);
 
   return (
-    <div className="mx-auto aspect-[3/4] w-full max-w-sm select-none overflow-hidden rounded-2xl bg-gradient-to-b from-emerald-800 to-emerald-950 ring-1 ring-white/10 sm:max-w-md">
-      {/* líneas del campo */}
+    <div className="mx-auto aspect-[3/4] w-full max-w-sm select-none overflow-hidden rounded-2xl bg-gradient-to-b from-emerald-800 to-emerald-950 ring-1 ring-emerald-700/40 sm:max-w-md">
       <div className="relative h-full">
-        {/* franjas */}
+        {/* franjas de césped */}
         <div
-          className="absolute inset-0 opacity-[0.04]"
+          className="absolute inset-0 opacity-[0.05]"
           style={{
             backgroundImage:
               "repeating-linear-gradient(0deg, transparent 0%, transparent 12%, white 12%, white 13%, transparent 13%, transparent 25%)",
@@ -48,19 +38,14 @@ export function Pitch({ xi }: { xi: PlayerWithConsensus[] }) {
         {/* línea de medio campo */}
         <div className="absolute inset-x-0 top-1/2 h-px bg-white/15" />
         {/* círculo central */}
-        <div className="absolute left-1/2 top-1/2 size-16 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/15 sm:size-20" />
-        {/* área superior */}
-        <div className="absolute left-1/2 top-0 h-[16%] w-3/5 -translate-x-1/2 border-x border-b border-white/15" />
-        {/* área inferior */}
-        <div className="absolute bottom-0 left-1/2 h-[16%] w-3/5 -translate-x-1/2 border-x border-t border-white/15" />
+        <div className="absolute left-1/2 top-1/2 size-16 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/20 sm:size-20" />
+        {/* áreas */}
+        <div className="absolute left-1/2 top-0 h-[16%] w-3/5 -translate-x-1/2 border-x border-b border-white/20" />
+        <div className="absolute bottom-0 left-1/2 h-[16%] w-3/5 -translate-x-1/2 border-x border-t border-white/20" />
 
-        {/* jugadores */}
         <div className="relative flex h-full flex-col justify-around gap-1 px-2 py-3">
           {rows.map((row) => (
-            <div
-              key={row.label}
-              className="flex items-center justify-around"
-            >
+            <div key={row.label} className="flex items-center justify-around">
               {row.players.map((p) => (
                 <PlayerNode key={p.id} player={p} />
               ))}
@@ -72,7 +57,7 @@ export function Pitch({ xi }: { xi: PlayerWithConsensus[] }) {
   );
 }
 
-function PlayerNode({ player }: { player: PlayerWithConsensus }) {
+function PlayerNode({ player }: { player: XIPlayer }) {
   const pct = player.consensus!.probability_pct;
   const ringColor =
     pct >= 80
