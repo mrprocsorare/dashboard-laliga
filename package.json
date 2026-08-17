@@ -12,6 +12,7 @@
     "test:watch": "vitest",
     "audit:duplicates": "tsx scripts/audit-duplicates.ts",
     "audit:unmatched": "tsx scripts/audit-unmatched.ts",
+    "audit:near-misses": "tsx scripts/audit-near-misses.ts",
     "sync:roster": "tsx scripts/sync-roster.ts",
     "backfill:roster": "tsx scripts/backfill-from-roster.ts",
     "merge:duplicates": "tsx scripts/merge-duplicate-players.ts",

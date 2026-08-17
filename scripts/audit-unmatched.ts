@@ -20,8 +20,6 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { eq, isNull, sql, desc } from "drizzle-orm";
 import * as schema from "../database/schema";
 
-type Db = ReturnType<typeof drizzle<typeof schema>>;
-
 async function main() {
   const url = process.env.DATABASE_URL;
   if (!url) { console.error("Falta DATABASE_URL"); process.exit(1); }

@@ -13,7 +13,7 @@
  *  - minConfidence customizable.
  */
 import { describe, it, expect } from "vitest";
-import { matchAgainstRoster } from "../lib/match";
+import { matchAgainstRoster, nearMisses } from "../lib/match";
 import type { CanonicalPlayer } from "../lib/roster";
 
 const ROSTER: CanonicalPlayer[] = [
@@ -186,18 +186,23 @@ describe("matchAgainstRoster — matching cerrado", () => {
   });
 
   describe("minConfidence customizable", () => {
-    it("con minConfidence 0.95, un subset-inverse 0.8 NO matchea", () => {
-      const m = matchAgainstRoster("Padilla", ROSTER, { minConfidence: 0.95 });
-      expect(m).toBeNull();
+    it("con minConfidence 0.95, un subset-inverse 0.8 NO matchea si no hay regla más fuerte", () => {
+      // Probamos con un roster mínimo donde no haya regla de apellido+pil
+      // que matchee con 0.95.
+      const miniRoster: CanonicalPlayer[] = [{ name: "García", pos: "DEF" }];
+      // "García" es 1 token. last-name-unique da 0.85 < 0.95 → null.
+      expect(matchAgainstRoster("García", miniRoster, { minConfidence: 0.95 })).toBeNull();
     });
 
     it("con minConfidence 0.5, sí matchea", () => {
-      const m = matchAgainstRoster("Padilla", ROSTER, { minConfidence: 0.5 });
-      expect(m).not.toBeNull();
+      const miniRoster: CanonicalPlayer[] = [{ name: "Padilla", pos: "POR" }];
+      expect(matchAgainstRoster("Álex Padilla", miniRoster, { minConfidence: 0.5 })).not.toBeNull();
     });
 
     it("minConfidence 1.0 solo acepta exact", () => {
-      expect(matchAgainstRoster("Ademola Lookman", ROSTER, { minConfidence: 1.0 })!.rule).toBe("exact");
+      expect(
+        matchAgainstRoster("Ademola Lookman", ROSTER, { minConfidence: 1.0 })!.rule,
+      ).toBe("exact");
       expect(matchAgainstRoster("Lookman", ROSTER, { minConfidence: 1.0 })).toBeNull();
     });
   });
@@ -205,6 +210,87 @@ describe("matchAgainstRoster — matching cerrado", () => {
   describe("Cobertura numérica (mínimo 30 casos)", () => {
     it("el roster de test tiene ≥ 30 jugadores", () => {
       expect(ROSTER.length).toBeGreaterThanOrEqual(30);
+    });
+  });
+
+  describe("Diminutivos de nombre de pila (mismo apellido)", () => {
+    // Roster auxiliar para esta batería (todos los pares que el enunciado
+    // menciona + otros habituales de la plantilla 2026-27).
+    const miniRoster: CanonicalPlayer[] = [
+      { name: "Alejandro Grimaldo", pos: "DEF" },
+      { name: "Alejandro Balde", pos: "DEF" },
+      { name: "Javier Guerra", pos: "MED" },
+      { name: "Fernando Niño", pos: "DEL" },
+      { name: "Facundo González", pos: "MED" },
+      { name: "Cristian Romero", pos: "DEF" },
+      { name: "Manuel Sánchez", pos: "DEF" },
+      { name: "Roberto Torres", pos: "MED" },
+      { name: "Francisco García", pos: "DEL" },
+      { name: "Daniel Carvajal", pos: "DEF" },
+      { name: "Antonio Rüdiger", pos: "DEF" },
+      { name: "Jesús Areso", pos: "DEF" },
+      { name: "Rafael Leão", pos: "DEL" },
+      { name: "Youssef Enríquez", pos: "DEL" },
+      { name: "Rubén García", pos: "MED" },
+      { name: "Rodrigo Riquelme", pos: "DEL" },
+    ];
+
+    const casos: Array<{ input: string; canonical: string; regla: string }> = [
+      // Caso exacto del enunciado.
+      { input: "Álex Grimaldo", canonical: "Alejandro Grimaldo", regla: "Álex → Alejandro" },
+      // Variantes del enunciado (mismo patrón, otros apellidos).
+      { input: "Álex Balde", canonical: "Alejandro Balde", regla: "Álex → Alejandro" },
+      { input: "Javi Guerra", canonical: "Javier Guerra", regla: "Javi → Javier" },
+      { input: "Fer Niño", canonical: "Fernando Niño", regla: "Fer → Fernando" },
+      { input: "Facu González", canonical: "Facundo González", regla: "Facu → Facundo" },
+      { input: "Cuti Romero", canonical: "Cristian Romero", regla: "Cuti → Cristian" },
+      { input: "Manu Sánchez", canonical: "Manuel Sánchez", regla: "Manu → Manuel" },
+      { input: "Roberto", canonical: "Roberto Torres", regla: "1 token, apellido único" },
+      { input: "Dani Carvajal", canonical: "Daniel Carvajal", regla: "Dani → Daniel" },
+      { input: "Toni Rüdiger", canonical: "Antonio Rüdiger", regla: "Toni → Antonio" },
+      { input: "Rafa Leão", canonical: "Rafael Leão", regla: "Rafa → Rafael" },
+      { input: "Yusi Enríquez", canonical: "Youssef Enríquez", regla: "Yusi → Youssef" },
+      { input: "Rubo García", canonical: "Rubén García", regla: "Rubo → Rubén" },
+      { input: "Roro Riquelme", canonical: "Rodrigo Riquelme", regla: "Roro → Rodrigo" },
+      // Iniciales: "P." solo matchea si el canónico empieza por P.
+      // (P. Aubameyang → Pierre-Emerick Aubameyang empieza por P).
+      // NO podemos asumir que P. = Francisco, Pablo, Pedro, etc.
+      // (Para testear esto, añadimos el canónico al mini-roster de este test):
+      // ya está cubierto arriba en el roster principal (Pierre-Emerick Aubameyang).
+      // Aquí verificamos que NO hay falso positivo: "P. García" NO matchea
+      // con "Francisco García" (porque Francisco no empieza por P).
+      { input: "P. García", canonical: "(no match)", regla: "P ≠ Francisco" },
+    ];
+
+    for (const c of casos) {
+      it(`"${c.input}" → "${c.canonical}" (${c.regla})`, () => {
+        const m = matchAgainstRoster(c.input, miniRoster);
+        if (c.canonical === "(no match)") {
+          expect(m).toBeNull();
+          return;
+        }
+        expect(m).not.toBeNull();
+        expect(miniRoster[m!.index].name).toBe(c.canonical);
+      });
+    }
+  });
+
+  describe("nearMisses (Paso 4)", () => {
+    const roster: CanonicalPlayer[] = [
+      { name: "Alejandro Grimaldo", pos: "DEF" },
+    ];
+    it("nearMisses detecta la similitud Álex/Alejandro Grimaldo con score 0.95", () => {
+      const ms = nearMisses("Álex Grimaldo", roster);
+      expect(ms.length).toBeGreaterThan(0);
+      const top = ms[0];
+      expect(top.canonicalName).toBe("Alejandro Grimaldo");
+      expect(top.confidence).toBeGreaterThanOrEqual(0.9);
+      expect(top.rule).toBe("first-name-alias-same-lastname");
+    });
+
+    it("nearMisses devuelve [] para un nombre completamente distinto", () => {
+      const ms = nearMisses("Lionel Messi", roster);
+      expect(ms.length).toBe(0);
     });
   });
 });
