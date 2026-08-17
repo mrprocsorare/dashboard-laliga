@@ -115,6 +115,13 @@ export function parseMatchPage(html: string): {
   visitante: ParsedTeamBlock | null;
 } {
   const $ = cheerio.load(html);
+
+  // Biwenger replaced the old `div.field.football` lineup markup with a
+  // two-column `match-team-inner` grid. Prefer the current schema.org markup,
+  // while retaining the old parser as a fallback for cached/older pages.
+  const current = parseCurrentMatchPage($);
+  if (current.local || current.visitante) return current;
+
   const blocks: ParsedTeamBlock[] = [];
 
   // Cada equipo tiene un `div.field.football` precedido por un heading
@@ -158,6 +165,75 @@ export function parseMatchPage(html: string): {
   if (blocks.length >= 2) visitante = blocks[1];
 
   return { local, visitante };
+}
+
+/** Parse the current Biwenger match layout (one local and one visitor per row). */
+function parseCurrentMatchPage($: cheerio.CheerioAPI): {
+  local: ParsedTeamBlock | null;
+  visitante: ParsedTeamBlock | null;
+} {
+  const homeName = cleanText($("#main [itemprop=homeTeam] [itemprop=name]").first().text());
+  const awayName = cleanText($("#main [itemprop=awayTeam] [itemprop=name]").first().text());
+  const localSlug = resolveTeamName(homeName);
+  const visitanteSlug = resolveTeamName(awayName);
+  if (!localSlug || !visitanteSlug) return { local: null, visitante: null };
+
+  const localPlayers: ParsedLineupPlayer[] = [];
+  const visitantePlayers: ParsedLineupPlayer[] = [];
+  const seenLocal = new Set<string>();
+  const seenVisitante = new Set<string>();
+
+  $("#team .match-team-inner").each((_, row) => {
+    const performers = $(row).children('[itemprop="performer"]');
+    if (performers.length < 2) return;
+
+    const localPlayer = parseCurrentPlayer($, performers.eq(0));
+    const visitantePlayer = parseCurrentPlayer($, performers.eq(1));
+    if (localPlayer && !seenLocal.has(localPlayer.name)) {
+      seenLocal.add(localPlayer.name);
+      localPlayers.push(localPlayer);
+    }
+    if (visitantePlayer && !seenVisitante.has(visitantePlayer.name)) {
+      seenVisitante.add(visitantePlayer.name);
+      visitantePlayers.push(visitantePlayer);
+    }
+  });
+
+  if (!localPlayers.length && !visitantePlayers.length) {
+    return { local: null, visitante: null };
+  }
+
+  return {
+    local: { teamSlug: localSlug, players: localPlayers, events: [] },
+    visitante: { teamSlug: visitanteSlug, players: visitantePlayers, events: [] },
+  };
+}
+
+/** Parse one current-layout `itemprop=performer` player card. */
+function parseCurrentPlayer(
+  $: cheerio.CheerioAPI,
+  performer: cheerio.Cheerio<Element>,
+): ParsedLineupPlayer | null {
+  const name = cleanText(performer.find('h4[itemprop="name"]').first().text());
+  if (!name) return null;
+
+  const positionTitle = cleanText(performer.find(".player-position").first().attr("title") ?? "");
+  const position = currentPosition(positionTitle);
+  const src = performer.find('img[itemprop="image"]').first().attr("src") ?? "";
+
+  return {
+    name,
+    position,
+    photoUrl: src.startsWith("http") ? src.split("?")[0] : null,
+  };
+}
+
+function currentPosition(title: string): Position {
+  const normalized = normalizeTeamName(title);
+  if (/port|goalkeeper|arquero|keeper/.test(normalized)) return "POR";
+  if (/defen|defender|lateral|central/.test(normalized)) return "DEF";
+  if (/medio|midfielder|mediocamp|interior|pivote/.test(normalized)) return "MED";
+  return "DEL";
 }
 
 /** Parsea los jugadores del once dentro de un `div.field.football`. */
