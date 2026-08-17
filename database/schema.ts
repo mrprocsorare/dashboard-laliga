@@ -311,7 +311,38 @@ export const teamConsensus = pgTable("team_consensus", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+/**
+ * Cuotas 1X2 normalizadas de The Odds API. Hay una fila por evento externo:
+ * si la casa preferida cambia, se actualiza la misma fila y se conserva la
+ * casa elegida en `bookmaker`.
+ */
+export const matchOdds = pgTable(
+  "match_odds",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    externalEventId: text("external_event_id").notNull().unique(),
+    homeTeamId: uuid("home_team_id").references(() => teams.id, { onDelete: "set null" }),
+    awayTeamId: uuid("away_team_id").references(() => teams.id, { onDelete: "set null" }),
+    homeTeamName: text("home_team_name").notNull(),
+    awayTeamName: text("away_team_name").notNull(),
+    commenceTime: timestamp("commence_time", { withTimezone: true }).notNull(),
+    /** Jornada inferida por bloques cronológicos de 10 partidos (LaLiga). */
+    matchday: integer("matchday"),
+    probabilityHomePct: integer("probability_home_pct"),
+    probabilityDrawPct: integer("probability_draw_pct"),
+    probabilityAwayPct: integer("probability_away_pct"),
+    bookmaker: text("bookmaker"),
+    capturedAt: timestamp("captured_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("match_odds_event_idx").on(t.externalEventId),
+    index("match_odds_commence_idx").on(t.commenceTime),
+    index("match_odds_matchday_idx").on(t.matchday),
+  ],
+);
+
 export type Source = typeof sources.$inferSelect;
 export type Team = typeof teams.$inferSelect;
 export type Player = typeof players.$inferSelect;
 export type ScrapeRun = typeof scrapeRuns.$inferSelect;
+export type MatchOdds = typeof matchOdds.$inferSelect;

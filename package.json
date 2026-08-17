@@ -22,7 +22,8 @@
     "db:rls": "tsx database/rls.ts",
     "db:studio": "drizzle-kit studio",
     "scrape": "tsx scrapers/cli.ts",
-    "consensus": "tsx scrapers/consensus-cli.ts"
+    "consensus": "tsx scrapers/consensus-cli.ts",
+    "odds": "tsx scripts/odds-cli.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

@@ -85,6 +85,36 @@ export interface TeamSummary extends TeamRow {
   likelyStarters: number;
 }
 
+export interface MatchOddsRow {
+  id: string;
+  external_event_id: string;
+  home_team_id: string | null;
+  away_team_id: string | null;
+  home_team_name: string;
+  away_team_name: string;
+  commence_time: string;
+  matchday: number | null;
+  probability_home_pct: number | null;
+  probability_draw_pct: number | null;
+  probability_away_pct: number | null;
+  bookmaker: string | null;
+  captured_at: string;
+}
+
+export interface JornadaMatch {
+  odds: MatchOddsRow;
+  homeTeam: TeamRow | null;
+  awayTeam: TeamRow | null;
+  homeXI: XIPlayer[];
+  awayXI: XIPlayer[];
+}
+
+export interface JornadaData {
+  currentMatchday: number | null;
+  nextMatchday: number | null;
+  matches: JornadaMatch[];
+}
+
 /** Ventana de frescura de los eventos (lesiones, sanciones…). */
 const EVENTS_WINDOW_HOURS = 48;
 
@@ -162,6 +192,72 @@ export async function getHomeData(): Promise<{
         lastRunError: run?.error_message ?? null,
       };
     }),
+  };
+}
+
+/**
+ * Datos de /jornada. Las cuotas no son una dependencia del consenso: si un
+ * evento no tiene cuotas, se devuelve igualmente con probabilities null.
+ */
+export async function getJornadaData(): Promise<JornadaData> {
+  const supabase = await createClient();
+  const [oddsRes, teamsRes, playersRes] = await Promise.all([
+    supabase
+      .from("match_odds")
+      .select(
+        "id, external_event_id, home_team_id, away_team_id, home_team_name, away_team_name, commence_time, matchday, probability_home_pct, probability_draw_pct, probability_away_pct, bookmaker, captured_at",
+      )
+      .order("matchday", { ascending: true })
+      .order("commence_time", { ascending: true }),
+    supabase.from("teams").select("id, slug, name, short_name, logo_url").order("name"),
+    supabase
+      .from("players")
+      .select(
+        "id, team_id, name, position, photo_url, player_consensus(probability_pct, sources_total, sources_starter, agreement, updated_at)",
+      )
+      .not("team_id", "is", null),
+  ]);
+
+  const odds = (oddsRes.data ?? []) as unknown as MatchOddsRow[];
+  const teams = (teamsRes.data ?? []) as unknown as TeamRow[];
+  type RawPlayer = Omit<PlayerWithConsensus, "consensus"> & {
+    team_id: string;
+    player_consensus: ConsensusInfo | ConsensusInfo[] | null;
+  };
+  const players = ((playersRes.data ?? []) as unknown as RawPlayer[]).map(({ player_consensus, ...p }) => {
+    const pc = Array.isArray(player_consensus) ? (player_consensus[0] ?? null) : player_consensus;
+    return {
+      ...p,
+      consensus: pc ? { ...pc, agreement: normalizeAgreement(pc.agreement) } : null,
+    } as PlayerWithConsensus & { team_id: string };
+  });
+
+  const availableRounds = [...new Set(odds.map((o) => o.matchday).filter((v): v is number => v !== null))].sort(
+    (a, b) => a - b,
+  );
+  const currentMatchday = availableRounds[0] ?? null;
+  const nextMatchday = availableRounds[1] ?? null;
+  const selectedOdds = odds.filter(
+    (o) => o.matchday === currentMatchday || o.matchday === nextMatchday,
+  );
+  const teamById = new Map(teams.map((team) => [team.id, team]));
+  const playersByTeam = new Map<string, PlayerWithConsensus[]>();
+  for (const player of players) {
+    const list = playersByTeam.get(player.team_id) ?? [];
+    list.push(player);
+    playersByTeam.set(player.team_id, list);
+  }
+
+  return {
+    currentMatchday,
+    nextMatchday,
+    matches: selectedOdds.map((oddsRow) => ({
+      odds: oddsRow,
+      homeTeam: oddsRow.home_team_id ? teamById.get(oddsRow.home_team_id) ?? null : null,
+      awayTeam: oddsRow.away_team_id ? teamById.get(oddsRow.away_team_id) ?? null : null,
+      homeXI: oddsRow.home_team_id ? selectXI(playersByTeam.get(oddsRow.home_team_id) ?? []) : [],
+      awayXI: oddsRow.away_team_id ? selectXI(playersByTeam.get(oddsRow.away_team_id) ?? []) : [],
+    })),
   };
 }
 

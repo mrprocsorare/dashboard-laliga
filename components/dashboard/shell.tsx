@@ -30,6 +30,9 @@ export function DashboardShell({
             ) : null}
           </div>
           <div className="flex items-center gap-2">
+            <Link href="/jornada" className="hidden text-xs font-medium text-muted-foreground hover:text-foreground sm:inline">
+              Jornada
+            </Link>
             <ThemeToggle />
             <SignOutButton />
           </div>
