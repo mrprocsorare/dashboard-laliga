@@ -31,46 +31,14 @@
  * positivos (p. ej. "Lookman" → "Ademola Lookman" funciona porque el equipo
  * puede tener varios Williams/García, pero no por apellido único).
  *
- * Las claves se almacenan YA NORMALIZADAS (`normalizeName`). Cualquier nuevo
- * caso de duplicación se añade aquí. Estructura pensada para crecer sin
- * tocar la lógica de matching.
+ * El mapa vive en `services/player-aliases.ts` para que la lógica de matching
+ * (`services/player-names.ts`), el reconciliador (`services/reconcile.ts`), el
+ * auditor (`scripts/audit-duplicates.ts`) y la migración (`scripts/merge-duplicate-players.ts`)
+ * compartan exactamente la misma fuente de verdad. Las claves se almacenan YA
+ * NORMALIZADAS (`normalizeName`). Cualquier nuevo caso de duplicación se añade
+ * al módulo de aliases, no aquí.
  */
-const PLAYER_ALIASES: Record<string, string> = {
-  // Apellidos únicos / jugadores muy conocidos referidos por un solo token.
-  // OJO: solo añadimos entradas INEQUÍVOCAS. No incluimos nombres propios
-  // cortos que pueden ser ambiguos (p. ej. "Williams", "Nico", "Iñaki") ni
-  // apellidos compartidos por varios jugadores del mismo equipo.
-  lookman: "Ademola Lookman",
-  aubameyang: "Pierre-Emerick Aubameyang",
-  // mbappe cubre tanto "Mbappé" como "Mbappe" porque normalizeName quita tildes.
-  mbappe: "Kylian Mbappé",
-  vinicius: "Vinícius Júnior",
-  // "Vinícius" con tilde tras normalizar produce "vinicius"; queda cubierto arriba.
-  vini: "Vinícius Júnior",
-  bellingham: "Jude Bellingham",
-  valverde: "Federico Valverde",
-  gavi: "Pablo Páez",
-  pedri: "Pedro González",
-  lamine: "Lamine Yamal",
-  yamal: "Lamine Yamal",
-  // Casos frecuentes abreviados con iniciales y/o guión.
-  "a lookman": "Ademola Lookman",
-  "p aubameyang": "Pierre-Emerick Aubameyang",
-  "p e aubameyang": "Pierre-Emerick Aubameyang",
-  "p-e aubameyang": "Pierre-Emerick Aubameyang",
-  "k mbappe": "Kylian Mbappé",
-  "v jr": "Vinícius Júnior",
-  "vini jr": "Vinícius Júnior",
-  "l yam": "Lamine Yamal",
-  "l yamal": "Lamine Yamal",
-  // Nombres con guión partido: muchas fuentes parten "Pierre-Emerick" en una
-  // sola palabra y otras lo emiten con espacio. Cualquier forma debe resolver
-  // al canónico con espacio (que es el que usan los scrapers mayoritarios).
-  "pierre emerick aubameyang": "Pierre-Emerick Aubameyang",
-  "pierre-emerick aubameyang": "Pierre-Emerick Aubameyang",
-  "pierre emerick": "Pierre-Emerick Aubameyang",
-  "pierre-emerick": "Pierre-Emerick Aubameyang",
-};
+import { PLAYER_ALIASES_INTERNAL as PLAYER_ALIASES } from "./player-aliases";
 
 /**
  * Devuelve la forma canónica del nombre si está en `PLAYER_ALIASES`, o el

@@ -8,6 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "audit:duplicates": "tsx scripts/audit-duplicates.ts",
+    "merge:duplicates": "tsx scripts/merge-duplicate-players.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx database/migrate.ts",
     "db:seed": "tsx database/seed.ts",
@@ -41,11 +45,13 @@
     "@types/pg": "^8.20.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/ui": "^4.1.10",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "^15.5.22",
     "tailwindcss": "^4",
     "tsx": "^4.23.9",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   }
 }
