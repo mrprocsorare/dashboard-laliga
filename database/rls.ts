@@ -22,6 +22,7 @@ const TABLES = [
   "player_events",
   "player_consensus",
   "team_consensus",
+  "match_odds",
 ];
 
 async function main() {
