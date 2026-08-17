@@ -84,10 +84,27 @@ export const players = pgTable(
     name: text("name").notNull(),
     position: positionEnum("position"),
     photoUrl: text("photo_url"),
+    /**
+     * Nombre canónico que el roster cerrado (Wikipedia) asigna a este jugador.
+     * Cuando un nombre scrapeado matchea este canónico (vía roster matcher),
+     * la fila `players` queda ligada al canónico. Si difiere del `name` que
+     * escribió la primera fuente, conservamos ambos: `name` se queda como
+     * estaba y `canonical_name` aporta la forma canónica. La UI muestra
+     * siempre `canonical_name` cuando existe.
+     */
+    canonicalName: text("canonical_name"),
+    /**
+     * `true` cuando esta fila se creó (o se revalidó) desde el roster
+     * canónico de Wikipedia. Es el ancla del matching cerrado: si está
+     * activada, ningún nuevo scrape puede crear OTRO jugador con el mismo
+     * nombre canónico, porque ya forma parte del roster.
+     */
+    isCanonicalRoster: boolean("is_canonical_roster").notNull().default(false),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
     uniqueIndex("players_team_name_idx").on(t.teamId, t.name),
+    uniqueIndex("players_team_canonical_idx").on(t.teamId, t.canonicalName),
     index("players_team_idx").on(t.teamId),
   ],
 );
@@ -236,6 +253,46 @@ export const playerConsensus = pgTable("player_consensus", {
   >(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+/**
+ * Forecasts scrapeados cuyo nombre NO matcheó con suficiente confianza
+ * contra el roster canónico del equipo. Se conservan para revisión manual
+ * (típicamente porque el jugador se ha fichado muy recientemente y aún no
+ * aparece en la plantilla de Wikipedia). Se limpian tras asignarlos a un
+ * `player_id` o descartarlos.
+ */
+export const unmatchedForecasts = pgTable(
+  "unmatched_forecasts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    teamId: uuid("team_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+    sourceId: uuid("source_id")
+      .notNull()
+      .references(() => sources.id, { onDelete: "cascade" }),
+    rawName: text("raw_name").notNull(),
+    normalizedName: text("normalized_name").notNull(),
+    probabilityPct: integer("probability_pct"),
+    isCertain: boolean("is_certain").notNull().default(false),
+    forecastType: forecastTypeEnum("forecast_type").notNull().default("probable"),
+    note: text("note"),
+    fetchedAt: timestamp("fetched_at", { withTimezone: true }).notNull().defaultNow(),
+    /**
+     * Si tras revisión manual se asigna a un jugador del roster, se guarda
+     * el `player_id` aquí. `null` = pendiente de revisión.
+     */
+    resolvedPlayerId: uuid("resolved_player_id").references(() => players.id, {
+      onDelete: "set null",
+    }),
+    resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+  },
+  (t) => [
+    index("unmatched_team_idx").on(t.teamId),
+    index("unmatched_source_idx").on(t.sourceId),
+    index("unmatched_resolved_idx").on(t.resolvedPlayerId),
+  ],
+);
 
 /**
  * Consenso por equipo, materializado por el motor.

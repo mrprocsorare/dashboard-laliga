@@ -15,6 +15,20 @@
       "when": 1786633315369,
       "tag": "0001_gifted_mockingbird",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786955085441,
+      "tag": "0002_left_vin_gonzales",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1786955787424,
+      "tag": "0003_overjoyed_moondragon",
+      "breakpoints": true
     }
   ]
 }

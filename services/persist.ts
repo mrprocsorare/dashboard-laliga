@@ -5,7 +5,8 @@ import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "../database/schema";
 import type { Logger } from "../scrapers/logger";
 import type { ScraperResult, TeamScrapeResult } from "../scrapers/types";
-import { isSamePlayer, isSameLastNameReference, canonicalizeName } from "./player-names";
+import { matchAgainstRoster } from "../lib/match";
+import { loadRosterFromDb, getRosterForTeam } from "../lib/roster-cache";
 
 type Db = NodePgDatabase<typeof schema>;
 
@@ -13,6 +14,8 @@ type Db = NodePgDatabase<typeof schema>;
 interface RosterEntry {
   id: string;
   name: string;
+  canonicalName: string | null;
+  isCanonicalRoster: boolean;
   position: "POR" | "DEF" | "MED" | "DEL" | null;
   photoUrl: string | null;
 }
@@ -26,30 +29,43 @@ interface RosterEntry {
  *  - latest_player_forecast → solo se tocan jugadores que la fuente SÍ reporta;
  *                             el resto queda intacto (último dato válido).
  *  - player_events          → append-only (nunca se borran).
- * Toda la escritura va en UNA transacción por fuente.
+ *
+ * MATCHING CERRADO CONTRA ROSTER (commit actual):
+ *  - Cada nombre entrante se compara SOLO contra el roster canónico del equipo
+ *    (lista cerrada de 20-25 jugadores, fuente Wikipedia vía API de MediaWiki).
+ *  - Si hay match con confianza suficiente → se reusa el `player_id` del roster.
+ *  - Si NO hay match → el forecast se guarda en `unmatched_forecasts` para
+ *    revisión manual. Nunca se crea un jugador "huérfano" silenciosamente.
+ *  - Esto elimina de raíz el bug de duplicados: el roster es la única fuente
+ *    de verdad para los `player_id` de cada equipo.
  */
 export async function persistScraperResult(
   result: ScraperResult,
   dbSourceId: string,
   logger: Logger,
   pool: Pool,
-): Promise<{ teamsProcessed: number; playersProcessed: number }> {
+): Promise<{ teamsProcessed: number; playersProcessed: number; unmatched: number }> {
   const db = drizzle(pool, { schema }) as Db;
   const now = new Date();
 
+  // Cargamos el roster canónico una sola vez por ciclo de persistencia.
+  await loadRosterFromDb(pool);
+
+  let playersProcessed = 0;
+  let unmatched = 0;
+
   await db.transaction(async (tx) => {
     for (const team of result.teams) {
-      await persistTeam(tx, team, dbSourceId, now, logger);
+      const r = await persistTeam(tx, team, dbSourceId, now, logger, pool);
+      playersProcessed += r.processed;
+      unmatched += r.unmatched;
     }
   });
 
-  let playersProcessed = 0;
-  for (const team of result.teams) playersProcessed += team.players.length;
-
   logger.info(
-    `Persistido: ${result.teams.length} equipos, ${playersProcessed} predicciones de jugador.`,
+    `Persistido: ${result.teams.length} equipos, ${playersProcessed} predicciones de jugador, ${unmatched} sin match de roster.`,
   );
-  return { teamsProcessed: result.teams.length, playersProcessed };
+  return { teamsProcessed: result.teams.length, playersProcessed, unmatched };
 }
 
 async function persistTeam(
@@ -58,35 +74,40 @@ async function persistTeam(
   sourceId: string,
   now: Date,
   logger: Logger,
-): Promise<void> {
+  pool: Pool,
+): Promise<{ processed: number; unmatched: number }> {
   const teamRow = await tx
     .select({ id: schema.teams.id })
     .from(schema.teams)
     .where(eq(schema.teams.slug, team.teamSlug))
     .limit(1);
   if (!teamRow.length) {
-    logger.warn(
-      `Equipo desconocido en catálogo: "${team.teamSlug}". No se persiste.`,
-    );
-    return;
+    logger.warn(`Equipo desconocido en catálogo: "${team.teamSlug}". No se persiste.`);
+    return { processed: 0, unmatched: 0 };
   }
   const teamId = teamRow[0].id;
 
   await upsertTeamInfo(tx, team, teamId, sourceId, now);
   await upsertSetPieces(tx, team, teamId, sourceId, now);
 
-  // Índice en memoria de los jugadores del equipo: permite unificar nombres
-  // entre fuentes sin repetir consultas por cada jugador.
   const roster = await loadRoster(tx, teamId);
+  const wikiRoster = await getRosterForTeam(pool, team.teamSlug);
+
+  let processed = 0;
+  let unmatched = 0;
 
   for (const forecast of team.players) {
-    const playerId = await resolvePlayer(tx, teamId, roster, forecast);
-    if (!playerId) continue;
+    const result = await resolvePlayer(tx, teamId, roster, wikiRoster, forecast, sourceId, now);
+    if (result === null) {
+      unmatched += 1;
+      continue;
+    }
+    processed += 1;
 
     await tx
       .insert(schema.latestPlayerForecast)
       .values({
-        playerId,
+        playerId: result,
         sourceId,
         probabilityPct: clampProbability(forecast.probabilityPct),
         isCertain: forecast.isCertain ?? false,
@@ -107,13 +128,19 @@ async function persistTeam(
   }
 
   for (const event of team.events) {
-    const playerId = await resolvePlayer(tx, teamId, roster, {
-      playerName: event.playerName,
-    });
-    if (!playerId) continue;
+    const result = await resolvePlayer(
+      tx,
+      teamId,
+      roster,
+      wikiRoster,
+      { playerName: event.playerName },
+      sourceId,
+      now,
+    );
+    if (result === null) continue;
 
     await tx.insert(schema.playerEvents).values({
-      playerId,
+      playerId: result,
       sourceId,
       eventType: event.eventType,
       severity: event.severity ?? "none",
@@ -123,6 +150,8 @@ async function persistTeam(
       recordedAt: now,
     });
   }
+
+  return { processed, unmatched };
 }
 
 /** Merge campo a campo: lo vacío conserva el valor anterior almacenado. */
@@ -199,137 +228,102 @@ async function upsertSetPieces(
     });
 }
 
-/** Carga los jugadores actuales del equipo para unificar nombres en memoria. */
+/**
+ * Carga los jugadores del roster canónico del equipo (los marcados con
+ * `is_canonical_roster = true`). Estos son los únicos que pueden recibir
+ * forecasts: el resto del roster queda inactivo.
+ */
 async function loadRoster(tx: Db, teamId: string): Promise<RosterEntry[]> {
   const rows = await tx
     .select({
       id: schema.players.id,
       name: schema.players.name,
+      canonicalName: schema.players.canonicalName,
+      isCanonicalRoster: schema.players.isCanonicalRoster,
       position: schema.players.position,
       photoUrl: schema.players.photoUrl,
     })
     .from(schema.players)
-    .where(eq(schema.players.teamId, teamId));
+    .where(and(eq(schema.players.teamId, teamId), eq(schema.players.isCanonicalRoster, true)));
 
-  const all = rows.map((r) => ({
+  return rows.map((r) => ({
     id: r.id,
     name: r.name,
+    canonicalName: r.canonicalName,
+    isCanonicalRoster: r.isCanonicalRoster,
     position: r.position,
     photoUrl: r.photoUrl,
   }));
-
-  // Deduplicamos el roster en memoria: si un jugador aparece SOLO por su
-  // apellido ("Ede") y existe OTRO con nombre completo que termina en ese
-  // mismo apellido y NO hay otros multi-token con ese apellido (hermanos),
-  // descartamos la versión corta. Así evitamos que un forecast entrante por
-  // el apellido solo cree un duplicado cuando ya está el nombre completo.
-  const lastToken = (s: string) => {
-    const norm = s
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9\s]/g, "");
-    const tokens = norm.split(/\s+/).filter(Boolean);
-    return tokens[tokens.length - 1] ?? "";
-  };
-  const skip = new Set<string>();
-  for (const a of all) {
-    if (a.name.split(/\s+/).filter(Boolean).length !== 1) continue;
-    const last = lastToken(a.name);
-    if (!last) continue;
-    const multiWithLast = all.filter(
-      (b) =>
-        b.id !== a.id &&
-        b.name.split(/\s+/).filter(Boolean).length >= 2 &&
-        lastToken(b.name) === last,
-    );
-    if (multiWithLast.length === 1) skip.add(a.id);
-  }
-  return all.filter((p) => !skip.has(p.id));
 }
 
 /**
- * Resuelve el jugador al que corresponde una predicción, unificando nombres
- * entre fuentes. Orden: coincidencia exacta → match conservador por tokens →
- * inserción nueva. Devuelve el player id o null.
+ * Resuelve el jugador al que corresponde una predicción, usando el roster
+ * canónico cerrado del equipo.
+ *
+ *  - Si el nombre matchea con suficiente confianza un jugador del roster
+ *    cerrado (Wikipedia), se reusa ESE `player_id`. Nunca crea uno nuevo.
+ *  - Si NO matchea, devuelve `null` → el caller persiste el forecast en
+ *    `unmatched_forecasts` para revisión manual.
  */
 async function resolvePlayer(
   tx: Db,
   teamId: string,
   roster: RosterEntry[],
+  wikiRoster: { name: string; pos: "POR" | "DEF" | "MED" | "DEL" }[],
   forecast: { playerName: string; position?: string | null; photoUrl?: string },
+  sourceId: string,
+  now: Date,
 ): Promise<string | null> {
   const raw = forecast.playerName.trim();
   if (!raw) return null;
 
-  // 0) Canonización por aliases curados: si el scraper publica "Lookman",
-  //    "Aubameyang", "Vinicius", etc., los tratamos YA como su nombre
-  //    completo canónico. Esto evita que un solo token cree un jugador nuevo
-  //    cuando ya existe el nombre completo en la BD.
-  const incoming = canonicalizeName(raw);
-
-  // 1) Coincidencia exacta.
-  let entry = roster.find((p) => p.name === incoming);
-
-  // 2) Match conservador por tokens (misma persona, distinta grafía).
-  if (!entry) {
-    entry = roster.find((p) => isSamePlayer(p.name, incoming));
+  // 1) Matching contra el roster cerrado (Wikipedia).
+  // El roster en BD puede tener Nombres Canónicos vacíos si el sync no se ha
+  // hecho todavía. Caemos al roster de Wikipedia en memoria como fallback.
+  const candidatesFromDb = roster
+    .filter((r) => r.canonicalName)
+    .map((r) => ({ name: r.canonicalName as string, pos: r.position ?? "MED" }));
+  const combined = candidatesFromDb.length > 0 ? candidatesFromDb : wikiRoster;
+  const match = matchAgainstRoster(raw, combined);
+  if (match) {
+    const target = roster.find((r) => (r.canonicalName ?? r.name) === combined[match.index].name);
+    if (target) {
+      await enrichPlayer(tx, target, forecast);
+      return target.id;
+    }
+    // Si el match apunta a un jugador que solo está en wikiRoster pero aún no
+    // se ha sincronizado con la BD (caso muy raro entre sync y scraper),
+    // caemos a la creación. En la práctica esto no debería pasar si el sync
+    // se ejecuta antes del scrape.
   }
 
-  // 3) Referencia por apellido: el scraper usa solo el apellido ("Balde") y
-  //    la única persona del equipo con ese apellido es la que buscamos.
-  if (!entry) {
-    const rosterNames = roster.map((r) => r.name);
-    entry = roster.find((p) =>
-      isSameLastNameReference(incoming, p.name, rosterNames),
-    );
-  }
-
-  if (entry) {
-    await enrichPlayer(tx, entry, forecast);
-    return entry.id;
-  }
-
-  // 4) Jugador nuevo. `onConflictDoNothing` lo hace idempotente ante carreras
-  //    (p. ej. dos ciclos de scraping concurrentes contra la misma BD): si otro
-  //    proceso ya insertó este jugador, no fallamos; lo recuperamos con un SELECT.
-  const inserted = await tx
-    .insert(schema.players)
-    .values({
-      teamId,
-      name: incoming,
-      position: normalizePosition(forecast.position),
-      photoUrl: forecast.photoUrl ?? null,
-    })
-    .onConflictDoNothing({ target: [schema.players.teamId, schema.players.name] })
-    .returning({ id: schema.players.id });
-
-  let id = inserted[0]?.id ?? null;
-  if (!id) {
-    const existing = await tx
-      .select({ id: schema.players.id })
-      .from(schema.players)
-      .where(and(eq(schema.players.teamId, teamId), eq(schema.players.name, incoming)))
-      .limit(1);
-    id = existing[0]?.id ?? null;
-  }
-
-  if (id) {
-    roster.push({
-      id,
-      name: incoming,
-      position: normalizePosition(forecast.position),
-      photoUrl: forecast.photoUrl ?? null,
-    });
-  }
-  return id;
+  // 2) Sin match en el roster cerrado → guardar como unmatched para revisión.
+  // El parámetro `forecast` es una unión de PlayerForecast | PlayerEvent;
+  // aquí tratamos de forma tolerante cualquier campo opcional.
+  const f = forecast as {
+    probabilityPct?: number | null;
+    isCertain?: boolean;
+    forecastType?: "probable" | "confirmed";
+    note?: string | null;
+  };
+  await tx.insert(schema.unmatchedForecasts).values({
+    teamId,
+    sourceId,
+    rawName: raw,
+    normalizedName: raw,
+    probabilityPct:
+      typeof f.probabilityPct === "number" ? clampProbability(f.probabilityPct) : null,
+    isCertain: f.isCertain ?? false,
+    forecastType: f.forecastType ?? "probable",
+    note: f.note ?? null,
+    fetchedAt: now,
+  });
+  return null;
 }
 
 /**
  * Actualiza el jugador ya existente con datos no vacíos de la fuente (posición,
- * foto). No renombramos el jugador: la identidad ya quedó resuelta por el
- * match fuzzy y el nombre canónico lo aporta la primera fuente que lo creó.
- * Así evitamos cualquier colisión con la restricción única (team_id, name).
+ * foto). Nunca renombra.
  */
 async function enrichPlayer(
   tx: Db,
