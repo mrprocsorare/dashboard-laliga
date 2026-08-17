@@ -5,7 +5,7 @@ import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "../database/schema";
 import type { Logger } from "../scrapers/logger";
 import type { ScraperResult, TeamScrapeResult } from "../scrapers/types";
-import { isSamePlayer, isSameLastNameReference } from "./player-names";
+import { isSamePlayer, isSameLastNameReference, canonicalizeName } from "./player-names";
 
 type Db = NodePgDatabase<typeof schema>;
 
@@ -259,8 +259,14 @@ async function resolvePlayer(
   roster: RosterEntry[],
   forecast: { playerName: string; position?: string | null; photoUrl?: string },
 ): Promise<string | null> {
-  const incoming = forecast.playerName.trim();
-  if (!incoming) return null;
+  const raw = forecast.playerName.trim();
+  if (!raw) return null;
+
+  // 0) Canonización por aliases curados: si el scraper publica "Lookman",
+  //    "Aubameyang", "Vinicius", etc., los tratamos YA como su nombre
+  //    completo canónico. Esto evita que un solo token cree un jugador nuevo
+  //    cuando ya existe el nombre completo en la BD.
+  const incoming = canonicalizeName(raw);
 
   // 1) Coincidencia exacta.
   let entry = roster.find((p) => p.name === incoming);
@@ -284,7 +290,7 @@ async function resolvePlayer(
     return entry.id;
   }
 
-  // 3) Jugador nuevo. `onConflictDoNothing` lo hace idempotente ante carreras
+  // 4) Jugador nuevo. `onConflictDoNothing` lo hace idempotente ante carreras
   //    (p. ej. dos ciclos de scraping concurrentes contra la misma BD): si otro
   //    proceso ya insertó este jugador, no fallamos; lo recuperamos con un SELECT.
   const inserted = await tx

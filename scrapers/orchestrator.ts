@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import * as schema from "../database/schema";
 import { persistScraperResult } from "../services/persist";
 import { rebuildConsensus } from "../services/consensus";
+import { reconcilePlayers } from "../services/reconcile";
 import { createLogger } from "./logger";
 import type { Scraper, ScraperContext } from "./types";
 
@@ -118,6 +119,20 @@ export async function orchestrate(
   // innecesario cuando todo falló). Un error de consenso nunca hace fallar el
   // ciclo: se loguea y se conserva el consenso anterior.
   if (!opts.skipConsensus && succeededSources > 0) {
+    // Reconciliación de duplicados: detectamos y fusionamos jugadores que
+    // representan a la misma persona física (p. ej. "Lookman" vs
+    // "Ademola Lookman"). Se ejecuta antes del consenso para que el rebuild
+    // opere ya sobre el roster limpio. Es idempotente y barato; un fallo aquí
+    // NO bloquea el consenso (se conserva el estado anterior).
+    try {
+      await reconcilePlayers(pool, createLogger("reconcile"));
+    } catch (err) {
+      log.errorWithCause(
+        "La reconciliación de duplicados falló. Se conserva el roster anterior.",
+        err,
+      );
+    }
+
     try {
       await rebuildConsensus(pool, createLogger("consensus"));
     } catch (err) {

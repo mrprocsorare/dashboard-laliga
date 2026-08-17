@@ -24,6 +24,67 @@
  */
 
 /**
+ * Aliases curados de jugador completo → nombre canónico. Cubre los casos en los
+ * que una fuente publica un nombre muy abreviado (solo apellido, solo primer
+ * nombre, iniciales con guión…) que NO se pueden resolver con las heurísticas
+ * genéricas de `isSamePlayer` / `isSameLastNameReference` sin riesgo de falsos
+ * positivos (p. ej. "Lookman" → "Ademola Lookman" funciona porque el equipo
+ * puede tener varios Williams/García, pero no por apellido único).
+ *
+ * Las claves se almacenan YA NORMALIZADAS (`normalizeName`). Cualquier nuevo
+ * caso de duplicación se añade aquí. Estructura pensada para crecer sin
+ * tocar la lógica de matching.
+ */
+const PLAYER_ALIASES: Record<string, string> = {
+  // Apellidos únicos / jugadores muy conocidos referidos por un solo token.
+  // OJO: solo añadimos entradas INEQUÍVOCAS. No incluimos nombres propios
+  // cortos que pueden ser ambiguos (p. ej. "Williams", "Nico", "Iñaki") ni
+  // apellidos compartidos por varios jugadores del mismo equipo.
+  lookman: "Ademola Lookman",
+  aubameyang: "Pierre-Emerick Aubameyang",
+  // mbappe cubre tanto "Mbappé" como "Mbappe" porque normalizeName quita tildes.
+  mbappe: "Kylian Mbappé",
+  vinicius: "Vinícius Júnior",
+  // "Vinícius" con tilde tras normalizar produce "vinicius"; queda cubierto arriba.
+  vini: "Vinícius Júnior",
+  bellingham: "Jude Bellingham",
+  valverde: "Federico Valverde",
+  gavi: "Pablo Páez",
+  pedri: "Pedro González",
+  lamine: "Lamine Yamal",
+  yamal: "Lamine Yamal",
+  // Casos frecuentes abreviados con iniciales y/o guión.
+  "a lookman": "Ademola Lookman",
+  "p aubameyang": "Pierre-Emerick Aubameyang",
+  "p e aubameyang": "Pierre-Emerick Aubameyang",
+  "p-e aubameyang": "Pierre-Emerick Aubameyang",
+  "k mbappe": "Kylian Mbappé",
+  "v jr": "Vinícius Júnior",
+  "vini jr": "Vinícius Júnior",
+  "l yam": "Lamine Yamal",
+  "l yamal": "Lamine Yamal",
+  // Nombres con guión partido: muchas fuentes parten "Pierre-Emerick" en una
+  // sola palabra y otras lo emiten con espacio. Cualquier forma debe resolver
+  // al canónico con espacio (que es el que usan los scrapers mayoritarios).
+  "pierre emerick aubameyang": "Pierre-Emerick Aubameyang",
+  "pierre-emerick aubameyang": "Pierre-Emerick Aubameyang",
+  "pierre emerick": "Pierre-Emerick Aubameyang",
+  "pierre-emerick": "Pierre-Emerick Aubameyang",
+};
+
+/**
+ * Devuelve la forma canónica del nombre si está en `PLAYER_ALIASES`, o el
+ * propio nombre (recortado) si no. Es seguro llamar siempre: cuando no hay
+ * match, devuelve la entrada intacta.
+ */
+export function canonicalizeName(raw: string): string {
+  const trimmed = raw.trim();
+  if (!trimmed) return trimmed;
+  const key = normalizeName(trimmed);
+  return PLAYER_ALIASES[key] ?? trimmed;
+}
+
+/**
  * Mapa curado de variantes del primer nombre → forma canónica. Solo incluimos
  * pares bien documentados en LaLiga; cualquier nuevo caso se añade aquí. Las
  * claves se almacenan ya normalizadas (minúsculas, sin acentos).
@@ -206,4 +267,35 @@ export function moreCompleteName(a: string, b: string): string {
   const tb = significantTokens(b).length;
   if (ta !== tb) return ta > tb ? a : b;
   return normalizeName(a).length >= normalizeName(b).length ? a : b;
+}
+
+/**
+ * Conjunto de cadenas que `canonicalizeName` resuelve al MISMO canónico que
+ * `canonical`. Útil para detectar todos los duplicados de un jugador en un
+ * roster (incluyendo el propio canónico y todas sus variantes conocidas).
+ */
+export function aliasVariantsFor(canonical: string): Set<string> {
+  const target = normalizeName(canonical);
+  const variants = new Set<string>([target]);
+  for (const [alias, canon] of Object.entries(PLAYER_ALIASES)) {
+    if (normalizeName(canon) === target) variants.add(alias);
+  }
+  return variants;
+}
+
+/**
+ * ¿Dos nombres son variantes del mismo canónico en `PLAYER_ALIASES`? Es la
+ * versión "estricta" del matching: solo devuelve true si AMBOS resuelven al
+ * mismo canónico. Útil para el reconciliador, donde NO queremos heurísticas
+ * difusas (solo fusiones seguras y auditables).
+ */
+export function isCanonicalAlias(a: string, b: string): boolean {
+  if (!a || !b) return false;
+  const na = normalizeName(a);
+  const nb = normalizeName(b);
+  if (!na || !nb) return false;
+  if (na === nb) return true;
+  const canonA = PLAYER_ALIASES[na];
+  const canonB = PLAYER_ALIASES[nb];
+  return Boolean(canonA && canonB && normalizeName(canonA) === normalizeName(canonB));
 }
