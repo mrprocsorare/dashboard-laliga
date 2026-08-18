@@ -65,7 +65,15 @@ const PLAYER_DATA_QUERY = `
 `;
 
 interface SearchCardsResponse {
-  hits: Array<{ card: { anyPlayer: { displayName: string; slug?: string } | null } | null }>;
+  hits: Array<{
+    card: {
+      anyPlayer: {
+        displayName: string;
+        slug?: string;
+        activeClub?: { name: string; slug: string } | null;
+      } | null;
+    } | null;
+  }>;
 }
 
 const PLAYER_SEARCH_QUERY = `
@@ -75,6 +83,7 @@ const PLAYER_SEARCH_QUERY = `
         card {
           anyPlayer {
             displayName
+            activeClub { name slug }
             ... on Player { slug }
           }
         }
@@ -204,6 +213,8 @@ export async function getSorareData(slugs: string[]): Promise<Map<string, Sorare
 export interface SorareSearchResult {
   slug: string;
   displayName: string;
+  activeClubName: string | null;
+  activeClubSlug: string | null;
 }
 
 function searchResultsFromHits(hits: SearchCardsResponse["hits"]): SorareSearchResult[] {
@@ -211,7 +222,12 @@ function searchResultsFromHits(hits: SearchCardsResponse["hits"]): SorareSearchR
   for (const hit of hits) {
     const player = hit.card?.anyPlayer;
     if (player?.slug && player.displayName) {
-      results.set(player.slug, { slug: player.slug, displayName: player.displayName });
+      results.set(player.slug, {
+        slug: player.slug,
+        displayName: player.displayName,
+        activeClubName: player.activeClub?.name ?? null,
+        activeClubSlug: player.activeClub?.slug ?? null,
+      });
     }
   }
   return [...results.values()];

@@ -32,6 +32,18 @@ El comando solo guarda coincidencias exactas con `--apply`. Para corregir un cas
 npm run map:sorare -- --manual-only --set "Nombre del jugador=slug-de-sorare" --apply
 ```
 
+Para generar sugerencias inteligentes y un archivo editable en Excel:
+
+```bash
+npm run map:sorare -- --assist --apply
+```
+
+Revisa `sorare-mapping-review.csv`, completa la columna `selected_slug` en los casos pendientes y aplica esas decisiones con:
+
+```bash
+npm run map:sorare -- --apply-review sorare-mapping-review.csv
+```
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
