@@ -2,7 +2,7 @@ import "dotenv/config";
 import { eq } from "drizzle-orm";
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { searchSorarePlayers } from "../lib/sorare";
+import { searchSorarePlayersBatch } from "../lib/sorare";
 import { players, teams } from "../database/schema";
 
 function normalize(value: string): string {
@@ -69,19 +69,24 @@ async function main() {
 
   const pending = rows.filter((row) => !row.sorareSlug);
   console.log(`Buscando ${pending.length} jugadores sin sorare_slug...`);
-  for (let index = 0; index < pending.length; index++) {
-    const player = pending[index];
-    const candidates = await searchSorarePlayers(player.name);
-    const exact = candidates.filter((candidate) => normalize(candidate.displayName) === normalize(player.name));
-    if (exact.length === 1) {
-      console.log(`[match] ${player.name} (${player.teamName}) -> ${exact[0].slug}`);
-      if (apply) await db.update(players).set({ sorareSlug: exact[0].slug }).where(eq(players.id, player.id));
-    } else if (candidates.length) {
-      console.log(`[review] ${player.name} (${player.teamName}): ${candidates.map((c) => `${c.displayName}=${c.slug}`).join(" | ")}`);
-    } else {
-      console.log(`[none] ${player.name} (${player.teamName})`);
+  const searchBatchSize = 20;
+  for (let index = 0; index < pending.length; index += searchBatchSize) {
+    const batch = pending.slice(index, index + searchBatchSize);
+    const candidateLists = await searchSorarePlayersBatch(batch.map((player) => player.name));
+    for (let batchIndex = 0; batchIndex < batch.length; batchIndex++) {
+      const player = batch[batchIndex];
+      const candidates = candidateLists[batchIndex] ?? [];
+      const exact = candidates.filter((candidate) => normalize(candidate.displayName) === normalize(player.name));
+      if (exact.length === 1) {
+        console.log(`[match] ${player.name} (${player.teamName}) -> ${exact[0].slug}`);
+        if (apply) await db.update(players).set({ sorareSlug: exact[0].slug }).where(eq(players.id, player.id));
+      } else if (candidates.length) {
+        console.log(`[review] ${player.name} (${player.teamName}): ${candidates.map((c) => `${c.displayName}=${c.slug}`).join(" | ")}`);
+      } else {
+        console.log(`[none] ${player.name} (${player.teamName})`);
+      }
     }
-    if (index < pending.length - 1) await sleep(3_100);
+    if (index + batch.length < pending.length) await sleep(61_000);
   }
 
   console.log(apply ? "Mapeo terminado." : "Dry-run terminado: usa --apply para guardar coincidencias exactas.");

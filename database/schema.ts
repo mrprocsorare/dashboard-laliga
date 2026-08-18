@@ -106,7 +106,7 @@ export const players = pgTable(
   (t) => [
     uniqueIndex("players_team_name_idx").on(t.teamId, t.name),
     uniqueIndex("players_team_canonical_idx").on(t.teamId, t.canonicalName),
-    uniqueIndex("players_sorare_slug_idx").on(t.sorareSlug),
+    index("players_sorare_slug_idx").on(t.sorareSlug),
     index("players_team_idx").on(t.teamId),
   ],
 );

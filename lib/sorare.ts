@@ -64,6 +64,10 @@ const PLAYER_DATA_QUERY = `
   }
 `;
 
+interface SearchCardsResponse {
+  hits: Array<{ card: { anyPlayer: { displayName: string; slug?: string } | null } | null }>;
+}
+
 const PLAYER_SEARCH_QUERY = `
   query SearchSorarePlayers($query: String!) {
     searchCards(query: $query, page: 1, pageSize: 10) {
@@ -202,19 +206,24 @@ export interface SorareSearchResult {
   displayName: string;
 }
 
-/** Busca candidatos por nombre para la herramienta de mapeo administrativo. */
-export async function searchSorarePlayers(name: string): Promise<SorareSearchResult[]> {
-  const data = await sorareRequest<{
-    searchCards: {
-      hits: Array<{ card: { anyPlayer: { displayName: string; slug?: string } | null } | null }>;
-    };
-  }>(PLAYER_SEARCH_QUERY, { query: name });
+function searchResultsFromHits(hits: SearchCardsResponse["hits"]): SorareSearchResult[] {
   const results = new Map<string, SorareSearchResult>();
-  for (const hit of data?.searchCards.hits ?? []) {
+  for (const hit of hits) {
     const player = hit.card?.anyPlayer;
     if (player?.slug && player.displayName) {
       results.set(player.slug, { slug: player.slug, displayName: player.displayName });
     }
   }
   return [...results.values()];
+}
+
+/** Busca varios nombres en paralelo; el script limita cada grupo a 20 peticiones/minuto. */
+export async function searchSorarePlayersBatch(names: string[]): Promise<SorareSearchResult[][]> {
+  return Promise.all(names.map((name) => searchSorarePlayers(name)));
+}
+
+/** Busca candidatos por nombre para la herramienta de mapeo administrativo. */
+export async function searchSorarePlayers(name: string): Promise<SorareSearchResult[]> {
+  const data = await sorareRequest<{ searchCards: SearchCardsResponse }>(PLAYER_SEARCH_QUERY, { query: name });
+  return searchResultsFromHits(data?.searchCards?.hits ?? []);
 }
