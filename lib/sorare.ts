@@ -70,6 +70,7 @@ interface SearchCardsResponse {
       anyPlayer: {
         displayName: string;
         slug?: string;
+        birthDay?: string | null;
         activeClub?: { name: string; slug: string } | null;
       } | null;
     } | null;
@@ -83,6 +84,7 @@ const PLAYER_SEARCH_QUERY = `
         card {
           anyPlayer {
             displayName
+            birthDay
             activeClub { name slug }
             ... on Player { slug }
           }
@@ -213,6 +215,7 @@ export async function getSorareData(slugs: string[]): Promise<Map<string, Sorare
 export interface SorareSearchResult {
   slug: string;
   displayName: string;
+  birthDay: string | null;
   activeClubName: string | null;
   activeClubSlug: string | null;
 }
@@ -225,6 +228,7 @@ function searchResultsFromHits(hits: SearchCardsResponse["hits"]): SorareSearchR
       results.set(player.slug, {
         slug: player.slug,
         displayName: player.displayName,
+        birthDay: player.birthDay ?? null,
         activeClubName: player.activeClub?.name ?? null,
         activeClubSlug: player.activeClub?.slug ?? null,
       });

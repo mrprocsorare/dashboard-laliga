@@ -84,6 +84,7 @@ function teamMatches(localTeam: string, activeClubName: string | null, activeClu
 interface RankedCandidate {
   slug: string;
   displayName: string;
+  birthDay: string | null;
   activeClubName: string | null;
   activeClubSlug: string | null;
   nameScore: number;
@@ -98,6 +99,7 @@ function rankCandidates(
     displayName: string;
     activeClubName: string | null;
     activeClubSlug: string | null;
+    birthDay: string | null;
   }>,
 ): RankedCandidate[] {
   const localTokens = tokens(player.name);
@@ -134,11 +136,12 @@ function rankCandidates(
 
 function isSafeSuggestion(candidate: RankedCandidate | undefined, next: RankedCandidate | undefined): boolean {
   if (!candidate) return false;
+  if (!candidate.teamMatch) return false;
   if (candidate.nameScore === 1 && !next) return true;
   const margin = candidate.score - (next?.score ?? 0);
   return (
-    (candidate.nameScore >= 0.82 && (candidate.teamMatch || margin >= 0.12) && margin >= 0.08) ||
-    (candidate.nameScore >= 0.68 && candidate.teamMatch && margin >= 0.08)
+    (candidate.nameScore >= 0.82 && margin >= 0.08) ||
+    (candidate.nameScore >= 0.68 && margin >= 0.08)
   );
 }
 
@@ -313,7 +316,7 @@ async function main() {
           team_match: suggestion?.teamMatch ? "yes" : "no",
           candidates: ranked
             .slice(0, 8)
-            .map((candidate) => `${candidate.slug} :: ${candidate.displayName} :: ${candidate.activeClubName ?? ""} :: ${candidate.score.toFixed(2)}`)
+            .map((candidate) => `${candidate.slug} :: ${candidate.displayName} :: ${candidate.birthDay ?? ""} :: ${candidate.activeClubName ?? ""} :: ${candidate.score.toFixed(2)}`)
             .join(" | "),
           selected_slug: selectedSlug,
           notes: safe ? "auto-applied" : suggestion ? "review suggested_slug" : "no candidates",
@@ -335,7 +338,13 @@ async function main() {
     for (let batchIndex = 0; batchIndex < batch.length; batchIndex++) {
       const player = batch[batchIndex];
       const candidates = candidateLists[batchIndex] ?? [];
-      const exact = candidates.filter((candidate) => normalize(candidate.displayName) === normalize(player.name));
+      const exact = candidates.filter(
+        (candidate) => normalize(candidate.displayName) === normalize(player.name) && teamMatches(
+          player.teamName,
+          candidate.activeClubName,
+          candidate.activeClubSlug,
+        ),
+      );
       if (exact.length === 1) {
         console.log(`[match] ${player.name} (${player.teamName}) -> ${exact[0].slug}`);
         if (apply) await db.update(players).set({ sorareSlug: exact[0].slug }).where(eq(players.id, player.id));

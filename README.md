@@ -44,6 +44,12 @@ Revisa `sorare-mapping-review.csv`, completa la columna `selected_slug` en los c
 npm run map:sorare -- --apply-review sorare-mapping-review.csv
 ```
 
+Para auditar un CSV revisado sin escribir en la base de datos:
+
+```bash
+npm run audit:sorare-mapping -- --input "sorare-mapping-review OK.csv"
+```
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

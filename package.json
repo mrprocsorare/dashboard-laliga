@@ -24,7 +24,8 @@
     "scrape": "tsx scrapers/cli.ts",
     "consensus": "tsx scrapers/consensus-cli.ts",
     "odds": "tsx scripts/odds-cli.ts",
-    "map:sorare": "tsx scripts/map-sorare.ts"
+    "map:sorare": "tsx scripts/map-sorare.ts",
+    "audit:sorare-mapping": "tsx scripts/audit-sorare-mapping.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
