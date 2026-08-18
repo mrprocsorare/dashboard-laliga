@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ProbableLineup } from "@/components/dashboard/probable-lineup";
+import { Pitch } from "@/components/dashboard/pitch";
 import { TeamCrest } from "@/components/dashboard/team-crest";
 import type { XIPlayer } from "@/lib/data";
 
@@ -27,7 +27,13 @@ export function MatchXI({
           </Link>
         ) : null}
       </div>
-      <ProbableLineup players={players} />
+      {players.length ? (
+        <div className="mx-auto w-full max-w-[22rem]">
+          <Pitch xi={players} />
+        </div>
+      ) : (
+        <p className="py-3 text-xs text-muted-foreground">Sin XI disponible.</p>
+      )}
     </div>
   );
 }
