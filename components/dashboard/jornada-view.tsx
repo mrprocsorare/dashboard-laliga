@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { MatchPrediction } from "@/components/dashboard/match-prediction";
 import { MatchXI } from "@/components/dashboard/match-xi";
+import { TeamCrest } from "@/components/dashboard/team-crest";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { JornadaMatch } from "@/lib/data";
 
@@ -63,7 +64,13 @@ export function JornadaView({ matches }: { matches: JornadaMatch[] }) {
                       >
                         <span className="block text-[11px] text-muted-foreground">{shortDate(match.odds.commence_time)}</span>
                         <span className="mt-1 block truncate text-xs font-semibold">
-                          {match.odds.home_team_name} <span className="font-normal text-muted-foreground">vs</span> {match.odds.away_team_name}
+                          <span className="inline-flex max-w-full items-center gap-1.5 align-middle">
+                            <TeamCrest slug={match.homeTeam?.slug ?? null} name={match.odds.home_team_name} logoUrl={match.homeTeam?.logo_url} className="size-5 rounded p-0.5" />
+                            <span className="truncate">{match.odds.home_team_name}</span>
+                            <span className="font-normal text-muted-foreground">vs</span>
+                            <TeamCrest slug={match.awayTeam?.slug ?? null} name={match.odds.away_team_name} logoUrl={match.awayTeam?.logo_url} className="size-5 rounded p-0.5" />
+                            <span className="truncate">{match.odds.away_team_name}</span>
+                          </span>
                         </span>
                       </button>
                     );
@@ -118,11 +125,13 @@ function MatchCard({ match }: { match: JornadaMatch }) {
           <MatchXI
             teamName={match.homeTeam?.name ?? match.odds.home_team_name}
             teamSlug={match.homeTeam?.slug ?? null}
+            logoUrl={match.homeTeam?.logo_url}
             players={match.homeXI}
           />
           <MatchXI
             teamName={match.awayTeam?.name ?? match.odds.away_team_name}
             teamSlug={match.awayTeam?.slug ?? null}
+            logoUrl={match.awayTeam?.logo_url}
             players={match.awayXI}
           />
         </div>

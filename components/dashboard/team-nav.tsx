@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { TeamCrest } from "@/components/dashboard/team-crest";
 import type { TeamNavInfo } from "@/lib/data";
 
 /** Navegador entre equipos: |‹ anterior| [ select ] |siguiente ›| */
@@ -25,6 +26,7 @@ export function TeamNav({
           className="flex shrink-0 items-center gap-1 rounded-lg border px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
           <ChevronLeft />
+          <TeamCrest slug={prev.slug} name={prev.name} logoUrl={prev.logo_url} className="size-5 rounded p-0" />
           <span className="hidden max-w-[72px] truncate sm:inline">
             {prev.short_name}
           </span>
@@ -56,6 +58,7 @@ export function TeamNav({
           <span className="hidden max-w-[72px] truncate sm:inline">
             {next.short_name}
           </span>
+          <TeamCrest slug={next.slug} name={next.name} logoUrl={next.logo_url} className="size-5 rounded p-0" />
           <ChevronRight />
         </Link>
       ) : (

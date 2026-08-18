@@ -427,6 +427,7 @@ export interface TeamNavInfo {
   slug: string;
   name: string;
   short_name: string;
+  logo_url: string | null;
 }
 
 /** Todos los equipos ordenados por nombre (para el navegador entre equipos). */
@@ -434,7 +435,7 @@ export async function getAllTeamsForNav(): Promise<TeamNavInfo[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("teams")
-    .select("slug, name, short_name")
+    .select("slug, name, short_name, logo_url")
     .order("name");
   return (data ?? []) as unknown as TeamNavInfo[];
 }

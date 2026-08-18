@@ -10,6 +10,7 @@ import {
 import { PlayerAvatar } from "@/components/dashboard/player-avatar";
 import { Pitch } from "@/components/dashboard/pitch";
 import { ProbableLineup } from "@/components/dashboard/probable-lineup";
+import { TeamCrest } from "@/components/dashboard/team-crest";
 import { TeamNav } from "@/components/dashboard/team-nav";
 import {
   Card,
@@ -79,7 +80,10 @@ export default async function TeamPage({
         <TeamNav teams={allTeams} currentSlug={slug} />
 
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-2xl font-bold tracking-tight">{team.name}</h1>
+          <div className="flex items-center gap-2">
+            <TeamCrest slug={team.slug} name={team.name} logoUrl={team.logo_url} />
+            <h1 className="text-2xl font-bold tracking-tight">{team.name}</h1>
+          </div>
           {formation ? (
             <span className="rounded-md border bg-muted px-2 py-0.5 text-sm font-medium tabular-nums">
               {formation}
