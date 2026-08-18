@@ -24,8 +24,31 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
+      - name: Comprobar configuración
+        id: config
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          if [ -z "$ODDS_API_KEY" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Cuotas omitidas: falta el secreto ODDS_API_KEY. Las alineaciones funcionan en otro workflow." 
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Actualizar cuotas The Odds API
+        if: steps.config.outputs.configured == 'true'
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: npm run odds
+
+      - name: Resumen cuando no hay key
+        if: steps.config.outputs.configured != 'true'
+        run: |
+          {
+            echo "## Cuotas omitidas"
+            echo ""
+            echo "Falta el secreto \\`ODDS_API_KEY\\`. El scraping de alineaciones está separado y no se ve afectado."
+            echo "Añade el secreto en Settings > Secrets and variables > Actions para activar las cuotas."
+          } >> "$GITHUB_STEP_SUMMARY"

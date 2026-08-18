@@ -9,6 +9,16 @@ import { persistLaLigaOdds } from "../lib/odds";
 async function main() {
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) throw new Error("Falta DATABASE_URL");
+
+  // Las cuotas son opcionales. Una configuración ausente no debe convertir
+  // el job independiente en una alerta repetitiva ni afectar a las alineaciones.
+  if (!process.env.ODDS_API_KEY?.trim()) {
+    console.warn(
+      "[odds] OMITIDO: falta el secreto ODDS_API_KEY. Añádelo en GitHub Actions para activar las cuotas; las alineaciones no se ven afectadas.",
+    );
+    return;
+  }
+
   const pool = new Pool({ connectionString });
   try {
     const result = await persistLaLigaOdds(pool);
