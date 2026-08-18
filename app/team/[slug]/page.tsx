@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { AgreementBars } from "@/components/dashboard/agreement-bars";
 import {
@@ -9,6 +9,7 @@ import {
 } from "@/components/dashboard/badges";
 import { PlayerAvatar } from "@/components/dashboard/player-avatar";
 import { Pitch } from "@/components/dashboard/pitch";
+import { ProbableLineup } from "@/components/dashboard/probable-lineup";
 import { TeamNav } from "@/components/dashboard/team-nav";
 import {
   Card,
@@ -34,9 +35,9 @@ import {
   type PlayerWithConsensus,
   type Severity,
   type TeamEvent,
+  type MatchOddsRow,
 } from "@/lib/data";
 import { timeAgo } from "@/lib/format";
-import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
@@ -55,12 +56,6 @@ export default async function TeamPage({
 }) {
   const { slug } = await params;
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
-
   const [data, allTeams, sourceMap] = await Promise.all([
     getTeamData(slug),
     getAllTeamsForNav(),
@@ -68,12 +63,10 @@ export default async function TeamPage({
   ]);
   if (!data) notFound();
 
-  const { team, players, events, teamConsensus } = data;
+  const { team, players, events, teamConsensus, upcomingMatches } = data;
   const withConsensus = players.filter((p) => p.consensus);
   const xi = selectXI(players);
   const formation = xi.length > 0 ? deriveFormation(xi) : null;
-  const xiIds = new Set(xi.map((x) => x.id));
-  const bench = withConsensus.filter((p) => !xiIds.has(p.id));
   const sortedEvents = [...events].sort(
     (a, b) =>
       SEVERITY_RANK[b.severity] - SEVERITY_RANK[a.severity] ||
@@ -81,7 +74,7 @@ export default async function TeamPage({
   );
 
   return (
-    <DashboardShell email={user.email}>
+    <DashboardShell>
       <div className="space-y-4">
         <TeamNav teams={allTeams} currentSlug={slug} />
 
@@ -118,8 +111,12 @@ export default async function TeamPage({
           <div className="grid gap-6 lg:grid-cols-[minmax(0,28rem)_1fr] lg:items-start">
             <Pitch xi={xi} />
             <Card>
+              <CardHeader>
+                <CardTitle>Alineación probable</CardTitle>
+                <CardDescription>Posición, jugador y probabilidad de titularidad.</CardDescription>
+              </CardHeader>
               <CardContent>
-                <PlayersTable players={xi} sourceMap={sourceMap} />
+                <ProbableLineup players={xi} />
               </CardContent>
             </Card>
           </div>
@@ -132,18 +129,34 @@ export default async function TeamPage({
         )}
       </section>
 
-      {bench.length > 0 ? (
-        <section className="space-y-3">
+      <section className="space-y-3">
+        <div className="flex items-baseline justify-between gap-3">
           <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Otras previsiones ({bench.length})
+            Plantilla y consenso ({players.length})
           </h2>
+          <span className="text-xs text-muted-foreground">{withConsensus.length} con previsión</span>
+        </div>
+        <Card>
+          <CardContent>
+            <PlayersTable players={players} sourceMap={sourceMap} />
+          </CardContent>
+        </Card>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Próximos partidos</h2>
+        {upcomingMatches.length ? (
           <Card>
-            <CardContent>
-              <PlayersTable players={bench} sourceMap={sourceMap} />
+            <CardContent className="divide-y">
+              {upcomingMatches.map((match) => <UpcomingMatch key={match.external_event_id} match={match} />)}
             </CardContent>
           </Card>
-        </section>
-      ) : null}
+        ) : (
+          <Card>
+            <CardContent className="py-6 text-center text-sm text-muted-foreground">No hay próximos partidos disponibles.</CardContent>
+          </Card>
+        )}
+      </section>
 
       <section className="space-y-3">
         <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
@@ -196,7 +209,7 @@ function PlayersTable({
       </TableHeader>
       <TableBody>
         {players.map((p) => {
-          const c = p.consensus!;
+          const c = p.consensus;
           return (
             <TableRow key={p.id}>
               <TableCell>
@@ -208,20 +221,18 @@ function PlayersTable({
               <TableCell>
                 <PositionBadge position={p.position} />
               </TableCell>
-              <TableCell>
-                <ProbabilityBadge pct={c.probability_pct} />
-              </TableCell>
+              <TableCell>{c ? <ProbabilityBadge pct={c.probability_pct} /> : <span className="text-xs text-muted-foreground">—</span>}</TableCell>
               <TableCell>
                 <span
                   className="text-xs tabular-nums text-muted-foreground"
-                  title={`${c.sources_starter} de ${c.sources_total} fuentes lo consideran titular`}
+                  title={c ? `${c.sources_starter} de ${c.sources_total} fuentes lo consideran titular` : "Sin previsión"}
                 >
-                  {c.sources_starter}/{c.sources_total}
+                  {c ? `${c.sources_starter}/${c.sources_total}` : "—"}
                 </span>
               </TableCell>
               <TableCell className="whitespace-normal">
                 <AgreementBars
-                  agreement={c.agreement}
+                  agreement={c?.agreement ?? []}
                   sourceMap={sourceMap}
                 />
               </TableCell>
@@ -231,6 +242,30 @@ function PlayersTable({
       </TableBody>
     </Table>
   );
+}
+
+function UpcomingMatch({ match }: { match: MatchOddsRow }) {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-2 py-3 first:pt-0 last:pb-0">
+      <div>
+        <p className="text-sm font-medium">
+          {match.home_team_name} <span className="font-normal text-muted-foreground">vs</span> {match.away_team_name}
+        </p>
+        <p className="text-xs text-muted-foreground">{formatMatchDate(match.commence_time)}</p>
+      </div>
+      {match.bookmaker ? <span className="text-xs text-muted-foreground">Cuotas: {match.bookmaker}</span> : null}
+    </div>
+  );
+}
+
+function formatMatchDate(iso: string): string {
+  return new Intl.DateTimeFormat("es-ES", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(iso));
 }
 
 function EventRow({ event }: { event: TeamEvent }) {

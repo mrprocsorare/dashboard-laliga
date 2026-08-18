@@ -1,11 +1,9 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { NextUpdateCountdown } from "@/components/dashboard/countdown";
 import { getHomeData, type RunStatus } from "@/lib/data";
 import { timeAgo } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
@@ -17,17 +15,11 @@ const STATUS_DOT: Record<RunStatus, string> = {
 };
 
 export default async function HomePage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
-
   const { teams, sources } = await getHomeData();
   const totalConsensus = teams.reduce((s, t) => s + t.playersWithConsensus, 0);
 
   return (
-    <DashboardShell email={user.email}>
+    <DashboardShell>
       <section className="space-y-3">
         <div className="flex items-baseline justify-between gap-4">
           <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">

@@ -3,11 +3,11 @@ import { Pool } from "pg";
 
 /**
  * Row Level Security: habilita RLS en las 10 tablas del catálogo y concede
- * SOLO SELECT al rol `authenticated` (el usuario logueado de la app).
+ * SOLO SELECT al rol `public` (anon y authenticated).
  *
  * Los escritos los realizan los scrapers con la clave de servicio / usuario
  * postgres, que ignoran RLS. La app (frontend) queda de solo lectura y
- * cualquier acceso sin sesión es denegado a nivel de base de datos.
+ * La aplicación es pública y queda protegida contra escrituras.
  *
  * Idempotente: usa DO $$ para no fallar si ya existe.
  */
@@ -41,19 +41,21 @@ async function main() {
     await pool.query(`
       DO $$
       BEGIN
-        IF NOT EXISTS (
+        IF EXISTS (
           SELECT 1 FROM pg_policies
           WHERE schemaname = 'public' AND tablename = '${table}' AND policyname = '${policy}'
         ) THEN
+          ALTER POLICY ${policy} ON ${table} TO public;
+        ELSE
           CREATE POLICY ${policy} ON ${table}
-            FOR SELECT TO authenticated USING (true);
+            FOR SELECT TO public USING (true);
         END IF;
       END $$;
     `);
   }
 
   await pool.end();
-  console.log(`RLS configurado en ${TABLES.length} tablas (SELECT solo para authenticated).`);
+  console.log(`RLS configurado en ${TABLES.length} tablas (SELECT público, solo lectura).`);
 }
 
 main().catch((err) => {

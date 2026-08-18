@@ -1,10 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-/**
- * Middleware de sesión: renueva el token de Supabase y protege las rutas.
- * Usuarios sin sesión son redirigidos a /login.
- */
+/** Renueva el token de Supabase cuando existe, sin bloquear el acceso público. */
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
@@ -30,26 +27,9 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const { pathname } = request.nextUrl;
-
-  // Sin sesión → solo se permite /login (y assets).
-  if (!user && !pathname.startsWith("/login")) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    url.searchParams.set("redirected", "true");
-    return NextResponse.redirect(url);
-  }
-
-  // Con sesión, no tiene sentido visitar /login.
-  if (user && pathname.startsWith("/login")) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/";
-    return NextResponse.redirect(url);
-  }
+  // Mantiene la renovación de cookies para quien tenga una sesión, pero no
+  // condiciona el acceso al catálogo público.
+  await supabase.auth.getUser();
 
   return supabaseResponse;
 }

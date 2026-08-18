@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import SignOutButton from "@/components/auth/sign-out-button";
+import { MainNav } from "@/components/dashboard/main-nav";
 import { ThemeToggle } from "@/components/dashboard/theme-toggle";
 
 /**
@@ -19,9 +19,10 @@ export function DashboardShell({
     <div className="min-h-screen bg-background">
       <div className="sticky top-0 z-20 border-b bg-background/80 backdrop-blur-md">
         <header className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2.5 sm:px-6">
-          <div className="flex items-baseline gap-2">
+          <div className="flex min-w-0 items-center gap-3">
             <Link href="/" className="text-base font-semibold hover:underline">
-              Dashboard LaLiga
+              <span className="hidden sm:inline">Dashboard LaLiga</span>
+              <span className="sm:hidden">LaLiga</span>
             </Link>
             {email ? (
               <span className="hidden truncate text-xs text-muted-foreground sm:inline">
@@ -30,11 +31,8 @@ export function DashboardShell({
             ) : null}
           </div>
           <div className="flex items-center gap-2">
-            <Link href="/jornada" className="hidden text-xs font-medium text-muted-foreground hover:text-foreground sm:inline">
-              Jornada
-            </Link>
+            <MainNav />
             <ThemeToggle />
-            <SignOutButton />
           </div>
         </header>
       </div>

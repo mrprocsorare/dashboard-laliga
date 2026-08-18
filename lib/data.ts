@@ -267,6 +267,7 @@ export async function getTeamData(slug: string): Promise<{
   players: PlayerWithConsensus[];
   events: TeamEvent[];
   teamConsensus: TeamConsensusRow | null;
+  upcomingMatches: MatchOddsRow[];
 } | null> {
   const supabase = await createClient();
 
@@ -281,7 +282,7 @@ export async function getTeamData(slug: string): Promise<{
     Date.now() - EVENTS_WINDOW_HOURS * 3_600_000,
   ).toISOString();
 
-  const [playersRes, eventsRes, consensusRes] = await Promise.all([
+  const [playersRes, eventsRes, consensusRes, matchesRes] = await Promise.all([
     supabase
       .from("players")
       .select(
@@ -302,6 +303,15 @@ export async function getTeamData(slug: string): Promise<{
       .select("formation, coach, set_pieces, updated_at")
       .eq("team_id", team.id)
       .maybeSingle(),
+    supabase
+      .from("match_odds")
+      .select(
+        "id, external_event_id, home_team_id, away_team_id, home_team_name, away_team_name, commence_time, matchday, probability_home_pct, probability_draw_pct, probability_away_pct, bookmaker, captured_at",
+      )
+      .or(`home_team_id.eq.${team.id},away_team_id.eq.${team.id}`)
+      .gte("commence_time", new Date().toISOString())
+      .order("commence_time", { ascending: true })
+      .limit(5),
   ]);
 
   type PlayerRowRaw = Omit<PlayerWithConsensus, "consensus"> & {
@@ -372,6 +382,7 @@ export async function getTeamData(slug: string): Promise<{
     players,
     events,
     teamConsensus: (consensusRes.data ?? null) as unknown as TeamConsensusRow | null,
+    upcomingMatches: (matchesRes.data ?? []) as unknown as MatchOddsRow[],
   };
 }
 
