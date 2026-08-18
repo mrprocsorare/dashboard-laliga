@@ -16,6 +16,22 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Sorare
+
+La integracion usa la API GraphQL oficial desde el servidor (`lib/sorare.ts`); el navegador nunca llama directamente a Sorare. Los scores se cachean una hora y los precios Limited veinte minutos en memoria. `SORARE_API_KEY` es opcional y, si se configura, solo debe existir en el entorno backend.
+
+Tras aplicar la migracion (`npm run db:migrate`), busca coincidencias de jugadores con:
+
+```bash
+npm run map:sorare
+```
+
+El comando solo guarda coincidencias exactas con `--apply`. Para corregir un caso manualmente:
+
+```bash
+npm run map:sorare -- --manual-only --set "Nombre del jugador=slug-de-sorare" --apply
+```
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

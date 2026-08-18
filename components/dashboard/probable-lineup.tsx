@@ -1,4 +1,5 @@
 import type { PlayerWithConsensus } from "@/lib/data";
+import { SorareMeta } from "@/components/dashboard/sorare-meta";
 
 export function ProbableLineup({
   players,
@@ -19,7 +20,10 @@ export function ProbableLineup({
             <span className="w-7 shrink-0 text-[10px] font-medium uppercase text-muted-foreground">
               {player.position ?? "—"}
             </span>
-            <span className="truncate">{player.name}</span>
+            <span className="min-w-0 truncate">
+              <span className="block truncate">{player.name}</span>
+              <SorareMeta data={player.sorare} compact fallback="" />
+            </span>
           </span>
           <span className="shrink-0 tabular-nums text-muted-foreground">
             {player.consensus?.probability_pct ?? "—"}%

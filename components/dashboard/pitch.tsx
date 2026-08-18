@@ -1,6 +1,7 @@
 import { PlayerAvatar } from "@/components/dashboard/player-avatar";
 import { cn } from "@/lib/utils";
 import type { XIPlayer } from "@/lib/data";
+import { SorareMeta } from "@/components/dashboard/sorare-meta";
 
 /**
  * Campo de fútbol con el once de consenso.
@@ -84,6 +85,7 @@ function PlayerNode({ player }: { player: XIPlayer }) {
       <span className="w-full truncate text-center text-[10px] font-medium text-white/90 sm:text-xs">
         {player.name}
       </span>
+      {player.sorare ? <SorareMeta data={player.sorare} compact tone="light" /> : null}
     </div>
   );
 }

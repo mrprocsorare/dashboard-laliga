@@ -12,6 +12,7 @@ import { Pitch } from "@/components/dashboard/pitch";
 import { ProbableLineup } from "@/components/dashboard/probable-lineup";
 import { TeamCrest } from "@/components/dashboard/team-crest";
 import { TeamNav } from "@/components/dashboard/team-nav";
+import { SorareMeta } from "@/components/dashboard/sorare-meta";
 import {
   Card,
   CardContent,
@@ -208,6 +209,7 @@ function PlayersTable({
           <TableHead>Pos</TableHead>
           <TableHead>Consenso</TableHead>
           <TableHead>Fuentes</TableHead>
+          <TableHead>Sorare</TableHead>
           <TableHead className="w-full">Acuerdo entre fuentes</TableHead>
         </TableRow>
       </TableHeader>
@@ -233,6 +235,9 @@ function PlayersTable({
                 >
                   {c ? `${c.sources_starter}/${c.sources_total}` : "—"}
                 </span>
+              </TableCell>
+              <TableCell>
+                <SorareMeta data={p.sorare} />
               </TableCell>
               <TableCell className="whitespace-normal">
                 <AgreementBars

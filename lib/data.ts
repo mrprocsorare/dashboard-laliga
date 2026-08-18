@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { getSorareData, type SorarePlayerData } from "@/lib/sorare";
 
 /**
  * Capa de datos del dashboard. Lee de Supabase con la sesión del usuario
@@ -52,6 +53,8 @@ export interface PlayerWithConsensus {
   name: string;
   position: Position | null;
   photo_url: string | null;
+  sorare_slug: string | null;
+  sorare: SorarePlayerData | null;
   consensus: ConsensusInfo | null;
 }
 
@@ -213,7 +216,7 @@ export async function getJornadaData(): Promise<JornadaData> {
     supabase
       .from("players")
       .select(
-        "id, team_id, name, position, photo_url, player_consensus(probability_pct, sources_total, sources_starter, agreement, updated_at)",
+        "id, team_id, name, position, photo_url, sorare_slug, player_consensus(probability_pct, sources_total, sources_starter, agreement, updated_at)",
       )
       .not("team_id", "is", null),
   ]);
@@ -228,6 +231,7 @@ export async function getJornadaData(): Promise<JornadaData> {
     const pc = Array.isArray(player_consensus) ? (player_consensus[0] ?? null) : player_consensus;
     return {
       ...p,
+      sorare: null,
       consensus: pc ? { ...pc, agreement: normalizeAgreement(pc.agreement) } : null,
     } as PlayerWithConsensus & { team_id: string };
   });
@@ -248,6 +252,20 @@ export async function getJornadaData(): Promise<JornadaData> {
     playersByTeam.set(player.team_id, list);
   }
 
+  const xiByMatch = new Map<string, { homeXI: XIPlayer[]; awayXI: XIPlayer[] }>();
+  const visibleXI = selectedOdds.flatMap((oddsRow) => {
+    const homeXI = oddsRow.home_team_id ? selectXI(playersByTeam.get(oddsRow.home_team_id) ?? []) : [];
+    const awayXI = oddsRow.away_team_id ? selectXI(playersByTeam.get(oddsRow.away_team_id) ?? []) : [];
+    xiByMatch.set(oddsRow.external_event_id, { homeXI, awayXI });
+    return [...homeXI, ...awayXI];
+  });
+  const sorare = await getSorareData(visibleXI.map((player) => player.sorare_slug ?? ""));
+  const withSorare = (xi: XIPlayer[]) =>
+    xi.map((player) => ({
+      ...player,
+      sorare: player.sorare_slug ? sorare.get(player.sorare_slug) ?? null : null,
+    }));
+
   return {
     currentMatchday,
     nextMatchday,
@@ -255,8 +273,8 @@ export async function getJornadaData(): Promise<JornadaData> {
       odds: oddsRow,
       homeTeam: oddsRow.home_team_id ? teamById.get(oddsRow.home_team_id) ?? null : null,
       awayTeam: oddsRow.away_team_id ? teamById.get(oddsRow.away_team_id) ?? null : null,
-      homeXI: oddsRow.home_team_id ? selectXI(playersByTeam.get(oddsRow.home_team_id) ?? []) : [],
-      awayXI: oddsRow.away_team_id ? selectXI(playersByTeam.get(oddsRow.away_team_id) ?? []) : [],
+      homeXI: withSorare(xiByMatch.get(oddsRow.external_event_id)?.homeXI ?? []),
+      awayXI: withSorare(xiByMatch.get(oddsRow.external_event_id)?.awayXI ?? []),
     })),
   };
 }
@@ -286,7 +304,7 @@ export async function getTeamData(slug: string): Promise<{
     supabase
       .from("players")
       .select(
-        "id, name, position, photo_url, player_consensus(probability_pct, sources_total, sources_starter, agreement, updated_at)",
+        "id, name, position, photo_url, sorare_slug, player_consensus(probability_pct, sources_total, sources_starter, agreement, updated_at)",
       )
       .eq("team_id", team.id),
     supabase
@@ -325,15 +343,22 @@ export async function getTeamData(slug: string): Promise<{
       : player_consensus;
     return {
       ...p,
+      sorare: null,
       consensus: pc
         ? { ...pc, agreement: normalizeAgreement(pc.agreement) }
         : null,
     };
   });
 
+  const sorare = await getSorareData(players.map((player) => player.sorare_slug ?? ""));
+  const enrichedPlayers = players.map((player) => ({
+    ...player,
+    sorare: player.sorare_slug ? sorare.get(player.sorare_slug) ?? null : null,
+  }));
+
   // Orden: probabilidad de consenso desc → nº de fuentes desc → nombre.
   // Los jugadores sin consenso (sin previsión) van al final por nombre.
-  players.sort((a, b) => {
+  enrichedPlayers.sort((a, b) => {
     const pa = a.consensus?.probability_pct ?? -1;
     const pb = b.consensus?.probability_pct ?? -1;
     if (pa !== pb) return pb - pa;
@@ -379,7 +404,7 @@ export async function getTeamData(slug: string): Promise<{
 
   return {
     team: team as unknown as TeamRow,
-    players,
+    players: enrichedPlayers,
     events,
     teamConsensus: (consensusRes.data ?? null) as unknown as TeamConsensusRow | null,
     upcomingMatches: (matchesRes.data ?? []) as unknown as MatchOddsRow[],
