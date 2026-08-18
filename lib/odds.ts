@@ -1,4 +1,5 @@
 import { Pool } from "pg";
+import { notInArray } from "drizzle-orm";
 import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "../database/schema";
 
@@ -186,6 +187,17 @@ export async function fetchAndNormalizeLaLigaOdds(pool: Pool): Promise<MatchOdds
 export async function persistLaLigaOdds(pool: Pool): Promise<{ events: number; withOdds: number }> {
   const rows = await fetchAndNormalizeLaLigaOdds(pool);
   const db = drizzle(pool, { schema }) as Db;
+
+  // La API devuelve la ventana vigente de eventos, no un histórico. Una vez
+  // confirmado que la llamada fue válida y trajo eventos, eliminamos filas
+  // que ya no aparecen (partidos comenzados o fuera de la ventana). Así la
+  // página no conserva partidos obsoletos de una ejecución anterior.
+  if (rows.length > 0) {
+    await db
+      .delete(schema.matchOdds)
+      .where(notInArray(schema.matchOdds.externalEventId, rows.map((row) => row.externalEventId)));
+  }
+
   for (const row of rows) {
     await db
       .insert(schema.matchOdds)
