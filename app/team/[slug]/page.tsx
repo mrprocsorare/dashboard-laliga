@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { AgreementBars } from "@/components/dashboard/agreement-bars";
 import {
@@ -39,6 +40,7 @@ import {
   type TeamEvent,
   type MatchOddsRow,
 } from "@/lib/data";
+import { matchAnchorId } from "@/lib/match-anchor";
 import { timeAgo } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -66,6 +68,7 @@ export default async function TeamPage({
   if (!data) notFound();
 
   const { team, players, events, teamConsensus, upcomingMatches } = data;
+  const nextMatch = upcomingMatches[0] ?? null;
   const withConsensus = players.filter((p) => p.consensus);
   const xi = selectXI(players);
   const formation = xi.length > 0 ? deriveFormation(xi) : null;
@@ -109,9 +112,19 @@ export default async function TeamPage({
       </div>
 
       <section className="space-y-3">
-        <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          Once más probable ({xi.length})
-        </h2>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            Once más probable ({xi.length})
+          </h2>
+          {nextMatch ? (
+            <Link
+              href={`/jornada?match=${encodeURIComponent(nextMatch.external_event_id)}#${matchAnchorId(nextMatch.external_event_id)}`}
+              className="text-xs font-medium text-primary hover:underline"
+            >
+              Ver próximo partido
+            </Link>
+          ) : null}
+        </div>
         {xi.length > 0 ? (
           <div className="grid gap-6 lg:grid-cols-[minmax(0,28rem)_1fr] lg:items-start">
             <Pitch xi={xi} />

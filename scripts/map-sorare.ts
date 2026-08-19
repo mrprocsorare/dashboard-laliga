@@ -245,6 +245,10 @@ async function main() {
         console.log(`[skip] jugador no encontrado: ${review.player_id}`);
         continue;
       }
+      if (player.sorareSlug === slug) {
+        console.log(`[igual] ${player.name} (${player.teamName}) ya tiene ${slug}`);
+        continue;
+      }
       await db.update(players).set({ sorareSlug: slug }).where(eq(players.id, player.id));
       applied++;
       console.log(`[review] ${player.name} (${player.teamName}) -> ${slug}`);

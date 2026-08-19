@@ -36,6 +36,7 @@ sorare-mapping-review*.csv
 sorare-mapping-audit.csv
 sorare-auto-audit.csv
 sorare-duplicate-audit.csv
+.backups/
 
 # vercel
 .vercel

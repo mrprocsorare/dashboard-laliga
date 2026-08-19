@@ -199,7 +199,7 @@ async function main() {
   const reportPath = option("--report", DEFAULT_REPORT);
   const duplicatePath = option("--duplicates", DEFAULT_DUPLICATES);
   const auditAllMapped = process.argv.includes("--all-mapped");
-  const reviewRows = readCsv(input) as unknown as ReviewRow[];
+  const reviewRows = auditAllMapped ? [] : readCsv(input) as unknown as ReviewRow[];
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) throw new Error("Falta DATABASE_URL");
 

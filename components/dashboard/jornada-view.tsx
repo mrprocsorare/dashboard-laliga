@@ -1,11 +1,13 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { MatchPrediction } from "@/components/dashboard/match-prediction";
 import { MatchXI } from "@/components/dashboard/match-xi";
 import { TeamCrest } from "@/components/dashboard/team-crest";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { JornadaMatch } from "@/lib/data";
+import { matchAnchorId } from "@/lib/match-anchor";
 
 function matchDate(iso: string): string {
   return new Intl.DateTimeFormat("es-ES", {
@@ -26,7 +28,13 @@ function shortDate(iso: string): string {
 }
 
 export function JornadaView({ matches }: { matches: JornadaMatch[] }) {
-  const [selectedId, setSelectedId] = useState(matches[0]?.odds.external_event_id ?? "");
+  const searchParams = useSearchParams();
+  const requestedId = searchParams.get("match");
+  const [selectedId, setSelectedId] = useState(
+    () => matches.find((match) => match.odds.external_event_id === requestedId)?.odds.external_event_id
+      ?? matches[0]?.odds.external_event_id
+      ?? "",
+  );
   const selected = matches.find((match) => match.odds.external_event_id === selectedId) ?? matches[0];
   const rounds = [...new Set(matches.map((match) => match.odds.matchday))];
 
@@ -82,7 +90,9 @@ export function JornadaView({ matches }: { matches: JornadaMatch[] }) {
         </div>
       </section>
 
-      <MatchCard match={selected} />
+      <div id={matchAnchorId(selected.odds.external_event_id)}>
+        <MatchCard match={selected} />
+      </div>
     </div>
   );
 }
