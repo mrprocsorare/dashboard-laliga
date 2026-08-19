@@ -14,6 +14,7 @@ import { ProbableLineup } from "@/components/dashboard/probable-lineup";
 import { TeamCrest } from "@/components/dashboard/team-crest";
 import { TeamNav } from "@/components/dashboard/team-nav";
 import { SorareMeta } from "@/components/dashboard/sorare-meta";
+import { SorarePlayerDialog } from "@/components/dashboard/sorare-player-dialog";
 import {
   Card,
   CardContent,
@@ -112,19 +113,10 @@ export default async function TeamPage({
       </div>
 
       <section className="space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Once más probable ({xi.length})
-          </h2>
-          {nextMatch ? (
-            <Link
-              href={`/jornada?match=${encodeURIComponent(nextMatch.external_event_id)}#${matchAnchorId(nextMatch.external_event_id)}`}
-              className="text-xs font-medium text-primary hover:underline"
-            >
-              Ver próximo partido
-            </Link>
-          ) : null}
-        </div>
+        <h2 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          Once más probable ({xi.length})
+        </h2>
+        {nextMatch ? <NextMatchCard match={nextMatch} /> : null}
         {xi.length > 0 ? (
           <div className="grid gap-6 lg:grid-cols-[minmax(0,28rem)_1fr] lg:items-start">
             <Pitch xi={xi} />
@@ -232,10 +224,12 @@ function PlayersTable({
           return (
             <TableRow key={p.id}>
               <TableCell>
-                <span className="flex items-center gap-2">
-                  <PlayerAvatar name={p.name} photoUrl={p.photo_url} />
-                  <span className="whitespace-normal font-medium">{p.name}</span>
-                </span>
+                  <SorarePlayerDialog player={p}>
+                    <span className="flex items-center gap-2">
+                      <PlayerAvatar name={p.name} photoUrl={p.photo_url} />
+                      <span className="whitespace-normal font-medium">{p.name}</span>
+                    </span>
+                  </SorarePlayerDialog>
               </TableCell>
               <TableCell>
                 <PositionBadge position={p.position} />
@@ -277,6 +271,29 @@ function UpcomingMatch({ match }: { match: MatchOddsRow }) {
       </div>
       {match.bookmaker ? <span className="text-xs text-muted-foreground">Cuotas: {match.bookmaker}</span> : null}
     </div>
+  );
+}
+
+function NextMatchCard({ match }: { match: MatchOddsRow }) {
+  return (
+    <Link
+      href={`/jornada?match=${encodeURIComponent(match.external_event_id)}#${matchAnchorId(match.external_event_id)}`}
+      className="group block rounded-xl border border-primary/35 bg-primary/[0.07] p-4 shadow-sm transition-colors hover:border-primary/60 hover:bg-primary/[0.12] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      aria-label={`Abrir partido ${match.home_team_name} contra ${match.away_team_name}`}
+    >
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-primary">Próximo partido</p>
+          <p className="mt-1 text-base font-semibold tracking-tight">
+            {match.home_team_name} <span className="font-normal text-muted-foreground">vs</span> {match.away_team_name}
+          </p>
+          <p className="mt-1 text-xs capitalize text-muted-foreground">{formatMatchDate(match.commence_time)}</p>
+        </div>
+        <span className="rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground transition-transform group-hover:translate-x-0.5">
+          Ver partido completo →
+        </span>
+      </div>
+    </Link>
   );
 }
 

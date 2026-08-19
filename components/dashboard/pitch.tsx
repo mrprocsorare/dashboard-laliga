@@ -2,6 +2,7 @@ import { PlayerAvatar } from "@/components/dashboard/player-avatar";
 import { cn } from "@/lib/utils";
 import type { XIPlayer } from "@/lib/data";
 import { SorareMeta } from "@/components/dashboard/sorare-meta";
+import { SorarePlayerDialog } from "@/components/dashboard/sorare-player-dialog";
 
 /**
  * Campo de fútbol con el once de consenso.
@@ -69,23 +70,27 @@ function PlayerNode({ player }: { player: XIPlayer }) {
 
   return (
     <div className="flex max-w-[72px] flex-col items-center gap-0.5 sm:max-w-[88px]">
-      <div className="relative">
-        <PlayerAvatar
-          name={player.name}
-          photoUrl={player.photo_url}
-          className={cn(
-            "size-9 ring-2 ring-offset-1 ring-offset-emerald-900 sm:size-12 sm:ring-offset-2",
-            ringColor,
-          )}
-        />
-        <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 rounded bg-black/80 px-1 text-[9px] font-bold text-white tabular-nums sm:text-[10px]">
-          {pct}%
+      <SorarePlayerDialog player={player}>
+        <span className="block rounded-lg px-1 py-0.5 transition-colors hover:bg-black/20">
+          <span className="relative block">
+            <PlayerAvatar
+              name={player.name}
+              photoUrl={player.photo_url}
+              className={cn(
+                "size-9 ring-2 ring-offset-1 ring-offset-emerald-900 sm:size-12 sm:ring-offset-2",
+                ringColor,
+              )}
+            />
+            <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 rounded bg-black/80 px-1 text-[9px] font-bold text-white tabular-nums sm:text-[10px]">
+              {pct}%
+            </span>
+          </span>
+          <span className="block w-full truncate text-center text-[10px] font-medium text-white/90 sm:text-xs">
+            {player.name}
+          </span>
+          {player.sorare ? <SorareMeta data={player.sorare} compact tone="light" /> : null}
         </span>
-      </div>
-      <span className="w-full truncate text-center text-[10px] font-medium text-white/90 sm:text-xs">
-        {player.name}
-      </span>
-      {player.sorare ? <SorareMeta data={player.sorare} compact tone="light" /> : null}
+      </SorarePlayerDialog>
     </div>
   );
 }
