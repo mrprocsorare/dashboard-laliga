@@ -43,7 +43,7 @@ export function SorarePlayerDialog({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="min-w-0 cursor-pointer rounded-md text-left outline-none ring-offset-background transition-colors hover:bg-muted/70 focus-visible:ring-2 focus-visible:ring-ring"
+        className="block min-w-0 max-w-full cursor-pointer rounded-md text-left outline-none ring-offset-background transition-colors hover:bg-muted/70 focus-visible:ring-2 focus-visible:ring-ring"
         aria-label={`Ver datos de Sorare de ${player.name}`}
       >
         {children}

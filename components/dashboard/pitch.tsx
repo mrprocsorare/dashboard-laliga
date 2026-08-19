@@ -47,7 +47,11 @@ export function Pitch({ xi }: { xi: XIPlayer[] }) {
 
         <div className="relative flex h-full flex-col justify-around gap-1 px-2 py-3">
           {rows.map((row) => (
-            <div key={row.label} className="flex items-center justify-around">
+            <div
+              key={row.label}
+              className="grid w-full min-w-0 items-center gap-1"
+              style={{ gridTemplateColumns: `repeat(${row.players.length}, minmax(0, 1fr))` }}
+            >
               {row.players.map((p) => (
                 <PlayerNode key={p.id} player={p} />
               ))}
@@ -69,9 +73,12 @@ function PlayerNode({ player }: { player: XIPlayer }) {
         : "ring-red-400";
 
   return (
-    <div className="flex max-w-[72px] flex-col items-center gap-0.5 sm:max-w-[88px]">
+    <div className="flex min-w-0 w-full flex-col items-center gap-0.5 overflow-hidden">
       <SorarePlayerDialog player={player}>
-        <span className="block rounded-lg px-1 py-0.5 transition-colors hover:bg-black/20">
+        <span
+          className="block w-full max-w-full overflow-hidden rounded-lg px-1 py-0.5 text-center transition-colors hover:bg-black/20"
+          title={player.name}
+        >
           <span className="relative block">
             <PlayerAvatar
               name={player.name}
@@ -85,7 +92,7 @@ function PlayerNode({ player }: { player: XIPlayer }) {
               {pct}%
             </span>
           </span>
-          <span className="block w-full truncate text-center text-[10px] font-medium text-white/90 sm:text-xs">
+          <span className="block w-full truncate text-[9px] font-medium text-white/90 sm:text-xs">
             {player.name}
           </span>
           {player.sorare ? <SorareMeta data={player.sorare} compact tone="light" /> : null}
