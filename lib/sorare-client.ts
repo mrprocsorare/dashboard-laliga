@@ -165,9 +165,9 @@ export class SorareApiClient {
 
   constructor(options: SorareClientOptions = {}) {
     this.fetcher = options.fetcher ?? fetch;
-    this.budget = options.budget ?? Number(process.env.SORARE_REQUEST_BUDGET ?? 180);
+    this.budget = options.budget ?? Number(process.env.SORARE_REQUEST_BUDGET ?? 100);
     this.requestsPerMinute = options.requestsPerMinute ?? Number(
-      process.env.SORARE_REQUESTS_PER_MINUTE ?? (process.env.SORARE_API_KEY ? 180 : 18),
+      process.env.SORARE_REQUESTS_PER_MINUTE ?? (process.env.SORARE_API_KEY ? 30 : 12),
     );
     this.minIntervalMs = options.minIntervalMs ?? Number(
       process.env.SORARE_MIN_INTERVAL_MS ?? Math.ceil(60_000 / this.requestsPerMinute),
@@ -243,9 +243,8 @@ export class SorareApiClient {
       if (response.status === 429) {
         const delay = retryAfterMs(response.headers.get("retry-after"));
         this.pausedUntil = Math.max(this.pausedUntil, this.now() + delay);
-        if (attempt === MAX_RETRIES - 1) throw new SorareRateLimitError(delay);
-        await this.sleep(delay);
-        continue;
+        // Parada limpia e inmediata: no reintentamos en ráfaga ni compensamos.
+        throw new SorareRateLimitError(delay);
       }
       if (response.status >= 500 && attempt < MAX_RETRIES - 1) {
         await this.sleep(2 ** attempt * 1_000);
@@ -312,6 +311,6 @@ export class SorareApiClient {
 /** Compatibilidad para la herramienta antigua de revisión CSV. */
 export async function searchSorarePlayersBatch(names: string[]): Promise<SorareCandidate[][]> {
   const client = new SorareApiClient();
-  const found = await client.searchPlayers(names, 2);
+  const found = await client.searchPlayers(names, 1);
   return names.map((name) => found.get(name.trim()) ?? []);
 }

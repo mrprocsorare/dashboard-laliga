@@ -385,7 +385,7 @@ async function main() {
   });
   const candidateMap = new Map<string, SorareCandidate[]>();
   try {
-    const found = await client.searchPlayers(pending.map(searchName), 2);
+    const found = await client.searchPlayers(pending.map(searchName), 1);
     for (const row of pending) candidateMap.set(row.id, found.get(searchName(row)) ?? []);
   } catch (error) {
     console.warn(`[sync] búsquedas detenidas: ${error instanceof Error ? error.message : String(error)}`);
