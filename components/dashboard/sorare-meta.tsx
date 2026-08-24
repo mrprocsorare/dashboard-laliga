@@ -29,11 +29,12 @@ export function SorareMeta({
           ? `inline-flex max-w-full flex-wrap justify-center gap-x-1 text-[10px] tabular-nums ${tone === "light" ? "text-white/75" : "text-muted-foreground"}`
           : "flex flex-wrap gap-x-2 gap-y-0.5 text-xs tabular-nums text-muted-foreground"
       }
-      title="Datos públicos de Sorare · carta Limited"
+      title="Datos persistidos de Sorare · Limited Classic e In-Season"
     >
       <span>SO5 {score(data.averageScore)}</span>
       {!compact && data.latestScore !== null ? <span>últ. {score(data.latestScore)}</span> : null}
-      {data.priceEurCents !== null ? <span>{price(data.priceEurCents)}</span> : null}
+      {!compact ? <span>Classic {price(data.classic.eurCents)}</span> : null}
+      {!compact ? <span>In-Season {price(data.inSeason.eurCents)}</span> : null}
     </span>
   );
 }

@@ -62,13 +62,13 @@ export function SorarePlayerDialog({
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Datos públicos de Sorare · Limited
+                   Datos persistidos de Sorare · Limited
                 </p>
                 <h2 id={`sorare-dialog-title-${player.id}`} className="mt-1 text-xl font-semibold tracking-tight">
                   {player.name}
                 </h2>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  SO5 actualizado {new Intl.DateTimeFormat("es-ES", { dateStyle: "medium", timeStyle: "short" }).format(new Date(data.fetchedAt))}
+                   SO5 actualizado {data.scoresUpdatedAt ? new Intl.DateTimeFormat("es-ES", { dateStyle: "medium", timeStyle: "short" }).format(new Date(data.scoresUpdatedAt)) : "—"}
                 </p>
               </div>
               <button
@@ -82,10 +82,11 @@ export function SorarePlayerDialog({
             </div>
 
             <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
-              <Metric label="Media SO5" value={score(data.averageScore)} accent />
-              <Metric label="Última" value={score(data.latestScore)} />
-              <Metric label="Precio mínimo" value={price(data.priceEurCents)} />
-              <Metric label="Prob. titular" value={player.consensus ? `${player.consensus.probability_pct}%` : "-"} />
+               <Metric label="Media SO5" value={score(data.averageScore)} accent />
+               <Metric label="Última" value={score(data.latestScore)} />
+               <Metric label="Classic" value={price(data.classic.eurCents)} />
+               <Metric label="In-Season" value={price(data.inSeason.eurCents)} />
+               <Metric label="Prob. titular" value={player.consensus ? `${player.consensus.probability_pct}%` : "-"} />
             </div>
 
             <section className="mt-5 rounded-xl border bg-muted/25 p-4">
@@ -96,18 +97,15 @@ export function SorarePlayerDialog({
                 </div>
                 <span className="text-xs text-muted-foreground">{data.scores.length} registros</span>
               </div>
-              {data.scores.length ? (
-                <div className="mt-3 grid grid-cols-5 gap-2">
-                  {data.scores.map((value, index) => (
-                    <div key={`${value}-${index}`} className="rounded-lg border bg-background px-2 py-2 text-center">
-                      <span className="block text-lg font-semibold tabular-nums">{score(value)}</span>
-                      <span className="text-[10px] text-muted-foreground">J-{index + 1}</span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="mt-3 text-xs text-muted-foreground">No hay puntuaciones recientes.</p>
-              )}
+              <div className="mt-3 grid grid-cols-5 gap-2">
+                {Array.from({ length: 5 }, (_, index) => (
+                  <div key={`score-${index}`} className="rounded-lg border bg-background px-2 py-2 text-center">
+                    <span className="block text-lg font-semibold tabular-nums">{score(data.scores[index] ?? null)}</span>
+                    <span className="text-[10px] text-muted-foreground">J-{index + 1}</span>
+                  </div>
+                ))}
+              </div>
+              {!data.scores.length ? <p className="mt-3 text-xs text-muted-foreground">No hay puntuaciones recientes.</p> : null}
             </section>
 
             <div className="mt-5 flex flex-wrap gap-2">
@@ -120,14 +118,25 @@ export function SorarePlayerDialog({
                 Ver perfil en Sorare
                 <ExternalLink className="size-3.5" aria-hidden="true" />
               </a>
-              {data.cardSlug ? (
+              {data.classic.cardSlug ? (
                 <a
-                  href={`https://sorare.com/football/cards/${data.cardSlug}`}
+                  href={`https://sorare.com/football/cards/${data.classic.cardSlug}`}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors hover:bg-muted"
                 >
-                  Ver carta Limited
+                   Ver carta Classic
+                  <ExternalLink className="size-3.5" aria-hidden="true" />
+                </a>
+              ) : null}
+              {data.inSeason.cardSlug ? (
+                <a
+                  href={`https://sorare.com/football/cards/${data.inSeason.cardSlug}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors hover:bg-muted"
+                >
+                  Ver carta In-Season
                   <ExternalLink className="size-3.5" aria-hidden="true" />
                 </a>
               ) : null}

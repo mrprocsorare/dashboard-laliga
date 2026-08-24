@@ -1,0 +1,34 @@
+name: sincronizar-sorare
+
+on:
+  schedule:
+    - cron: "25 4 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: sorare-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Sincronizar una vez al día
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SORARE_API_KEY: ${{ secrets.SORARE_API_KEY }}
+          SORARE_REQUEST_BUDGET: 180
+          SORARE_REQUESTS_PER_MINUTE: 180
+          SORARE_MIN_INTERVAL_MS: 334
+        run: npm run sync:sorare -- --apply

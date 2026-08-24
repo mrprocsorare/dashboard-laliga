@@ -4,6 +4,7 @@ import {
   jsonb,
   pgEnum,
   pgTable,
+  real,
   text,
   timestamp,
   uniqueIndex,
@@ -36,6 +37,11 @@ export const runStatusEnum = pgEnum("run_status", [
   "failed",
 ]);
 export const forecastTypeEnum = pgEnum("forecast_type", ["probable", "confirmed"]);
+export const sorareMappingStatusEnum = pgEnum("sorare_mapping_status", [
+  "matched",
+  "manual_review",
+  "not_found",
+]);
 
 /**
  * Catálogo de fuentes de datos. `reliability_weight` se usa para la media
@@ -85,6 +91,8 @@ export const players = pgTable(
     position: positionEnum("position"),
     photoUrl: text("photo_url"),
     sorareSlug: text("sorare_slug"),
+    dateOfBirth: text("date_of_birth"),
+    nationality: text("nationality"),
     /**
      * Nombre canónico que el roster cerrado (Wikipedia) asigna a este jugador.
      * Cuando un nombre scrapeado matchea este canónico (vía roster matcher),
@@ -343,8 +351,102 @@ export const matchOdds = pgTable(
   ],
 );
 
+/**
+ * Mapping auditable entre el roster local y la identidad de Sorare. El slug
+ * de `players` se conserva por compatibilidad, pero esta tabla es la fuente
+ * de verdad y permite dejar dudas sin convertirlas en falsos positivos.
+ */
+export const sorarePlayerMappings = pgTable(
+  "sorare_player_mappings",
+  {
+    playerId: uuid("player_id")
+      .primaryKey()
+      .references(() => players.id, { onDelete: "cascade" }),
+    sorareSlug: text("sorare_slug"),
+    displayName: text("display_name"),
+    firstName: text("first_name"),
+    lastName: text("last_name"),
+    birthDay: text("birth_day"),
+    nationality: text("nationality"),
+    activeClubName: text("active_club_name"),
+    activeClubSlug: text("active_club_slug"),
+    matchingMethod: text("matching_method").notNull().default("not_found"),
+    confidence: real("confidence"),
+    status: sorareMappingStatusEnum("status").notNull().default("not_found"),
+    reason: text("reason"),
+    candidates: jsonb("candidates").$type<unknown[]>(),
+    lastVerifiedAt: timestamp("last_verified_at", { withTimezone: true }),
+    identityExpiresAt: timestamp("identity_expires_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    uniqueIndex("sorare_player_mappings_slug_idx").on(t.sorareSlug),
+    index("sorare_player_mappings_status_idx").on(t.status),
+    index("sorare_player_mappings_expiry_idx").on(t.identityExpiresAt),
+  ],
+);
+
+/**
+ * Cache persistente por slug. Scores y precios tienen TTL independientes para
+ * que una caída parcial de Sorare nunca borre el último dato válido.
+ */
+export const sorarePlayerCache = pgTable(
+  "sorare_player_cache",
+  {
+    sorareSlug: text("sorare_slug").primaryKey(),
+    displayName: text("display_name"),
+    firstName: text("first_name"),
+    lastName: text("last_name"),
+    birthDay: text("birth_day"),
+    nationality: text("nationality"),
+    activeClubName: text("active_club_name"),
+    activeClubSlug: text("active_club_slug"),
+    scores: jsonb("scores").$type<number[]>(),
+    averageScore: real("average_score"),
+    latestScore: real("latest_score"),
+    scoresUpdatedAt: timestamp("scores_updated_at", { withTimezone: true }),
+    scoresExpiresAt: timestamp("scores_expires_at", { withTimezone: true }),
+    classicPriceEurCents: integer("classic_price_eur_cents"),
+    classicCardSlug: text("classic_card_slug"),
+    classicUpdatedAt: timestamp("classic_updated_at", { withTimezone: true }),
+    classicExpiresAt: timestamp("classic_expires_at", { withTimezone: true }),
+    inSeasonPriceEurCents: integer("in_season_price_eur_cents"),
+    inSeasonCardSlug: text("in_season_card_slug"),
+    inSeasonUpdatedAt: timestamp("in_season_updated_at", { withTimezone: true }),
+    inSeasonExpiresAt: timestamp("in_season_expires_at", { withTimezone: true }),
+    lastError: text("last_error"),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("sorare_player_cache_scores_expiry_idx").on(t.scoresExpiresAt),
+    index("sorare_player_cache_classic_expiry_idx").on(t.classicExpiresAt),
+    index("sorare_player_cache_in_season_expiry_idx").on(t.inSeasonExpiresAt),
+  ],
+);
+
+export const sorareSyncRuns = pgTable(
+  "sorare_sync_runs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    status: runStatusEnum("status").notNull().default("running"),
+    playersTotal: integer("players_total").notNull().default(0),
+    mappingsMatched: integer("mappings_matched").notNull().default(0),
+    mappingsPending: integer("mappings_pending").notNull().default(0),
+    mappingsNotFound: integer("mappings_not_found").notNull().default(0),
+    apiCalls: integer("api_calls").notNull().default(0),
+    errorMessage: text("error_message"),
+    startedAt: timestamp("started_at", { withTimezone: true }).notNull().defaultNow(),
+    finishedAt: timestamp("finished_at", { withTimezone: true }),
+  },
+  (t) => [index("sorare_sync_runs_started_idx").on(t.startedAt)],
+);
+
 export type Source = typeof sources.$inferSelect;
 export type Team = typeof teams.$inferSelect;
 export type Player = typeof players.$inferSelect;
 export type ScrapeRun = typeof scrapeRuns.$inferSelect;
 export type MatchOdds = typeof matchOdds.$inferSelect;
+export type SorarePlayerMapping = typeof sorarePlayerMappings.$inferSelect;
+export type SorarePlayerCache = typeof sorarePlayerCache.$inferSelect;
+export type SorareSyncRun = typeof sorareSyncRuns.$inferSelect;

@@ -2,7 +2,7 @@ import "dotenv/config";
 import { Pool } from "pg";
 
 /**
- * Row Level Security: habilita RLS en las 10 tablas del catálogo y concede
+ * Row Level Security: habilita RLS en las tablas del catálogo y concede
  * SOLO SELECT al rol `public` (anon y authenticated).
  *
  * Los escritos los realizan los scrapers con la clave de servicio / usuario
@@ -23,6 +23,9 @@ const TABLES = [
   "player_consensus",
   "team_consensus",
   "match_odds",
+  "sorare_player_mappings",
+  "sorare_player_cache",
+  "sorare_sync_runs",
 ];
 
 async function main() {

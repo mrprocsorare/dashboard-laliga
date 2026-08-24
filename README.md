@@ -18,30 +18,38 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Sorare
 
-La integracion usa la API GraphQL oficial desde el servidor (`lib/sorare.ts`); el navegador nunca llama directamente a Sorare. Los scores se cachean una hora y los precios Limited veinte minutos en memoria. `SORARE_API_KEY` es opcional y, si se configura, solo debe existir en el entorno backend.
+La integración usa la API GraphQL oficial desde un sincronizador backend (`lib/sorare-client.ts`); el navegador nunca llama directamente a Sorare. El dashboard lee `sorare_player_cache` desde Supabase y no genera consultas externas al abrir un equipo o jugador.
 
-Tras aplicar la migracion (`npm run db:migrate`), busca coincidencias de jugadores con:
+Los mappings se guardan en `sorare_player_mappings` y conservan `players.sorare_slug` por compatibilidad. Cada decisión incluye identidad remota, método, confianza, estado, candidatos y fecha de verificación. Solo se aplican coincidencias con evidencia suficiente; el resto queda en `manual_review` o `not_found`.
 
-```bash
-npm run map:sorare
-```
+El cache conserva scores, media SO5, última puntuación y precios Limited Classic e In-Season por separado. Scores se actualizan cada 24 horas, cada edición de precios tiene su propio TTL de 24 horas y la identidad se revalida cada 7 días. Una respuesta fallida no elimina el último valor válido.
 
-El comando solo guarda coincidencias exactas con `--apply`. Para corregir un caso manualmente:
+Tras aplicar la migración (`npm run db:migrate`), sincroniza los 20 equipos con:
 
 ```bash
-npm run map:sorare -- --manual-only --set "Nombre del jugador=slug-de-sorare" --apply
+npm run sync:sorare -- --apply
 ```
 
-Para generar sugerencias inteligentes y un archivo editable en Excel:
+El proceso es idempotente y reutiliza mappings válidos. `--force` fuerza una nueva verificación de identidades y debe reservarse para una auditoría completa. Para revisar cobertura sin llamar a Sorare:
+
+```bash
+npm run audit:sorare
+```
+
+Para importar únicamente decisiones históricas previamente aceptadas y verificadas:
+
+```bash
+npm run import:sorare-review
+```
+
+`SORARE_API_KEY` es opcional y solo existe en backend. Sin clave el limitador se mantiene por debajo de 20 peticiones/minuto y usa lotes de 8 por el límite de complejidad; con clave usa hasta 180 peticiones/minuto, lotes de 20 y un presupuesto de 180 por ejecución. Los errores 429 respetan `Retry-After`, se detienen nuevas peticiones y no se registran secretos.
+
+Las alineaciones siguen en su workflow de 15 minutos y no llaman al sincronizador Sorare. El workflow Sorare, cuando se habilita, se ejecuta una vez al día.
+
+La herramienta antigua de CSV sigue disponible para revisiones especiales:
 
 ```bash
 npm run map:sorare -- --assist --apply
-```
-
-Revisa `sorare-mapping-review.csv`, completa la columna `selected_slug` en los casos pendientes y aplica esas decisiones con:
-
-```bash
-npm run map:sorare -- --apply-review sorare-mapping-review.csv
 ```
 
 Para auditar un CSV revisado sin escribir en la base de datos:

@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { eq } from "drizzle-orm";
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { searchSorarePlayersBatch } from "../lib/sorare";
+import { searchSorarePlayersBatch } from "../lib/sorare-client";
 import { players, teams } from "../database/schema";
 
 function normalize(value: string): string {
