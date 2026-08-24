@@ -28,7 +28,6 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           SORARE_API_KEY: ${{ secrets.SORARE_API_KEY }}
-          SORARE_REQUEST_BUDGET: 180
-          SORARE_REQUESTS_PER_MINUTE: 180
-          SORARE_MIN_INTERVAL_MS: 334
+          SORARE_REQUEST_BUDGET: 100
+          SORARE_REQUESTS_PER_MINUTE: 30
         run: npm run sync:sorare -- --apply
