@@ -62,11 +62,24 @@ const TEAM_ALIASES: Array<{ key: string; aliases: string[] }> = [
 ];
 
 function clean(value: string | null | undefined): string {
-  return normalizeName(value ?? "").replace(/\s+/g, " ").trim();
+  return normalizeName(value ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function tokens(value: string): string[] {
   return clean(value).split(" ").filter((token) => token && !STOP_WORDS.has(token));
+}
+
+const GENERATIONAL = /\b(jr|junior|sr|senior|ii|iii|iv)\b/gi;
+
+function nameTokens(value: string): string[] {
+  return clean(value)
+    .replace(GENERATIONAL, " ")
+    .split(" ")
+    .filter((token) => token && !STOP_WORDS.has(token));
 }
 
 function clubKey(value: string | null | undefined): string | null {
@@ -85,16 +98,16 @@ function clubMatches(localTeam: string, candidate: SorareCandidate): boolean {
 }
 
 function tokenSimilarity(left: string, right: string): number {
-  const a = new Set(tokens(left));
-  const b = new Set(tokens(right));
+  const a = new Set(nameTokens(left));
+  const b = new Set(nameTokens(right));
   if (!a.size || !b.size) return 0;
   const overlap = [...a].filter((token) => b.has(token)).length;
   return (2 * overlap) / (a.size + b.size);
 }
 
 function prefixTokenSimilarity(left: string, right: string): number {
-  const a = new Set(tokens(left));
-  const b = new Set(tokens(right));
+  const a = new Set(nameTokens(left));
+  const b = new Set(nameTokens(right));
   if (!a.size || !b.size) return 0;
   let overlap = 0;
   for (const ta of a) {
@@ -136,7 +149,12 @@ function rank(local: LocalSorarePlayer, candidate: SorareCandidate): RankedSorar
   const fullExact = localName !== "" && localName === clean(candidateFullName);
   const nameScore = displayExact || fullExact
     ? 1
-    : Math.max(tokenSimilarity(local.name, candidate.displayName), tokenSimilarity(local.name, candidateFullName));
+    : Math.max(
+        tokenSimilarity(local.name, candidate.displayName),
+        tokenSimilarity(local.name, candidateFullName),
+        prefixTokenSimilarity(local.name, candidate.displayName),
+        prefixTokenSimilarity(local.name, candidateFullName),
+      );
   const teamMatch = clubMatches(local.teamName, candidate);
   const birthDateMatch = sameDate(local.dateOfBirth, candidate.birthDay);
   const nationalityMatch = sameNationality(local.nationality, candidate.nationality);

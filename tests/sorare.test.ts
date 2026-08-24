@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { SorareApiClient, SorareBudgetExceededError, SORARE_PLAYER_QUERY } from "../lib/sorare-client";
 import { decideSorareMatch, decideSlugProbeMatch, type SorareCandidate } from "../lib/sorare-matching";
+import { slugVariants } from "../lib/sorare-slugs";
 import { sorareRefreshPlan } from "../lib/sorare-sync-policy";
 
 const pedri: SorareCandidate = {
@@ -55,6 +56,61 @@ describe("matching Sorare por identidad", () => {
       [pedri],
     );
     expect(decision.status).toBe("manual_review");
+  });
+
+  it("matchea nombre abreviado con club y sin fecha de nacimiento (prefijo)", () => {
+    const vinicius: SorareCandidate = {
+      slug: "vinicius-jose-paixao-de-oliveira-junior",
+      displayName: "Vinícius Júnior",
+      firstName: "Vinícius",
+      lastName: "Júnior",
+      birthDay: "2000-07-12",
+      nationality: "br",
+      activeClubName: "Real Madrid",
+      activeClubSlug: "real-madrid",
+    };
+    const decision = decideSorareMatch(
+      { id: "1", name: "Vinícius Jr", teamName: "Real Madrid" },
+      [vinicius],
+    );
+    expect(decision.status).toBe("matched");
+  });
+
+  it("matchea por prefijo (Take -> Takefusa) con club y sin fecha", () => {
+    const kubo: SorareCandidate = {
+      slug: "takefusa-kubo",
+      displayName: "Take Kubo",
+      firstName: "Takefusa",
+      lastName: "Kubo",
+      birthDay: "2001-06-04",
+      nationality: "jp",
+      activeClubName: "Real Sociedad",
+      activeClubSlug: "real-sociedad",
+    };
+    const decision = decideSorareMatch(
+      { id: "1", name: "Take Kubo", teamName: "Real Sociedad" },
+      [kubo],
+    );
+    expect(decision.status).toBe("matched");
+  });
+});
+
+describe("slugVariants", () => {
+  it("limpia basura tipo '{{Cita web' sin cierre", () => {
+    const variants = slugVariants({ name: "Mikel Santos", canonicalName: "Mikel Santos {{Cita web" });
+    expect(variants).toContain("mikel-santos");
+    expect(variants.some((variant) => variant.includes("cita"))).toBe(false);
+  });
+
+  it("genera variantes para nombre con inicial", () => {
+    const variants = slugVariants({ name: "S. Flores" });
+    expect(variants).toContain("s-flores");
+    expect(variants).toContain("flores");
+  });
+
+  it("no genera slugs vacíos por basura", () => {
+    const variants = slugVariants({ name: "Mikel Santos", canonicalName: "{{Cita web" });
+    expect(variants.length).toBeGreaterThan(0);
   });
 });
 

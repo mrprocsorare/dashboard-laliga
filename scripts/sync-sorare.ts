@@ -3,7 +3,6 @@ import "dotenv/config";
 import { eq, inArray } from "drizzle-orm";
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
-import { normalizeName } from "../services/player-names";
 import * as schema from "../database/schema";
 import {
   SorareApiClient,
@@ -17,6 +16,7 @@ import {
   type LocalSorarePlayer,
   type SorareCandidate,
 } from "../lib/sorare-matching";
+import { slugVariants } from "../lib/sorare-slugs";
 import {
   SORARE_IDENTITY_TTL_MS,
   SORARE_PRICES_TTL_MS,
@@ -33,71 +33,6 @@ type LocalRow = LocalSorarePlayer & {
 
 function searchName(row: LocalRow): string {
   return row.canonicalName?.trim() || row.name.trim();
-}
-
-function slugVariants(row: LocalRow): string[] {
-  const raw = searchName(row)
-    .replace(/\{\{[^}]*\}\}/g, " ")
-    .replace(/\b\d+(?:er|nd|rd|th|o|a)?\b/g, " ")
-    .replace(/\b(jr|junior|ii|iii|iv)\b/gi, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-  const normalized = normalizeName(raw).trim();
-  if (!normalized) return [];
-
-  const isInitial = (token: string) => /^[a-z]\.?$/.test(token);
-  const isParticle = (token: string) =>
-    ["de", "da", "do", "del", "das", "dos"].includes(token);
-
-  const allParts = normalized.split(" ").filter(Boolean);
-  const significant = allParts.filter((p) => p.length > 1 || isInitial(p));
-  if (!significant.length) return [];
-
-  const first = significant[0];
-  const last = significant.at(-1);
-  const values = new Set<string>();
-
-  const push = (slug: string) => {
-    const clean = slug.replace(/-+/g, "-").replace(/^-|-$/g, "");
-    if (clean.length >= 3) values.add(clean);
-  };
-
-  // Full name with particles (e.g. inigo-ruiz-de-galarreta)
-  push(significant.join("-"));
-
-  // first-last (most common Sorare pattern)
-  if (significant.length >= 2) push(`${first}-${last}`);
-
-  // first-two tokens
-  if (significant.length >= 3) push(significant.slice(0, 2).join("-"));
-
-  // last-two tokens
-  if (significant.length >= 3) push(significant.slice(-2).join("-"));
-
-  // first-only (mononym: Koke, Bordalás)
-  if (first.length >= 3) push(first);
-
-  // last-only (surname reference: Budimir, etc.)
-  if (last && last.length >= 3 && last !== first) push(last);
-
-  // Particles-skipped first-last: e.g. "Antony dos Santos" → "antony-santos"
-  const noParticles = significant.filter((p) => !isParticle(p));
-  if (noParticles.length >= 2) {
-    push(`${noParticles[0]}-${noParticles.at(-1)}`);
-    if (noParticles.length >= 3) push(noParticles.slice(0, 2).join("-"));
-  }
-
-  // Initial-based: "s-flores", "j-castro"
-  if (isInitial(first) && significant.length >= 2) {
-    push(`${first.replace(".", "")}-${last}`);
-  }
-
-  // If the name starts with an initial + significant, also try the significant parts alone
-  if (isInitial(first) && significant.length >= 3) {
-    push(significant.slice(1).join("-"));
-  }
-
-  return [...values];
 }
 
 function candidateFromResponse(player: SorarePlayerResponse): SorareCandidate {
@@ -378,11 +313,21 @@ async function main() {
     }
   }
 
-  const pending = rows.filter((row) => {
+  const isAbbreviated = (row: LocalRow): boolean => {
+    const name = searchName(row);
+    return (
+      /(^|\s)[A-Za-z]\.(?=\s|$)/.test(name) ||
+      /\b(jr|junior|ii|iii|iv)\b/i.test(name) ||
+      name.split(/\s+/).some((token) => token.length <= 2 && /[A-Za-z]/.test(token))
+    );
+  };
+  const reviewRows = rows.filter((row) => {
     const old = mappingByPlayer.get(row.id);
     const current = status.get(row.id);
-    return (current === undefined || current === "manual_review") && (force || !old || old.status === "manual_review");
+    const needsReview = current === undefined || current === "manual_review" || current === "not_found";
+    return needsReview && (force || !old || old.status === "manual_review" || old.status === "not_found");
   });
+  const pending = [...reviewRows].sort((left, right) => Number(isAbbreviated(right)) - Number(isAbbreviated(left)));
   const candidateMap = new Map<string, SorareCandidate[]>();
   try {
     const found = await client.searchPlayers(pending.map(searchName), 1);

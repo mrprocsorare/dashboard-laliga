@@ -243,8 +243,9 @@ export class SorareApiClient {
       if (response.status === 429) {
         const delay = retryAfterMs(response.headers.get("retry-after"));
         this.pausedUntil = Math.max(this.pausedUntil, this.now() + delay);
-        // Parada limpia e inmediata: no reintentamos en ráfaga ni compensamos.
-        throw new SorareRateLimitError(delay);
+        if (attempt === MAX_RETRIES - 1) throw new SorareRateLimitError(delay);
+        await this.sleep(delay);
+        continue;
       }
       if (response.status >= 500 && attempt < MAX_RETRIES - 1) {
         await this.sleep(2 ** attempt * 1_000);
