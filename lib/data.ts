@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { getSorareData, type SorarePlayerData } from "@/lib/sorare";
+import { getSorareData, getSorareSlugByPlayerIds, type SorarePlayerData } from "@/lib/sorare";
 
 /**
  * Capa de datos del dashboard. Lee de Supabase con la sesión del usuario
@@ -216,7 +216,7 @@ export async function getJornadaData(): Promise<JornadaData> {
     supabase
       .from("players")
       .select(
-        "id, team_id, name, position, photo_url, sorare_slug, player_consensus(probability_pct, sources_total, sources_starter, agreement, updated_at)",
+        "id, team_id, name, position, photo_url, player_consensus(probability_pct, sources_total, sources_starter, agreement, updated_at)",
       )
       .not("team_id", "is", null),
   ]);
@@ -231,10 +231,13 @@ export async function getJornadaData(): Promise<JornadaData> {
     const pc = Array.isArray(player_consensus) ? (player_consensus[0] ?? null) : player_consensus;
     return {
       ...p,
+      sorare_slug: null,
       sorare: null,
       consensus: pc ? { ...pc, agreement: normalizeAgreement(pc.agreement) } : null,
     } as PlayerWithConsensus & { team_id: string };
   });
+  const slugMap = await getSorareSlugByPlayerIds(players.map((player) => player.id));
+  for (const player of players) player.sorare_slug = slugMap.get(player.id) ?? null;
 
   const availableRounds = [...new Set(odds.map((o) => o.matchday).filter((v): v is number => v !== null))].sort(
     (a, b) => a - b,
@@ -304,7 +307,7 @@ export async function getTeamData(slug: string): Promise<{
     supabase
       .from("players")
       .select(
-        "id, name, position, photo_url, sorare_slug, player_consensus(probability_pct, sources_total, sources_starter, agreement, updated_at)",
+        "id, name, position, photo_url, player_consensus(probability_pct, sources_total, sources_starter, agreement, updated_at)",
       )
       .eq("team_id", team.id),
     supabase
@@ -341,14 +344,18 @@ export async function getTeamData(slug: string): Promise<{
     const pc = Array.isArray(player_consensus)
       ? (player_consensus[0] ?? null)
       : player_consensus;
-    return {
-      ...p,
-      sorare: null,
-      consensus: pc
-        ? { ...pc, agreement: normalizeAgreement(pc.agreement) }
-        : null,
-    };
-  });
+  return {
+    ...p,
+    sorare_slug: null,
+    sorare: null,
+    consensus: pc
+      ? { ...pc, agreement: normalizeAgreement(pc.agreement) }
+      : null,
+  };
+});
+
+  const slugMap = await getSorareSlugByPlayerIds(players.map((player) => player.id));
+  for (const player of players) player.sorare_slug = slugMap.get(player.id) ?? null;
 
   const sorare = await getSorareData(players.map((player) => player.sorare_slug ?? ""));
   const enrichedPlayers = players.map((player) => ({

@@ -1,0 +1,2 @@
+DROP INDEX "player_source_ids_source_slug_idx";--> statement-breakpoint
+CREATE UNIQUE INDEX "player_source_ids_source_slug_idx" ON "player_source_ids" USING btree ("source_id","external_slug") WHERE "player_source_ids"."status" = 'matched';

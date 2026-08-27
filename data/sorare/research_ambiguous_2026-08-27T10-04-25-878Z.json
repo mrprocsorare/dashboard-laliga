@@ -1,0 +1,3921 @@
+[
+  {
+    "player_id": "79e556fb-5de5-42f9-b902-355af5f94be6",
+    "name": "Álex Padilla",
+    "equipo": "Athletic Club",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "alejandro-fernandez-iglesias",
+        "id": "Player:057b6c7f-6e00-4c18-bb95-28fd66108ac0",
+        "displayName": "Álex",
+        "club": null,
+        "nationality": "es",
+        "birthDay": "1992-10-15"
+      }
+    ]
+  },
+  {
+    "player_id": "3b105631-1a10-4ec1-a5ef-cd93824080bc",
+    "name": "Andoni Gorosabel",
+    "equipo": "Athletic Club",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "andoni-zubiaurre-dorronsoro",
+        "id": "Player:f9d7d4b2-1333-4d1f-9f01-aa250e55240f",
+        "displayName": "Andoni Zubiaurre",
+        "club": "Johor Darul Ta'zim FC",
+        "nationality": "es",
+        "birthDay": "1996-12-04"
+      }
+    ]
+  },
+  {
+    "player_id": "fb933811-a456-4fcd-bd75-e7e15f8c32b1",
+    "name": "Elijah Gift",
+    "equipo": "Athletic Club",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "elijah-henry-just",
+        "id": "Player:ec6bebeb-2d88-4beb-b249-f8a5a2215fd7",
+        "displayName": "Elijah Just",
+        "club": "Swansea City AFC",
+        "nationality": "nz",
+        "birthDay": "2000-05-01"
+      },
+      {
+        "slug": "elijah-dijkstra",
+        "id": "Player:b39f358d-2fe7-4d43-958a-8eac696c71ae",
+        "displayName": "Elijah Dijkstra",
+        "club": "AZ",
+        "nationality": "nl",
+        "birthDay": "2006-08-05"
+      },
+      {
+        "slug": "elijah-olaniyi-odede",
+        "id": "Player:a81c794f-ce24-4c34-b48f-6b770ff4da3a",
+        "displayName": "Elijah Odede",
+        "club": "ESTAC Troyes",
+        "nationality": "ng",
+        "birthDay": "2007-01-12"
+      },
+      {
+        "slug": "elijah-wynder",
+        "id": "Player:1673020d-7303-4ef6-8541-0bb890c2aab9",
+        "displayName": "Elijah Wynder",
+        "club": "LA Galaxy",
+        "nationality": "us",
+        "birthDay": "2003-03-10"
+      },
+      {
+        "slug": "elijah-adebayo",
+        "id": "Player:b3179897-f96d-4082-be91-559f94dbab3e",
+        "displayName": "Elijah Adebayo",
+        "club": "Bristol City FC",
+        "nationality": "gb-eng",
+        "birthDay": "1998-01-07"
+      }
+    ]
+  },
+  {
+    "player_id": "291838f7-a589-4a17-bd02-ac436cb60061",
+    "name": "Iker Monreal",
+    "equipo": "Athletic Club",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "iker-losada-aragunde",
+        "id": "Player:9c368bd3-ade4-48f6-905b-dd34c0372a11",
+        "displayName": "Iker Losada",
+        "club": "Real Betis",
+        "nationality": "es",
+        "birthDay": "2001-08-01"
+      },
+      {
+        "slug": "iker-cordoba-sanchez",
+        "id": "Player:70bbfc45-a331-4a08-bd6a-94620c7cf696",
+        "displayName": "Iker Córdoba",
+        "club": "Valencia CF",
+        "nationality": "es",
+        "birthDay": "2005-11-11"
+      },
+      {
+        "slug": "iker-bravo-solanilla",
+        "id": "Player:de1bfd7d-7fd0-48a4-a94f-b51a4769dce8",
+        "displayName": "Iker Bravo",
+        "club": "Watford FC",
+        "nationality": "es",
+        "birthDay": "2005-01-13"
+      },
+      {
+        "slug": "iker-munoz-cameros",
+        "id": "Player:138fbecd-2602-48bd-a3f1-f8f045bf535b",
+        "displayName": "Iker Muñoz",
+        "club": "CA Osasuna",
+        "nationality": "es",
+        "birthDay": "2002-09-05"
+      },
+      {
+        "slug": "iker-pozo-la-rosa",
+        "id": "Player:2d71679a-16f8-4622-a454-e3d038225fbd",
+        "displayName": "Iker Pozo",
+        "club": "FK Rodina Moskva",
+        "nationality": "es",
+        "birthDay": "2000-08-06"
+      }
+    ]
+  },
+  {
+    "player_id": "83bc3f7a-7c26-4faa-92f2-933bdcb748c2",
+    "name": "Iñaki Williams",
+    "equipo": "Athletic Club",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "william-owie",
+        "id": "Player:a0786815-2a01-41fd-843e-03d7768747e9",
+        "displayName": "William Owie",
+        "club": "Vanraure Hachinohe",
+        "nationality": "jp",
+        "birthDay": "2004-04-19"
+      },
+      {
+        "slug": "inaki-ruperez-urtasun",
+        "id": "Player:96c07bc1-e7a7-4a02-b900-b391d1d4b9a9",
+        "displayName": "Iñaki Rupérez",
+        "club": "Real Sociedad",
+        "nationality": "es",
+        "birthDay": "2003-01-07"
+      }
+    ]
+  },
+  {
+    "player_id": "625bb085-ca29-4c37-b521-ad8057b5c6f0",
+    "name": "Iñigo Ruiz de Galarreta",
+    "equipo": "Athletic Club",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "inigo-sainz-maza-serna",
+        "id": "Player:da0113dc-40e6-4c7f-9525-8e4cc61c4eee",
+        "displayName": "Íñigo Sainz-Maza",
+        "club": "Real Racing Club de Santander",
+        "nationality": "es",
+        "birthDay": "1998-06-16"
+      },
+      {
+        "slug": "inigo-vicente-elorduy",
+        "id": "Player:4aa24f64-0b54-4617-b7ed-d30c7edc1708",
+        "displayName": "Iñigo Vicente",
+        "club": "Real Racing Club de Santander",
+        "nationality": "es",
+        "birthDay": "1998-01-06"
+      },
+      {
+        "slug": "inigo-arguibide-goni",
+        "id": "Player:ad33232f-9b31-4416-ada2-54a2687359bf",
+        "displayName": "Íñigo Arguibide",
+        "club": "CA Osasuna",
+        "nationality": "es",
+        "birthDay": "2005-04-19"
+      }
+    ]
+  },
+  {
+    "player_id": "c756c1d6-ccc0-4cbf-8caa-d45cf624c777",
+    "name": "Jesús Areso",
+    "equipo": "Athletic Club",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "jesus-belza-medina",
+        "id": "Player:8c436090-34f3-4752-8bb8-55887c4100c9",
+        "displayName": "Jesús",
+        "club": "CD Tenerife II",
+        "nationality": "es",
+        "birthDay": "2004-02-26"
+      },
+      {
+        "slug": "jesus-lopez",
+        "id": "Player:199b7593-07f6-4d47-93fd-8463984a5b64",
+        "displayName": "Jesús",
+        "club": "Elche CF",
+        "nationality": "es",
+        "birthDay": "2002-08-01"
+      }
+    ]
+  },
+  {
+    "player_id": "2d1c77eb-86e1-4574-92e1-f9f87ada9ee6",
+    "name": "Robert Navarro",
+    "equipo": "Athletic Club",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "robert-wagner",
+        "id": "Player:ecc1334a-6d09-4d3d-ae19-4bbb2ff69378",
+        "displayName": "Robert Wagner",
+        "club": "SG Dynamo Dresden",
+        "nationality": "de",
+        "birthDay": "2003-07-14"
+      },
+      {
+        "slug": "robert-jan-vanwesemael",
+        "id": "Player:7d224647-f3ea-4163-b7c8-f68adaac571f",
+        "displayName": "Robert-Jan Vanwesemael",
+        "club": "Sint-Truidense VV",
+        "nationality": "be",
+        "birthDay": "2002-03-26"
+      },
+      {
+        "slug": "andrew-robertson",
+        "id": "Player:8ea72b53-1e32-434a-b88b-819e86b8157e",
+        "displayName": "Andy Robertson",
+        "club": "Tottenham Hotspur FC",
+        "nationality": "gb-sct",
+        "birthDay": "1994-03-11"
+      },
+      {
+        "slug": "robbie-ure",
+        "id": "Player:2b176d5b-931a-4ae4-88ec-d5a7c0801988",
+        "displayName": "Robert Ure",
+        "club": "Sevilla FC",
+        "nationality": "gb-sct",
+        "birthDay": "2004-02-26"
+      },
+      {
+        "slug": "robert-mudrazija",
+        "id": "Player:c98fdace-bd9c-4154-ab21-4e2d34b97897",
+        "displayName": "Robert Mudražija",
+        "club": "GNK Dinamo Zagreb",
+        "nationality": "hr",
+        "birthDay": "1997-05-05"
+      },
+      {
+        "slug": "robert-kampa",
+        "id": "Player:0799ddae-0707-4fa5-b090-614607feee47",
+        "displayName": "Robert Kampa",
+        "club": "1. FC Magdeburg",
+        "nationality": "de",
+        "birthDay": "2005-02-13"
+      },
+      {
+        "slug": "connor-roberts",
+        "id": "Player:33271343-5516-4b00-8077-3db94f260f85",
+        "displayName": "Connor Roberts",
+        "club": "Burnley FC",
+        "nationality": "gb-wls",
+        "birthDay": "1995-09-23"
+      },
+      {
+        "slug": "robert-lewandowski",
+        "id": "Player:47fceb66-5fc3-428c-ada7-844844b6c508",
+        "displayName": "Robert Lewandowski",
+        "club": "Chicago Fire FC",
+        "nationality": "pl",
+        "birthDay": "1988-08-21"
+      },
+      {
+        "slug": "robert-andrich",
+        "id": "Player:b957278b-3976-4ce8-9a57-22b88d6e7715",
+        "displayName": "Robert Andrich",
+        "club": "Bayer 04 Leverkusen",
+        "nationality": "de",
+        "birthDay": "1994-09-22"
+      },
+      {
+        "slug": "robert-skov",
+        "id": "Player:c565c7c7-9584-49be-90c5-281049e452d8",
+        "displayName": "Robert Skov",
+        "club": "1. FC Union Berlin",
+        "nationality": "dk",
+        "birthDay": "1996-05-20"
+      }
+    ]
+  },
+  {
+    "player_id": "af66ad36-727e-48ca-8cd5-740b52d0aab2",
+    "name": "Yeray Álvarez",
+    "equipo": "Athletic Club",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "yeray-alvarez-lopez",
+        "id": "Player:70eb273f-8f0e-4f20-9167-56577aecc32d",
+        "displayName": "Yeray",
+        "club": "Athletic Club",
+        "nationality": "es",
+        "birthDay": "1995-01-24"
+      }
+    ]
+  },
+  {
+    "player_id": "26c6d69b-2a7e-479d-bc7e-07336150f134",
+    "name": "Yuri Berchiche",
+    "equipo": "Athletic Club",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "yuri-berchiche-izeta",
+        "id": "Player:411f6a6a-f9c0-4e31-9e6e-40c07863fc75",
+        "displayName": "Yuri",
+        "club": "Athletic Club",
+        "nationality": "es",
+        "birthDay": "1990-02-10"
+      }
+    ]
+  },
+  {
+    "player_id": "d2a836c4-c716-46da-b81a-41e69b5ae278",
+    "name": "Alexander Sørloth",
+    "equipo": "Atlético de Madrid",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "trent-alexander-arnold",
+        "id": "Player:63636c27-445c-471b-8b3f-ce69c54a578e",
+        "displayName": "Trent Alexander-Arnold",
+        "club": "Real Madrid",
+        "nationality": "gb-eng",
+        "birthDay": "1998-10-07"
+      },
+      {
+        "slug": "alex-cairns",
+        "id": "Player:bc652fba-ca14-4169-8483-5c5a1de02423",
+        "displayName": "Alexander Cairns",
+        "club": "Leeds United FC",
+        "nationality": "gb-eng",
+        "birthDay": "1993-01-04"
+      },
+      {
+        "slug": "alexander-schlager",
+        "id": "Player:2f2d1c91-a04a-4941-ab9e-d1b440828e9f",
+        "displayName": "Alexander Schlager",
+        "club": "SV Werder Bremen",
+        "nationality": "at",
+        "birthDay": "1996-02-01"
+      },
+      {
+        "slug": "alexander-brunst-zollner",
+        "id": "Player:d2ff56fa-a9d8-44d2-b6e4-cefe8886f1ce",
+        "displayName": "Alexander Brunst",
+        "club": "SV Darmstadt 1898",
+        "nationality": "de",
+        "birthDay": "1995-07-07"
+      },
+      {
+        "slug": "alexander-paulsen",
+        "id": "Player:691b2b94-6045-4e38-8a67-e71595f705b9",
+        "displayName": "Alexander Paulsen",
+        "club": "Motherwell FC",
+        "nationality": "nz",
+        "birthDay": "2002-07-04"
+      },
+      {
+        "slug": "alexander-bonetig",
+        "id": "Player:2d3251d3-5d8a-4f64-9291-05d72009d2ce",
+        "displayName": "Alexander Bonetig",
+        "club": "Portland Timbers",
+        "nationality": "au",
+        "birthDay": "2002-08-20"
+      },
+      {
+        "slug": "alex-palmer",
+        "id": "Player:95070fc8-8561-4be2-b840-63e28de18d42",
+        "displayName": "Alexander Palmer",
+        "club": "Ipswich Town FC",
+        "nationality": "gb-eng",
+        "birthDay": "1996-08-10"
+      },
+      {
+        "slug": "alexander-james-moore",
+        "id": "Player:7c847837-a2cb-4ae7-bd9e-1e2811d3eb0a",
+        "displayName": "Alexander Moore",
+        "club": "Wrexham FC",
+        "nationality": "gb-eng",
+        "birthDay": "2006-09-18"
+      }
+    ]
+  },
+  {
+    "player_id": "de83041e-9389-4492-a689-a11b6f78f40c",
+    "name": "Johnny Cardoso",
+    "equipo": "Atlético de Madrid",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "johnny-kenny",
+        "id": "Player:7be92453-e84b-4610-9d74-fbfc06659338",
+        "displayName": "Johnny Kenny",
+        "club": "Celtic FC",
+        "nationality": "ie",
+        "birthDay": "2003-06-06"
+      },
+      {
+        "slug": "johnny-russell",
+        "id": "Player:eb35b0bf-62ab-4c91-b84e-ece2dcae074e",
+        "displayName": "Johnny Russell",
+        "club": null,
+        "nationality": "gb-sct",
+        "birthDay": "1990-04-08"
+      }
+    ]
+  },
+  {
+    "player_id": "a6b6d4cd-48b4-463b-ace3-cf2179c96e0c",
+    "name": "Jorge Domínguez",
+    "equipo": "Atlético de Madrid",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "jorgen-strand-larsen",
+        "id": "Player:8b921c65-e6f5-4a9b-b418-8bede308866d",
+        "displayName": "Jørgen Larsen",
+        "club": "Crystal Palace FC",
+        "nationality": "no",
+        "birthDay": "2000-02-06"
+      },
+      {
+        "slug": "thomas-jorgensen",
+        "id": "Player:681f9a50-8824-460c-978c-1f58fca3d351",
+        "displayName": "Thomas Jørgensen",
+        "club": "Toulouse FC",
+        "nationality": "dk",
+        "birthDay": "2005-09-30"
+      },
+      {
+        "slug": "jorge-eduardo-sanchez-ramos",
+        "id": "Player:2c388c69-1b22-4418-9805-a42008b12cc5",
+        "displayName": "Jorge Sánchez",
+        "club": "Atlas FC de Guadalajara",
+        "nationality": "mx",
+        "birthDay": "1997-12-10"
+      },
+      {
+        "slug": "kasper-poul-molgaard-jorgensen",
+        "id": "Player:76bd9a87-0604-4a91-8aed-c8dfede7c095",
+        "displayName": "Kasper Jørgensen",
+        "club": "LASK",
+        "nationality": "dk",
+        "birthDay": "1999-11-07"
+      },
+      {
+        "slug": "jorge-alastuey-aperte",
+        "id": "Player:ccf4d000-202f-4586-870a-8a904cd90912",
+        "displayName": "Jorge Alastuey",
+        "club": "Austin FC",
+        "nationality": "es",
+        "birthDay": "2003-05-14"
+      },
+      {
+        "slug": "filip-jorgensen",
+        "id": "Player:2358ad88-306c-450d-80b0-030e8829de05",
+        "displayName": "Filip Jörgensen",
+        "club": "RC Strasbourg Alsace",
+        "nationality": "dk",
+        "birthDay": "2002-04-16"
+      }
+    ]
+  },
+  {
+    "player_id": "16618a0e-4f74-4b12-918e-7f1c981ca543",
+    "name": "Koke Resurrección",
+    "equipo": "Atlético de Madrid",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "jorge-resurreccion-merodio",
+        "id": "Player:944d030a-0ac7-40b6-be7b-0e70a73885e8",
+        "displayName": "Koke",
+        "club": "Atlético de Madrid",
+        "nationality": "es",
+        "birthDay": "1992-01-08"
+      }
+    ]
+  },
+  {
+    "player_id": "f933bb6a-a3e2-4775-9534-5a2314ea9592",
+    "name": "Aimar Oroz",
+    "equipo": "CA Osasuna",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "aimar-oroz-huarte",
+        "id": "Player:31400050-9f64-486e-bdf0-807233d556c5",
+        "displayName": "Aimar",
+        "club": "CA Osasuna",
+        "nationality": "es",
+        "birthDay": "2001-11-27"
+      }
+    ]
+  },
+  {
+    "player_id": "07248ceb-4c9e-4773-af95-73e3f349f3a0",
+    "name": "Anai Morales",
+    "equipo": "CA Osasuna",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "ayoube-amaimouni-echghouyab",
+        "id": "Player:2b9dfbd4-acdb-4cd7-b636-76a973057749",
+        "displayName": "Ayoube Amaimouni-Echghouyab",
+        "club": "Eintracht Frankfurt",
+        "nationality": "ma",
+        "birthDay": "2004-11-30"
+      },
+      {
+        "slug": "anan-khalaili",
+        "id": "Player:fbe54e24-95bc-4e2f-a869-a7c900330af8",
+        "displayName": "Anan Khalaili",
+        "club": "Crystal Palace FC",
+        "nationality": "il",
+        "birthDay": "2004-09-03"
+      },
+      {
+        "slug": "anatolii-trubin",
+        "id": "Player:2dc36847-3d97-4e7c-896d-a03a4d7ebef5",
+        "displayName": "Anatolii Trubin",
+        "club": "SL Benfica",
+        "nationality": "ua",
+        "birthDay": "2001-08-01"
+      },
+      {
+        "slug": "michael-ani",
+        "id": "Player:2e0bf366-2d5c-4107-bb5d-6009adf38dbb",
+        "displayName": "Michael Ani",
+        "club": "Portsmouth FC",
+        "nationality": "gb-eng",
+        "birthDay": "2006-05-21"
+      },
+      {
+        "slug": "anisio-claudio-fernandes-reis-cabral",
+        "id": "Player:bed463d7-83ff-4031-9ec7-aee1426b97dc",
+        "displayName": "Anísio Cabral",
+        "club": "SL Benfica",
+        "nationality": "pt",
+        "birthDay": "2008-02-15"
+      },
+      {
+        "slug": "anis-hadj-moussa",
+        "id": "Player:76798bd9-6aa1-4a2d-a120-d50809917490",
+        "displayName": "Anis Hadj Moussa",
+        "club": "Feyenoord Rotterdam",
+        "nationality": "dz",
+        "birthDay": "2002-02-11"
+      },
+      {
+        "slug": "haitam-abaida-el-achhab",
+        "id": "Player:148a6d68-9b25-4462-9f31-28bea4122eb9",
+        "displayName": "Haitam Abaida",
+        "club": "Málaga CF",
+        "nationality": "ma",
+        "birthDay": "2002-06-01"
+      }
+    ]
+  },
+  {
+    "player_id": "ffefcce8-5521-4e2f-9cb7-5160dc331d2d",
+    "name": "Diego Rico",
+    "equipo": "CA Osasuna",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "diogo-andre-santos-nascimento",
+        "id": "Player:568605d0-d13e-4b0f-86fd-95121db69109",
+        "displayName": "Diogo Nascimento",
+        "club": "Rio Ave FC",
+        "nationality": "pt",
+        "birthDay": "2002-11-02"
+      },
+      {
+        "slug": "diogo-bezerra-de-oliveira",
+        "id": "Player:f5bdae8b-5bd3-4476-a335-19f955b6ef1f",
+        "displayName": "Diogo Bezerra",
+        "club": "Rio Ave FC",
+        "nationality": "br",
+        "birthDay": "2002-07-16"
+      },
+      {
+        "slug": "diego-jara-rodrigues",
+        "id": "Player:803d3ff3-94ff-43aa-a4bd-60bdc4878f6c",
+        "displayName": "Diego",
+        "club": "Vissel Kobe",
+        "nationality": "br",
+        "birthDay": "1995-09-21"
+      }
+    ]
+  },
+  {
+    "player_id": "53bcde51-6436-4930-9eb0-e67d84a42997",
+    "name": "Enzo Boyomo",
+    "equipo": "CA Osasuna",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "enzo-le-fee",
+        "id": "Player:b2f31c53-ff44-43cf-9852-a9d213edc418",
+        "displayName": "Enzo Le Fée",
+        "club": "Sunderland AFC",
+        "nationality": "fr",
+        "birthDay": "2000-02-03"
+      },
+      {
+        "slug": "enzo-leopold",
+        "id": "Player:2b9adcc3-f117-4f19-93a7-646f169af679",
+        "displayName": "Enzo Leopold",
+        "club": "Borussia Mönchengladbach",
+        "nationality": "de",
+        "birthDay": "2000-07-23"
+      },
+      {
+        "slug": "enzo-daniel-gimenez-rojas",
+        "id": "Player:f228572c-e77e-4cfe-96ed-a1f0d4b68225",
+        "displayName": "Enzo Giménez",
+        "club": "Querétaro FC",
+        "nationality": "py",
+        "birthDay": "1998-02-17"
+      },
+      {
+        "slug": "enzo-jeremias-fernandez",
+        "id": "Player:a76c5baa-e143-4eb2-a9af-a5b3d77c2bdc",
+        "displayName": "Enzo Fernández",
+        "club": "Chelsea FC",
+        "nationality": "ar",
+        "birthDay": "2001-01-17"
+      },
+      {
+        "slug": "enzo-anthony-honore-molebe",
+        "id": "Player:8dc22280-77a9-4675-a3cd-095dbec1090e",
+        "displayName": "Enzo Molébé",
+        "club": "FC Lausanne Sport",
+        "nationality": "fr",
+        "birthDay": "2007-09-18"
+      }
+    ]
+  },
+  {
+    "player_id": "1beabbbe-7b74-40db-a969-278f62c46a73",
+    "name": "Jorge Herrando",
+    "equipo": "CA Osasuna",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "jorge-daniel-hernandez-govea",
+        "id": "Player:5131b0ac-04ea-4372-a0f5-9f13ef0f28e9",
+        "displayName": "Jorge Hernández",
+        "club": null,
+        "nationality": "mx",
+        "birthDay": "1989-06-10"
+      },
+      {
+        "slug": "jorge-hernandez-2000-11-08",
+        "id": "Player:27c75486-c982-4ab1-ae45-cdc67946814d",
+        "displayName": "Jorge Hernandez",
+        "club": "San Antonio FC",
+        "nationality": "mx",
+        "birthDay": "2000-11-08"
+      },
+      {
+        "slug": "jorgen-strand-larsen",
+        "id": "Player:8b921c65-e6f5-4a9b-b418-8bede308866d",
+        "displayName": "Jørgen Larsen",
+        "club": "Crystal Palace FC",
+        "nationality": "no",
+        "birthDay": "2000-02-06"
+      },
+      {
+        "slug": "thomas-jorgensen",
+        "id": "Player:681f9a50-8824-460c-978c-1f58fca3d351",
+        "displayName": "Thomas Jørgensen",
+        "club": "Toulouse FC",
+        "nationality": "dk",
+        "birthDay": "2005-09-30"
+      },
+      {
+        "slug": "jorge-eduardo-sanchez-ramos",
+        "id": "Player:2c388c69-1b22-4418-9805-a42008b12cc5",
+        "displayName": "Jorge Sánchez",
+        "club": "Atlas FC de Guadalajara",
+        "nationality": "mx",
+        "birthDay": "1997-12-10"
+      },
+      {
+        "slug": "kasper-poul-molgaard-jorgensen",
+        "id": "Player:76bd9a87-0604-4a91-8aed-c8dfede7c095",
+        "displayName": "Kasper Jørgensen",
+        "club": "LASK",
+        "nationality": "dk",
+        "birthDay": "1999-11-07"
+      },
+      {
+        "slug": "jorge-alastuey-aperte",
+        "id": "Player:ccf4d000-202f-4586-870a-8a904cd90912",
+        "displayName": "Jorge Alastuey",
+        "club": "Austin FC",
+        "nationality": "es",
+        "birthDay": "2003-05-14"
+      },
+      {
+        "slug": "filip-jorgensen",
+        "id": "Player:2358ad88-306c-450d-80b0-030e8829de05",
+        "displayName": "Filip Jörgensen",
+        "club": "RC Strasbourg Alsace",
+        "nationality": "dk",
+        "birthDay": "2002-04-16"
+      }
+    ]
+  },
+  {
+    "player_id": "9250b4cf-9e69-4586-b017-7b7de142fe96",
+    "name": "Mauro Echegoyen",
+    "equipo": "CA Osasuna",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "mauro-wilney-arambarri-rosa",
+        "id": "Player:1b6d9d9f-d3a6-4471-8aaf-38785ee4c69c",
+        "displayName": "Mauro Arambarri",
+        "club": "CA River Plate",
+        "nationality": "uy",
+        "birthDay": "1995-09-30"
+      },
+      {
+        "slug": "mauro-jaqueson-junior-ferreira-dos-santos",
+        "id": "Player:3622f9da-9ea9-4dc9-86b4-12b1e6794aa2",
+        "displayName": "Mauro Júnior",
+        "club": "PSV Eindhoven",
+        "nationality": "br",
+        "birthDay": "1999-05-06"
+      }
+    ]
+  },
+  {
+    "player_id": "6eaf9398-dfef-403b-ad2c-af275921ac8f",
+    "name": "Miguel Auría",
+    "equipo": "CA Osasuna",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "adrian-san-miguel-del-castillo",
+        "id": "Player:5f26f2ec-51b3-47c9-89f2-18223a1a46aa",
+        "displayName": "Adrian San Miguel",
+        "club": null,
+        "nationality": "es",
+        "birthDay": "1987-01-03"
+      },
+      {
+        "slug": "miguel-rodriguez-vidal",
+        "id": "Player:2492a1f8-44da-4036-8660-55a0d54bfd6b",
+        "displayName": "Miguel Rodríguez",
+        "club": "D. Alavés",
+        "nationality": "es",
+        "birthDay": "2003-04-29"
+      },
+      {
+        "slug": "miguel-angelo-gomes-ferreira-magalhaes",
+        "id": "Player:3efd1f7e-9336-46ba-8f02-135f9eac962c",
+        "displayName": "Miguel Maga",
+        "club": "Vitória Guimarães SC",
+        "nationality": "pt",
+        "birthDay": "2002-11-16"
+      },
+      {
+        "slug": "miguel-angel-brau-blanquez",
+        "id": "Player:8952d292-6509-4f70-b99d-aaceee6650a6",
+        "displayName": "Miguel Ángel Brau",
+        "club": "Coventry City FC",
+        "nationality": "es",
+        "birthDay": "2001-12-27"
+      },
+      {
+        "slug": "miguel-loureiro-ameijeda",
+        "id": "Player:d3eee41b-0c76-4d24-9b85-1abf0f420502",
+        "displayName": "Miguel Loureiro Ameijenda",
+        "club": "Real Club Deportivo de La Coruña",
+        "nationality": "es",
+        "birthDay": "1996-11-21"
+      },
+      {
+        "slug": "miguel-gutierrez-ortega",
+        "id": "Player:606dc85f-e4a2-40ce-b5d8-03a24fdf7be4",
+        "displayName": "Miguel Gutiérrez",
+        "club": "Bayer 04 Leverkusen",
+        "nationality": "es",
+        "birthDay": "2001-07-27"
+      }
+    ]
+  },
+  {
+    "player_id": "adb25425-b74a-4d6f-92df-846dd3a85395",
+    "name": "Rafa Fernández",
+    "equipo": "CA Osasuna",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "rafael-alexandre-fernandes-ferreira-da-silva",
+        "id": "Player:d709385f-da8f-41ff-bbd2-ba3068fd1b64",
+        "displayName": "Rafa",
+        "club": "SL Benfica",
+        "nationality": "pt",
+        "birthDay": "1993-05-17"
+      }
+    ]
+  },
+  {
+    "player_id": "6a7715e7-9eef-4ded-9443-163c3e0e25df",
+    "name": "Aleix Febas",
+    "equipo": "Celta de Vigo",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "aleix-garcia-serrano",
+        "id": "Player:c91c337f-1750-4aab-a37f-c73faeaf3bc4",
+        "displayName": "Aleix García",
+        "club": "Bayer 04 Leverkusen",
+        "nationality": "es",
+        "birthDay": "1997-06-28"
+      }
+    ]
+  },
+  {
+    "player_id": "60b5a8d2-7eaa-4d61-9aab-b7a0dd7de91f",
+    "name": "Javi Galán",
+    "equipo": "Celta de Vigo",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "javier-guerra-moreno",
+        "id": "Player:95e7004b-06b4-4feb-8358-8f616814e410",
+        "displayName": "Javi Guerra",
+        "club": "Valencia CF",
+        "nationality": "es",
+        "birthDay": "2003-05-13"
+      },
+      {
+        "slug": "javier-puado-diaz",
+        "id": "Player:7d02f1ff-b6b9-4790-9e5c-c71f03f1f80c",
+        "displayName": "Javi Puado",
+        "club": "RCD Espanyol de Barcelona",
+        "nationality": "es",
+        "birthDay": "1998-05-25"
+      },
+      {
+        "slug": "javier-galan-gil",
+        "id": "Player:3b18f29f-37dc-4189-a9cf-ac7bae806127",
+        "displayName": "Javier Galán",
+        "club": "RC Celta",
+        "nationality": "es",
+        "birthDay": "1994-11-19"
+      },
+      {
+        "slug": "javier-rueda-garcia",
+        "id": "Player:3279e53a-942f-4011-a6aa-99fa70544d3c",
+        "displayName": "Javi Rueda",
+        "club": "RC Celta",
+        "nationality": "es",
+        "birthDay": "2002-05-08"
+      },
+      {
+        "slug": "javier-munoz-jimenez",
+        "id": "Player:94c5abc3-9a2a-4617-9cdc-60eead0a2ec1",
+        "displayName": "Javi Muñoz",
+        "club": "Getafe CF",
+        "nationality": "es",
+        "birthDay": "1995-02-28"
+      },
+      {
+        "slug": "marcelo-javier-correa",
+        "id": "Player:766685af-d0d3-488e-9e23-ae1e55bce901",
+        "displayName": "Javier Correa",
+        "club": "CSD Colo-Colo",
+        "nationality": "ar",
+        "birthDay": "1992-10-23"
+      },
+      {
+        "slug": "javier-rodriguez-galiano",
+        "id": "Player:6d7896f3-359a-45cf-b476-b5277115d042",
+        "displayName": "Javi Rodríguez",
+        "club": "RC Celta",
+        "nationality": "es",
+        "birthDay": "2003-06-26"
+      }
+    ]
+  },
+  {
+    "player_id": "81ad7029-6141-4ec0-a86a-a09cdcd1fe31",
+    "name": "Abde Rebbach",
+    "equipo": "Deportivo Alavés",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "abdessamad-ezzalzouli",
+        "id": "Player:f61f38ec-c4cd-4b3a-b72f-e892743c9dad",
+        "displayName": "Abde",
+        "club": "Real Betis",
+        "nationality": "ma",
+        "birthDay": "2001-12-17"
+      }
+    ]
+  },
+  {
+    "player_id": "12d8e70f-e081-4dc6-a138-2f58d46d2647",
+    "name": "Ander Guevara",
+    "equipo": "Deportivo Alavés",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "anders-dreyer",
+        "id": "Player:6c33288b-4196-4130-8e02-6cd637f090ad",
+        "displayName": "Anders Dreyer",
+        "club": "San Diego FC",
+        "nationality": "dk",
+        "birthDay": "1998-05-02"
+      },
+      {
+        "slug": "elliott-anderson",
+        "id": "Player:4204c693-5f89-440d-8597-aefab148aaed",
+        "displayName": "Elliot Anderson",
+        "club": "Manchester City FC",
+        "nationality": "gb-eng",
+        "birthDay": "2002-11-06"
+      },
+      {
+        "slug": "victor-andersson-2004-10-22",
+        "id": "Player:8d421fe0-03d1-49b6-931a-076bb1f46ee5",
+        "displayName": "Victor Andersson",
+        "club": "Vitória Guimarães SC",
+        "nationality": "se",
+        "birthDay": "2004-10-22"
+      },
+      {
+        "slug": "anderson-lenda-lucoqui",
+        "id": "Player:44772ed7-7096-4f20-aa1f-73b5688f31e2",
+        "displayName": "Anderson Lucoqui",
+        "club": "FC Energie Cottbus",
+        "nationality": "ao",
+        "birthDay": "1997-07-06"
+      },
+      {
+        "slug": "anderson-de-oliveira-da-silva",
+        "id": "Player:95665a39-25fa-4562-86ea-2e7d0039ece4",
+        "displayName": "Anderson Oliveira",
+        "club": "FC Seoul",
+        "nationality": "br",
+        "birthDay": "1998-07-16"
+      },
+      {
+        "slug": "silas-sinan-erhen-thorup-andersen",
+        "id": "Player:d50cc80e-81a0-46cc-92ae-841446edff29",
+        "displayName": "Silas Andersen",
+        "club": "Sporting Clube de Portugal",
+        "nationality": "dk",
+        "birthDay": "2004-06-13"
+      }
+    ]
+  },
+  {
+    "player_id": "126ca8f5-05e7-4404-a5d1-2a0438767b6b",
+    "name": "Carlos Benavídez",
+    "equipo": "Deportivo Alavés",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "carlos-lopez-nogueras",
+        "id": "Player:621026d6-f969-4441-8263-b685910c4ca2",
+        "displayName": "Carlos López",
+        "club": "Málaga CF",
+        "nationality": "es",
+        "birthDay": "2004-11-13"
+      },
+      {
+        "slug": "carlos-francisco-puga-medina",
+        "id": "Player:0bc14fec-58a1-4cca-a12c-5dbf7e555846",
+        "displayName": "Carlos Puga",
+        "club": "Málaga CF",
+        "nationality": "es",
+        "birthDay": "2000-11-26"
+      },
+      {
+        "slug": "carlos-vicente-robles",
+        "id": "Player:d15f246c-cbc5-4649-b432-a26c8b483434",
+        "displayName": "Carlos Vicente",
+        "club": "Birmingham City FC",
+        "nationality": "es",
+        "birthDay": "1999-04-23"
+      },
+      {
+        "slug": "carlos-balepa-noom-quomah",
+        "id": "Player:3ba316a9-b5d9-4e43-913b-3bdba8274901",
+        "displayName": "Carlos Baleba",
+        "club": "Manchester United FC",
+        "nationality": "cm",
+        "birthDay": "2004-01-03"
+      },
+      {
+        "slug": "carlos-alcaraz",
+        "id": "Player:e176d8a4-b790-47a4-8f3f-02d7d3cbcf6f",
+        "displayName": "Carlos Alcaraz",
+        "club": "Everton FC",
+        "nationality": "ar",
+        "birthDay": "2002-11-30"
+      },
+      {
+        "slug": "carlos-roberto-forbs-borges",
+        "id": "Player:20da711b-f7e9-4b14-813b-9402011bdb68",
+        "displayName": "Carlos Forbs",
+        "club": "Club Brugge KV",
+        "nationality": "pt",
+        "birthDay": "2004-03-19"
+      },
+      {
+        "slug": "carlos-soler-barragan",
+        "id": "Player:a000d8fe-f4c5-4e8a-ae78-89678aeec9ac",
+        "displayName": "Carlos Soler",
+        "club": "Real Sociedad",
+        "nationality": "es",
+        "birthDay": "1997-01-02"
+      }
+    ]
+  },
+  {
+    "player_id": "bfc14baa-638f-4c5e-8718-706d411a84cf",
+    "name": "J. Castro",
+    "equipo": "Deportivo Alavés",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "tino-jukic",
+        "id": "Player:4b696fc7-8efd-480a-948e-15071c4c3be9",
+        "displayName": "Tino Jukić",
+        "club": "NK Lokomotiva Zagreb",
+        "nationality": "hr",
+        "birthDay": "2001-10-10"
+      },
+      {
+        "slug": "wolke-janssens",
+        "id": "Player:afa09f22-e4dd-4e24-a7f7-75567923aac1",
+        "displayName": "Wolke Janssens",
+        "club": "Sint-Truidense VV",
+        "nationality": "be",
+        "birthDay": "1995-01-11"
+      },
+      {
+        "slug": "seung-won-jung",
+        "id": "Player:57557c1a-352f-4607-afc0-c758c97e79e4",
+        "displayName": "Jeong Seung-Won",
+        "club": "FC Seoul",
+        "nationality": "kr",
+        "birthDay": "1997-02-27"
+      },
+      {
+        "slug": "johannes-schenk",
+        "id": "Player:606e789e-dc97-4fd0-af98-313010d8f94d",
+        "displayName": "Johannes Schenk",
+        "club": "Waasland-Beveren",
+        "nationality": "de",
+        "birthDay": "2003-01-13"
+      },
+      {
+        "slug": "robert-jan-vanwesemael",
+        "id": "Player:7d224647-f3ea-4163-b7c8-f68adaac571f",
+        "displayName": "Robert-Jan Vanwesemael",
+        "club": "Sint-Truidense VV",
+        "nationality": "be",
+        "birthDay": "2002-03-26"
+      },
+      {
+        "slug": "tobias-lund-jensen",
+        "id": "Player:cb5bc48d-e039-44b4-acb5-ee0e45799f6c",
+        "displayName": "Tobias Lund Jensen",
+        "club": "SV Guntamatic Ried",
+        "nationality": "dk",
+        "birthDay": "2006-02-10"
+      },
+      {
+        "slug": "vitezslav-jaros",
+        "id": "Player:e848067d-ab65-4170-9a71-51edf21b1ab9",
+        "displayName": "Vítězslav Jaroš",
+        "club": "Liverpool FC",
+        "nationality": "cz",
+        "birthDay": "2001-07-23"
+      },
+      {
+        "slug": "reece-james",
+        "id": "Player:88775618-59ee-49be-8320-b53134fff0de",
+        "displayName": "Reece James",
+        "club": "Chelsea FC",
+        "nationality": "gb-eng",
+        "birthDay": "1999-12-08"
+      },
+      {
+        "slug": "jhon-adolfo-arias-andrade",
+        "id": "Player:daf38765-26ca-4d51-aa51-67d8d480341d",
+        "displayName": "Jhon Arias",
+        "club": "SE Palmeiras",
+        "nationality": "co",
+        "birthDay": "1997-09-21"
+      }
+    ]
+  },
+  {
+    "player_id": "a33ddd8e-ae4d-4e7e-8441-41169257f0fe",
+    "name": "Jesús Owono",
+    "equipo": "Deportivo Alavés",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "jesus-belza-medina",
+        "id": "Player:8c436090-34f3-4752-8bb8-55887c4100c9",
+        "displayName": "Jesús",
+        "club": "CD Tenerife II",
+        "nationality": "es",
+        "birthDay": "2004-02-26"
+      },
+      {
+        "slug": "jesus-lopez",
+        "id": "Player:199b7593-07f6-4d47-93fd-8463984a5b64",
+        "displayName": "Jesús",
+        "club": "Elche CF",
+        "nationality": "es",
+        "birthDay": "2002-08-01"
+      }
+    ]
+  },
+  {
+    "player_id": "fe05644d-c06c-423b-9f53-7abe54a9ced5",
+    "name": "Jonny Otto",
+    "equipo": "Deportivo Alavés",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "jonathan-castro-otto",
+        "id": "Player:23554bfb-39b9-48c1-a7f7-bb640d09ffd1",
+        "displayName": "Jonny",
+        "club": "D. Alavés",
+        "nationality": "es",
+        "birthDay": "1994-03-03"
+      }
+    ]
+  },
+  {
+    "player_id": "d0d687e5-63ed-476a-9a41-3243724bb48d",
+    "name": "Lander Pinillos",
+    "equipo": "Deportivo Alavés",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "landerson-costa-araujo",
+        "id": "Player:4327b150-b21e-497e-9910-861a6dcac021",
+        "displayName": "Landerson",
+        "club": "Moreirense FC",
+        "nationality": "br",
+        "birthDay": "2006-12-12"
+      }
+    ]
+  },
+  {
+    "player_id": "b8cccccd-f123-4294-9748-5c2ea455bbdb",
+    "name": "Protesoni",
+    "equipo": "Deportivo Alavés",
+    "reason": "weak",
+    "best": null,
+    "candidates": []
+  },
+  {
+    "player_id": "ec65f9e4-683e-411f-b0ab-911db9a4493c",
+    "name": "S. Flores",
+    "equipo": "Deportivo Alavés",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "andrevaldo-de-jesus-santos",
+        "id": "Player:b1fa7461-b9d7-4f52-8129-1cbe9fd24cad",
+        "displayName": "Valdo",
+        "club": "Floresta EC",
+        "nationality": "br",
+        "birthDay": "1992-02-10"
+      },
+      {
+        "slug": "savio-moreira-de-oliveira",
+        "id": "Player:d5333691-076b-4b1b-b1c2-6a0b3db660d9",
+        "displayName": "Sávio",
+        "club": "Tottenham Hotspur FC",
+        "nationality": "br",
+        "birthDay": "2004-04-10"
+      },
+      {
+        "slug": "ismaila-sarr",
+        "id": "Player:7a184849-7a81-4654-9c18-25f1e77c30e6",
+        "displayName": "Ismaïla Sarr",
+        "club": "Crystal Palace FC",
+        "nationality": "sn",
+        "birthDay": "1998-02-25"
+      },
+      {
+        "slug": "johannes-schenk",
+        "id": "Player:606e789e-dc97-4fd0-af98-313010d8f94d",
+        "displayName": "Johannes Schenk",
+        "club": "Waasland-Beveren",
+        "nationality": "de",
+        "birthDay": "2003-01-13"
+      },
+      {
+        "slug": "callum-styles",
+        "id": "Player:b388dc5a-6d72-4e09-887f-315d127e6083",
+        "displayName": "Callum Styles",
+        "club": "West Bromwich Albion FC",
+        "nationality": "hu",
+        "birthDay": "2000-03-27"
+      },
+      {
+        "slug": "samuel-essende",
+        "id": "Player:a94d49e1-bf28-4957-96a8-0fc94f95a949",
+        "displayName": "Samuel Essende",
+        "club": "BSC Young Boys",
+        "nationality": "cd",
+        "birthDay": "1998-01-23"
+      },
+      {
+        "slug": "matte-smets",
+        "id": "Player:f8b1e237-8e50-456d-8e79-18861dc17bd5",
+        "displayName": "Matte Smets",
+        "club": "KRC Genk",
+        "nationality": "be",
+        "birthDay": "2004-01-04"
+      },
+      {
+        "slug": "sergino-dest",
+        "id": "Player:a84b0663-87a7-4c97-87c0-9d06d7111c95",
+        "displayName": "Sergiño Dest",
+        "club": "PSV Eindhoven",
+        "nationality": "us",
+        "birthDay": "2000-11-03"
+      },
+      {
+        "slug": "yann-sommer",
+        "id": "Player:4f8fed4b-8ce9-49fa-baa5-ae5ceebd3a96",
+        "displayName": "Yann Sommer",
+        "club": "Club Brugge KV",
+        "nationality": "ch",
+        "birthDay": "1988-12-17"
+      },
+      {
+        "slug": "david-soria-solis",
+        "id": "Player:869f385b-5f17-4212-a29f-d0c2b5cbd624",
+        "displayName": "David Soria",
+        "club": "Getafe CF",
+        "nationality": "es",
+        "birthDay": "1993-04-04"
+      }
+    ]
+  },
+  {
+    "player_id": "c0150e31-ac62-4fba-8bff-31d36e1453d0",
+    "name": "X. Olaiz",
+    "equipo": "Deportivo Alavés",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "granit-xhaka",
+        "id": "Player:421a1492-6d9e-417f-a5fc-59c2a7955fd3",
+        "displayName": "Granit Xhaka",
+        "club": "Sunderland AFC",
+        "nationality": "ch",
+        "birthDay": "1992-09-27"
+      },
+      {
+        "slug": "xavier-grande-sanchez",
+        "id": "Player:437905f5-36ad-42d2-bdcb-02b70a0987b1",
+        "displayName": "Xavi Grande",
+        "club": "Levante UD",
+        "nationality": "es",
+        "birthDay": "2005-01-28"
+      },
+      {
+        "slug": "xander-dierckx",
+        "id": "Player:9e479cfc-6280-4813-a556-704bc0971a75",
+        "displayName": "Xander Dierckx",
+        "club": "Royal Antwerp FC",
+        "nationality": "be",
+        "birthDay": "2009-02-27"
+      },
+      {
+        "slug": "xavi-espart-font",
+        "id": "Player:520b3204-dbf1-4791-999a-35255e69de50",
+        "displayName": "Xavi Espart",
+        "club": "FC Barcelona",
+        "nationality": "es",
+        "birthDay": "2007-05-21"
+      },
+      {
+        "slug": "xaver-schlager",
+        "id": "Player:876b5a62-9641-4947-9596-9ca579f03ecb",
+        "displayName": "Xaver Schlager",
+        "club": "Nottingham Forest FC",
+        "nationality": "at",
+        "birthDay": "1997-09-28"
+      }
+    ]
+  },
+  {
+    "player_id": "210e6713-b021-4394-9500-269e6bcbbed8",
+    "name": "Youssef Enríquez",
+    "equipo": "Deportivo Alavés",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "youssef-hamdaoui",
+        "id": "Player:1115c1e0-68d6-4806-920b-58b0daa414d3",
+        "displayName": "Youssef Hamdaoui",
+        "club": "Royal Antwerp FC",
+        "nationality": "ma",
+        "birthDay": "2008-03-20"
+      },
+      {
+        "slug": "youssef-el-kachati",
+        "id": "Player:0074df2c-50a4-42f3-bb52-93880e442e08",
+        "displayName": "Youssef El Kachati",
+        "club": "Stade de Reims",
+        "nationality": "ma",
+        "birthDay": "1999-11-30"
+      },
+      {
+        "slug": "youssef-maziz",
+        "id": "Player:28c5f36d-349e-4f60-bec3-770709b6a4f9",
+        "displayName": "Youssef Maziz",
+        "club": "Colorado Rapids",
+        "nationality": "fr",
+        "birthDay": "1998-06-24"
+      },
+      {
+        "slug": "youssef-ramalho-chermiti",
+        "id": "Player:c18b689d-aee3-41c8-b597-b93acf3d1b6a",
+        "displayName": "Youssef Chermiti",
+        "club": "Rangers FC",
+        "nationality": "pt",
+        "birthDay": "2004-05-24"
+      },
+      {
+        "slug": "youssef-enriquez-lekhedim",
+        "id": "Player:d6676e9c-b9ca-426c-b792-6556cd7ddb94",
+        "displayName": "Youssef Lekhedim",
+        "club": "D. Alavés",
+        "nationality": "ma",
+        "birthDay": "2005-10-07"
+      }
+    ]
+  },
+  {
+    "player_id": "c8453287-2b63-40d0-b14d-a80c38f7274b",
+    "name": "Germán Parreño",
+    "equipo": "Deportivo de La Coruña",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "german-parreno-boix",
+        "id": "Player:0a7d8797-c1a7-40ba-a09c-93715d37b420",
+        "displayName": "Germán",
+        "club": "Real Club Deportivo de La Coruña",
+        "nationality": "es",
+        "birthDay": "1993-02-16"
+      }
+    ]
+  },
+  {
+    "player_id": "05dbfd4a-e79e-45ec-97b9-02ef25546f79",
+    "name": "José Ángel Jurado",
+    "equipo": "Deportivo de La Coruña",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "joe-rankin-costello",
+        "id": "Player:dca2008a-9a59-44ec-aa48-7d77a2597f0c",
+        "displayName": "Joseph Rankin-Costello",
+        "club": "Charlton Athletic FC",
+        "nationality": "gb-eng",
+        "birthDay": "1999-07-26"
+      },
+      {
+        "slug": "jose-maria-gimenez-de-vargas",
+        "id": "Player:a4575b34-530b-4bc4-b189-d410f8f29b5e",
+        "displayName": "José María Giménez",
+        "club": "Atlético de Madrid",
+        "nationality": "uy",
+        "birthDay": "1995-01-20"
+      },
+      {
+        "slug": "joe-ward",
+        "id": "Player:f5ea9ef8-ac47-4bfd-aa35-14dc9c09585f",
+        "displayName": "Joseph Ward",
+        "club": "Derby County FC",
+        "nationality": "gb-eng",
+        "birthDay": "1995-08-22"
+      },
+      {
+        "slug": "jose-pedro-formoso-neto",
+        "id": "Player:60c31c83-515d-42b6-a910-517d784f2d2f",
+        "displayName": "José Neto",
+        "club": "SL Benfica",
+        "nationality": "pt",
+        "birthDay": "2008-04-19"
+      },
+      {
+        "slug": "joseph-kalulu-kyatengwa",
+        "id": "Player:abc32a45-c3c3-4a75-9c3f-65f73a87a906",
+        "displayName": "Joseph Kalulu",
+        "club": "Angers SCO",
+        "nationality": "fr",
+        "birthDay": "2004-11-29"
+      },
+      {
+        "slug": "joseph-brooks-bevan",
+        "id": "Player:e795e07f-9099-42ec-88cf-06ac86a64f7d",
+        "displayName": "Joseph Bevan",
+        "club": "Dundee FC",
+        "nationality": "gb-sct",
+        "birthDay": "2004-07-15"
+      },
+      {
+        "slug": "jose-martinez-marsa",
+        "id": "Player:1291016c-fdfb-441d-b700-915256828a99",
+        "displayName": "José Marsà",
+        "club": "YR KV Mechelen",
+        "nationality": "es",
+        "birthDay": "2002-03-04"
+      },
+      {
+        "slug": "jose-miguel-reis-melro",
+        "id": "Player:15b5c7a9-06d1-44ae-a391-9c438bfbf87f",
+        "displayName": "José Melro",
+        "club": "CS Marítimo Funchal",
+        "nationality": "pt",
+        "birthDay": "2004-05-26"
+      }
+    ]
+  },
+  {
+    "player_id": "08b128cf-58db-4584-8356-09a688e89280",
+    "name": "Noé Carrillo",
+    "equipo": "Deportivo de La Coruña",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "noe-carrillo-collazo",
+        "id": "Player:6a7f79e7-2407-4812-bec1-b0f411e7f416",
+        "displayName": "Noé",
+        "club": "Real Club Deportivo de La Coruña",
+        "nationality": "es",
+        "birthDay": "2006-12-28"
+      }
+    ]
+  },
+  {
+    "player_id": "61412d05-5b8b-43e4-a135-b195d511379e",
+    "name": "Riki Rodríguez",
+    "equipo": "Deportivo de La Coruña",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "ricardo-rodriguez-gil-carcedo",
+        "id": "Player:e8af6ba0-fcd3-431c-b999-7d5be3868148",
+        "displayName": "Riki",
+        "club": "Real Club Deportivo de La Coruña",
+        "nationality": "es",
+        "birthDay": "1997-09-25"
+      }
+    ]
+  },
+  {
+    "player_id": "013c81a3-c1cb-458a-af43-48174ff77c93",
+    "name": "Albert Niculâesei",
+    "equipo": "Elche CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "albert-gronbaek-erlykke",
+        "id": "Player:e84aafcb-8383-4c73-9c18-d568ac057e61",
+        "displayName": "Albert Grønbæk",
+        "club": "Hamburger SV",
+        "nationality": "dk",
+        "birthDay": "2001-05-23"
+      },
+      {
+        "slug": "mathis-albert",
+        "id": "Player:f0fa40a3-f6de-4dab-a011-f423fb224975",
+        "displayName": "Mathis Albert",
+        "club": "Borussia Dortmund",
+        "nationality": "us",
+        "birthDay": "2009-05-21"
+      },
+      {
+        "slug": "albert-mboyo-sambi-lokonga",
+        "id": "Player:16a44ab9-9f65-4862-997e-ca39dcd9c50e",
+        "displayName": "Albert Sambi Lokonga",
+        "club": "Hamburger SV",
+        "nationality": "be",
+        "birthDay": "1999-10-22"
+      },
+      {
+        "slug": "albert-rusnak",
+        "id": "Player:a4c5a8ab-c670-48b8-8860-8b4de8a7b1e8",
+        "displayName": "Albert Rusnák",
+        "club": "Seattle Sounders FC",
+        "nationality": "sk",
+        "birthDay": "1994-07-07"
+      },
+      {
+        "slug": "alberto-oliveira-baio",
+        "id": "Player:e6317c1c-dea7-4c49-bcf9-46b697bcd398",
+        "displayName": "Alberto Costa",
+        "club": "FC Porto",
+        "nationality": "pt",
+        "birthDay": "2003-09-29"
+      },
+      {
+        "slug": "albert-frank-millgramm",
+        "id": "Player:0048acb7-c2e2-43cf-aa96-6658b2970b7c",
+        "displayName": "Albert Millgramm",
+        "club": "SC Paderborn 07",
+        "nationality": "de",
+        "birthDay": "2004-11-12"
+      },
+      {
+        "slug": "albert-gudmundsson",
+        "id": "Player:15545cfb-b60c-443c-8e31-fe592296d78d",
+        "displayName": "Albert Guðmundsson",
+        "club": "ACF Fiorentina",
+        "nationality": "is",
+        "birthDay": "1997-06-15"
+      },
+      {
+        "slug": "alberto-moleiro-gonzalez",
+        "id": "Player:43fc95c3-0962-46c3-8fd0-261113ed593f",
+        "displayName": "Alberto Moleiro",
+        "club": "Villarreal CF",
+        "nationality": "es",
+        "birthDay": "2003-09-30"
+      }
+    ]
+  },
+  {
+    "player_id": "dc2e5581-fdce-4302-aa65-f7de9d879e6c",
+    "name": "Javi Morcillo",
+    "equipo": "Elche CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "javier-guerra-moreno",
+        "id": "Player:95e7004b-06b4-4feb-8358-8f616814e410",
+        "displayName": "Javi Guerra",
+        "club": "Valencia CF",
+        "nationality": "es",
+        "birthDay": "2003-05-13"
+      },
+      {
+        "slug": "javier-puado-diaz",
+        "id": "Player:7d02f1ff-b6b9-4790-9e5c-c71f03f1f80c",
+        "displayName": "Javi Puado",
+        "club": "RCD Espanyol de Barcelona",
+        "nationality": "es",
+        "birthDay": "1998-05-25"
+      },
+      {
+        "slug": "javier-galan-gil",
+        "id": "Player:3b18f29f-37dc-4189-a9cf-ac7bae806127",
+        "displayName": "Javier Galán",
+        "club": "RC Celta",
+        "nationality": "es",
+        "birthDay": "1994-11-19"
+      },
+      {
+        "slug": "javier-rueda-garcia",
+        "id": "Player:3279e53a-942f-4011-a6aa-99fa70544d3c",
+        "displayName": "Javi Rueda",
+        "club": "RC Celta",
+        "nationality": "es",
+        "birthDay": "2002-05-08"
+      },
+      {
+        "slug": "javier-munoz-jimenez",
+        "id": "Player:94c5abc3-9a2a-4617-9cdc-60eead0a2ec1",
+        "displayName": "Javi Muñoz",
+        "club": "Getafe CF",
+        "nationality": "es",
+        "birthDay": "1995-02-28"
+      },
+      {
+        "slug": "marcelo-javier-correa",
+        "id": "Player:766685af-d0d3-488e-9e23-ae1e55bce901",
+        "displayName": "Javier Correa",
+        "club": "CSD Colo-Colo",
+        "nationality": "ar",
+        "birthDay": "1992-10-23"
+      },
+      {
+        "slug": "javier-rodriguez-galiano",
+        "id": "Player:6d7896f3-359a-45cf-b476-b5277115d042",
+        "displayName": "Javi Rodríguez",
+        "club": "RC Celta",
+        "nationality": "es",
+        "birthDay": "2003-06-26"
+      }
+    ]
+  },
+  {
+    "player_id": "f0476c0d-21b3-4986-8cf3-d4d46579c4dd",
+    "name": "John Chetauya Nwankwo Donald",
+    "equipo": "Elche CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "john-victor-maciel-furtado",
+        "id": "Player:75f352a1-f440-4c41-a14e-913ba97da217",
+        "displayName": "John",
+        "club": "Nottingham Forest FC",
+        "nationality": "br",
+        "birthDay": "1996-02-13"
+      }
+    ]
+  },
+  {
+    "player_id": "6edbac5a-348a-414c-ab10-6cb977b81d6a",
+    "name": "José Antonio Morente Oliva",
+    "equipo": "Elche CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "joe-rankin-costello",
+        "id": "Player:dca2008a-9a59-44ec-aa48-7d77a2597f0c",
+        "displayName": "Joseph Rankin-Costello",
+        "club": "Charlton Athletic FC",
+        "nationality": "gb-eng",
+        "birthDay": "1999-07-26"
+      },
+      {
+        "slug": "jose-maria-gimenez-de-vargas",
+        "id": "Player:a4575b34-530b-4bc4-b189-d410f8f29b5e",
+        "displayName": "José María Giménez",
+        "club": "Atlético de Madrid",
+        "nationality": "uy",
+        "birthDay": "1995-01-20"
+      },
+      {
+        "slug": "joe-ward",
+        "id": "Player:f5ea9ef8-ac47-4bfd-aa35-14dc9c09585f",
+        "displayName": "Joseph Ward",
+        "club": "Derby County FC",
+        "nationality": "gb-eng",
+        "birthDay": "1995-08-22"
+      },
+      {
+        "slug": "jose-pedro-formoso-neto",
+        "id": "Player:60c31c83-515d-42b6-a910-517d784f2d2f",
+        "displayName": "José Neto",
+        "club": "SL Benfica",
+        "nationality": "pt",
+        "birthDay": "2008-04-19"
+      },
+      {
+        "slug": "joseph-kalulu-kyatengwa",
+        "id": "Player:abc32a45-c3c3-4a75-9c3f-65f73a87a906",
+        "displayName": "Joseph Kalulu",
+        "club": "Angers SCO",
+        "nationality": "fr",
+        "birthDay": "2004-11-29"
+      },
+      {
+        "slug": "joseph-brooks-bevan",
+        "id": "Player:e795e07f-9099-42ec-88cf-06ac86a64f7d",
+        "displayName": "Joseph Bevan",
+        "club": "Dundee FC",
+        "nationality": "gb-sct",
+        "birthDay": "2004-07-15"
+      },
+      {
+        "slug": "jose-martinez-marsa",
+        "id": "Player:1291016c-fdfb-441d-b700-915256828a99",
+        "displayName": "José Marsà",
+        "club": "YR KV Mechelen",
+        "nationality": "es",
+        "birthDay": "2002-03-04"
+      },
+      {
+        "slug": "jose-miguel-reis-melro",
+        "id": "Player:15b5c7a9-06d1-44ae-a391-9c438bfbf87f",
+        "displayName": "José Melro",
+        "club": "CS Marítimo Funchal",
+        "nationality": "pt",
+        "birthDay": "2004-05-26"
+      }
+    ]
+  },
+  {
+    "player_id": "995c6cb9-cfa2-4601-a5cc-dd1c94f46dac",
+    "name": "Konaré",
+    "equipo": "Elche CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "ibrahima-konate",
+        "id": "Player:1303369d-8867-4c49-82f7-090fb7371e1e",
+        "displayName": "Ibrahima Konaté",
+        "club": "Real Madrid",
+        "nationality": "fr",
+        "birthDay": "1999-05-25"
+      },
+      {
+        "slug": "valy-konate",
+        "id": "Player:e2403698-eb9c-4b8c-907b-ff3dbf396ccb",
+        "displayName": "Valy Konaté",
+        "club": "Cercle Brugge KSV",
+        "nationality": "ci",
+        "birthDay": "2006-11-14"
+      },
+      {
+        "slug": "karim-konate",
+        "id": "Player:6e88e874-fd5f-4cb1-87c6-a850ae4f66f2",
+        "displayName": "Karim Konaté",
+        "club": "FC Red Bull Salzburg",
+        "nationality": "ci",
+        "birthDay": "2004-03-21"
+      },
+      {
+        "slug": "yored-hillel-konate",
+        "id": "Player:ae36d65b-9e5f-4ebe-82bb-907d082feb93",
+        "displayName": "Hillel Konaté",
+        "club": "ESTAC Troyes",
+        "nationality": "bf",
+        "birthDay": "1994-12-28"
+      }
+    ]
+  },
+  {
+    "player_id": "16842807-d1d2-4922-997d-4bc82cb1e05d",
+    "name": "Owen Bosch",
+    "equipo": "Elche CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "emmanuel-chigozie-owen",
+        "id": "Player:2b3c639e-613c-48ec-b080-8b8b70b55575",
+        "displayName": "Emmanuel Owen",
+        "club": "FC Utrecht",
+        "nationality": "de",
+        "birthDay": "2007-06-11"
+      },
+      {
+        "slug": "owen-elding",
+        "id": "Player:171d17ba-1179-4668-9e22-a1949da58408",
+        "displayName": "Owen Elding",
+        "club": "Hibernian FC",
+        "nationality": "ie",
+        "birthDay": "2006-03-07"
+      },
+      {
+        "slug": "owen-gene",
+        "id": "Player:ae845dd3-51e8-44c5-ba70-b86de143eec7",
+        "displayName": "Owen Gene",
+        "club": "Minnesota United",
+        "nationality": "gp",
+        "birthDay": "2003-03-19"
+      },
+      {
+        "slug": "owen-olamidayo-goodman",
+        "id": "Player:f709f8da-4092-46b8-a4f6-4d34e4dc753c",
+        "displayName": "Owen Goodman",
+        "club": "Dundee FC",
+        "nationality": "ca",
+        "birthDay": "2003-11-27"
+      },
+      {
+        "slug": "owen-bevan",
+        "id": "Player:10dee889-2863-4aef-ba8f-fdac9833c9b8",
+        "displayName": "Owen Bevan",
+        "club": "Dundee FC",
+        "nationality": "gb-wls",
+        "birthDay": "2003-10-26"
+      },
+      {
+        "slug": "owen-wolff",
+        "id": "Player:cfe2ee42-7024-4111-93dc-44af3559cb1a",
+        "displayName": "Owen Wolff",
+        "club": "Sporting Kansas City ",
+        "nationality": "us",
+        "birthDay": "2004-12-30"
+      },
+      {
+        "slug": "owen-anderson",
+        "id": "Player:f8bedfd5-ba4a-4bcc-a5fe-95be89b69a06",
+        "displayName": "Owen Anderson",
+        "club": "Real Salt Lake",
+        "nationality": "us",
+        "birthDay": "2007-06-06"
+      }
+    ]
+  },
+  {
+    "player_id": "ef496035-d232-4a74-ac7f-b20523d6e481",
+    "name": "Pedro Bigas",
+    "equipo": "Elche CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "pedro-eliezer-rodriguez-ledesma",
+        "id": "Player:85f8b247-f2f5-4dd1-b54c-93b92073bdb5",
+        "displayName": "Pedro",
+        "club": null,
+        "nationality": "es",
+        "birthDay": "1987-07-28"
+      }
+    ]
+  },
+  {
+    "player_id": "69954e10-6417-40a0-917c-803918868be7",
+    "name": "Fermín López Marín",
+    "equipo": "FC Barcelona",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "fermin-lopez-martin",
+        "id": "Player:8e9fa211-05ab-4314-8782-5ee36abdcd92",
+        "displayName": "Fermín",
+        "club": "FC Barcelona",
+        "nationality": "es",
+        "birthDay": "2003-05-11"
+      }
+    ]
+  },
+  {
+    "player_id": "01c7dcb1-a659-4105-a064-925c31b0150b",
+    "name": "Pedro González",
+    "equipo": "FC Barcelona",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "pedro-eliezer-rodriguez-ledesma",
+        "id": "Player:85f8b247-f2f5-4dd1-b54c-93b92073bdb5",
+        "displayName": "Pedro",
+        "club": null,
+        "nationality": "es",
+        "birthDay": "1987-07-28"
+      }
+    ]
+  },
+  {
+    "player_id": "ca487670-a5da-4ee7-aac5-00e1d203c27d",
+    "name": "Abdel Abqar",
+    "equipo": "Getafe CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "abdelhak-kadri",
+        "id": "Player:0badb86f-93fc-4615-af2f-48ec7771f269",
+        "displayName": "Abdelkahar Kadri",
+        "club": "KAA Gent",
+        "nationality": "dz",
+        "birthDay": "2000-06-24"
+      },
+      {
+        "slug": "abdelnour-soualhia",
+        "id": "Player:7c36333a-4c82-45ed-a5c4-05b551be97ab",
+        "displayName": "Abdelnour Soualhia",
+        "club": "SC Telstar",
+        "nationality": "fr",
+        "birthDay": "2001-06-27"
+      },
+      {
+        "slug": "abdelhamid-ait-boudlal",
+        "id": "Player:9241ede9-f6fb-4163-8a98-a8f2fb80d6d9",
+        "displayName": "Abdelhamid Aït Boudlal",
+        "club": "Stade Rennais F.C.",
+        "nationality": "ma",
+        "birthDay": "2006-04-16"
+      },
+      {
+        "slug": "hamza-mohamed-abdel-karim",
+        "id": "Player:565b5bcc-2020-4a6e-90fd-814022da042b",
+        "displayName": "Hamza Abdelkarim",
+        "club": "FC Barcelona",
+        "nationality": "eg",
+        "birthDay": "2008-01-01"
+      },
+      {
+        "slug": "himad-abdelli",
+        "id": "Player:89ba5149-7045-4961-898b-4ae0dadca9bd",
+        "displayName": "Himad Abdelli",
+        "club": "Olympique de Marseille",
+        "nationality": "dz",
+        "birthDay": "1999-11-17"
+      },
+      {
+        "slug": "jones-el-abdellaoui",
+        "id": "Player:13d9896b-c80d-4225-8adf-ddcf3e4c7471",
+        "displayName": "Jones El Abdellaoui",
+        "club": "RC Celta",
+        "nationality": "ma",
+        "birthDay": "2006-01-12"
+      }
+    ]
+  },
+  {
+    "player_id": "94ba4ce1-adeb-4ad5-bd6c-b3e59ef72a3d",
+    "name": "Bordalás",
+    "equipo": "Getafe CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": []
+  },
+  {
+    "player_id": "fe4d5c3d-f0c9-4edc-8ec8-9beab95b3326",
+    "name": "Jean Ives Valou",
+    "equipo": "Getafe CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "jean-carlos-batista",
+        "id": "Player:3886d409-97c5-4cf8-9c02-0cefc62874a0",
+        "displayName": "Jean",
+        "club": "Cuiabá EC",
+        "nationality": "br",
+        "birthDay": "2000-07-24"
+      }
+    ]
+  },
+  {
+    "player_id": "0629b2cb-b9d4-4950-91e1-430ae5c3fb76",
+    "name": "Johan Mojica",
+    "equipo": "Getafe CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "johan-manzambi",
+        "id": "Player:ab2c2d9b-5220-42e2-861b-ec8f245ada73",
+        "displayName": "Johan Manzambi",
+        "club": "Aston Villa FC",
+        "nationality": "ch",
+        "birthDay": "2005-10-14"
+      },
+      {
+        "slug": "johannes-simon-siebeking",
+        "id": "Player:7c4c3d0e-f059-4c92-936f-70daceb324a5",
+        "displayName": "Johannes Siebeking",
+        "club": "FC Schalke 04",
+        "nationality": "de",
+        "birthDay": "2006-03-02"
+      },
+      {
+        "slug": "isak-bergmann-johannesson",
+        "id": "Player:54a991f5-99b5-47cd-ad44-5531ae428513",
+        "displayName": "Ísak Bergmann Jóhannesson",
+        "club": "1. FC Köln",
+        "nationality": "is",
+        "birthDay": "2003-03-23"
+      },
+      {
+        "slug": "johannes-schenk",
+        "id": "Player:606e789e-dc97-4fd0-af98-313010d8f94d",
+        "displayName": "Johannes Schenk",
+        "club": "Waasland-Beveren",
+        "nationality": "de",
+        "birthDay": "2003-01-13"
+      },
+      {
+        "slug": "johan-bakayoko",
+        "id": "Player:43de7bf9-1b88-4ab7-bbdb-3fed837fc680",
+        "displayName": "Johan Bakayoko",
+        "club": "RB Leipzig",
+        "nationality": "be",
+        "birthDay": "2003-04-20"
+      }
+    ]
+  },
+  {
+    "player_id": "482015dc-71c7-41f2-8176-7ac49b14f4fc",
+    "name": "Juanmi Jiménez",
+    "equipo": "Getafe CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "juan-miguel-jimenez-lopez",
+        "id": "Player:bec40a89-7b2c-4e7c-8022-b7241abe0bc8",
+        "displayName": "Juanmi",
+        "club": "Getafe CF",
+        "nationality": "es",
+        "birthDay": "1993-05-20"
+      }
+    ]
+  },
+  {
+    "player_id": "563f187e-e29f-4ac5-8a9f-3650c82d32ec",
+    "name": "Adrián de la Fuente",
+    "equipo": "Levante UD",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "adrian-rodriguez-gimenez",
+        "id": "Player:96f30dc9-5849-4dc2-bf68-b76529dbc402",
+        "displayName": "Adrián",
+        "club": "D. Alavés",
+        "nationality": "ar",
+        "birthDay": "2000-12-12"
+      }
+    ]
+  },
+  {
+    "player_id": "90e3fc54-2fe7-4e61-abaa-aba2e4a38ca1",
+    "name": "Alejandro Primo",
+    "equipo": "Levante UD",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "alejandro-garnacho-ferreyra",
+        "id": "Player:8f79bf07-cc59-45f6-9ed0-f96c77e98d97",
+        "displayName": "Alejandro Garnacho",
+        "club": "Aston Villa FC",
+        "nationality": "ar",
+        "birthDay": "2004-07-01"
+      },
+      {
+        "slug": "alejandro-grimaldo-garcia",
+        "id": "Player:3d24d845-4f84-428e-9099-6ed4f2038f68",
+        "displayName": "Alejandro Grimaldo",
+        "club": "Atlético de Madrid",
+        "nationality": "es",
+        "birthDay": "1995-09-20"
+      },
+      {
+        "slug": "alejandro-frances-torrijo",
+        "id": "Player:579a8509-621d-424b-bbcd-9d3c0c80fbcb",
+        "displayName": "Alejandro Francés",
+        "club": "Girona FC",
+        "nationality": "es",
+        "birthDay": "2002-08-01"
+      },
+      {
+        "slug": "alejandro-balde-martinez",
+        "id": "Player:d752b006-8a4c-4db1-a88d-d8f6f373dbd3",
+        "displayName": "Alejandro Balde",
+        "club": "FC Barcelona",
+        "nationality": "es",
+        "birthDay": "2003-10-18"
+      }
+    ]
+  },
+  {
+    "player_id": "14939835-8269-40cc-8a7b-64043fa22f29",
+    "name": "Dani Requena",
+    "equipo": "Levante UD",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "daniel-ballard",
+        "id": "Player:17b8a4e5-b375-485d-a91e-f2c0736d979b",
+        "displayName": "Daniel Ballard",
+        "club": "Sunderland AFC",
+        "nationality": "gb-nir",
+        "birthDay": "1999-09-22"
+      },
+      {
+        "slug": "daniel-happe",
+        "id": "Player:b57929ce-4ccd-4b12-90db-a62b5618005e",
+        "displayName": "Daniel Happe",
+        "club": "Aberdeen FC",
+        "nationality": "gb-eng",
+        "birthDay": "1998-09-28"
+      },
+      {
+        "slug": "daniel-finlayson",
+        "id": "Player:5552ca37-5426-48d0-8e69-3a883f4529ec",
+        "displayName": "Daniel Finlayson",
+        "club": "Saint Johnstone FC",
+        "nationality": "gb-nir",
+        "birthDay": "2001-01-19"
+      },
+      {
+        "slug": "dani-van-loenen",
+        "id": "Player:faaa785a-66e9-486a-88c6-da8fa3e8fa51",
+        "displayName": "Dani van Loenen",
+        "club": "HFC ADO Den Haag",
+        "nationality": "nl",
+        "birthDay": "2007-02-12"
+      },
+      {
+        "slug": "daniel-martin-rodriguez",
+        "id": "Player:6e67a14a-995a-4f1f-b57a-f70aa0e1ca3a",
+        "displayName": "Dani Martín",
+        "club": "Levante UD",
+        "nationality": "es",
+        "birthDay": "2005-09-26"
+      },
+      {
+        "slug": "danilo-teodoro-soares",
+        "id": "Player:20579a00-dca3-40f2-a44b-1d1b22712764",
+        "displayName": "Danilo Soares",
+        "club": "SC Austria Lustenau",
+        "nationality": "br",
+        "birthDay": "1991-10-29"
+      },
+      {
+        "slug": "daniel-kofi-kyereh",
+        "id": "Player:01dfc8b6-a674-441f-a44e-bf91674ce2d3",
+        "displayName": "Daniel-Kofi Kyereh",
+        "club": "VfL Osnabrück",
+        "nationality": "gh",
+        "birthDay": "1996-03-08"
+      },
+      {
+        "slug": "daniel-olmo-carvajal",
+        "id": "Player:8609e9eb-39dd-4e11-85ac-7fece849581d",
+        "displayName": "Dani Olmo",
+        "club": "FC Barcelona",
+        "nationality": "es",
+        "birthDay": "1998-05-07"
+      },
+      {
+        "slug": "daniel-armando-fonseca-da-silva-banjaqui",
+        "id": "Player:83afbd5d-8897-42b8-ae01-1b46235cadc9",
+        "displayName": "Daniel Banjaqui",
+        "club": "SL Benfica",
+        "nationality": "pt",
+        "birthDay": "2008-03-24"
+      }
+    ]
+  },
+  {
+    "player_id": "78e4f4e9-d0e8-40f5-98ce-5a01e962fcbb",
+    "name": "Etta Eyong",
+    "equipo": "Levante UD",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "estanislau-pedrola-fortuny",
+        "id": "Player:4edd707f-d854-420c-b5e7-63ce05769c2b",
+        "displayName": "Estanis Pedrola",
+        "club": "Real Oviedo",
+        "nationality": "es",
+        "birthDay": "2003-08-24"
+      }
+    ]
+  },
+  {
+    "player_id": "a201028f-f6f6-40e1-8957-d951ee72e382",
+    "name": "Iván Romero",
+    "equipo": "Levante UD",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "ivan-perisic",
+        "id": "Player:71a5afab-d942-4fae-9c0c-99a6c075dbf4",
+        "displayName": "Ivan Perišić",
+        "club": "PSV Eindhoven",
+        "nationality": "hr",
+        "birthDay": "1989-02-02"
+      },
+      {
+        "slug": "ivano-kolarik",
+        "id": "Player:0422faf2-4c59-410d-a559-3f5dd33ffff5",
+        "displayName": "Ivano Kolarik",
+        "club": "NK Osijek",
+        "nationality": "hr",
+        "birthDay": "2007-05-20"
+      },
+      {
+        "slug": "ivan-fresneda-corraliza",
+        "id": "Player:14560ce1-d609-4309-82e7-d81e6acb797e",
+        "displayName": "Iván Fresneda",
+        "club": "Sporting Clube de Portugal",
+        "nationality": "es",
+        "birthDay": "2004-09-28"
+      },
+      {
+        "slug": "franjo-ivanovic",
+        "id": "Player:2384a2c5-077b-43d5-80f6-d0a8ae81501e",
+        "displayName": "Franjo Ivanović",
+        "club": "RC Lens",
+        "nationality": "hr",
+        "birthDay": "2003-10-01"
+      },
+      {
+        "slug": "ivan-rakitic",
+        "id": "Player:361603a1-00ca-4593-a42b-4c98e89b8352",
+        "displayName": "Ivan Rakitić",
+        "club": null,
+        "nationality": "hr",
+        "birthDay": "1988-03-10"
+      },
+      {
+        "slug": "ivan-doric",
+        "id": "Player:3d4ee99b-e8dd-4388-a5dc-2c092101c037",
+        "displayName": "Ivan Đorić",
+        "club": "NK Rudeš Zagreb",
+        "nationality": "rs",
+        "birthDay": "1995-07-07"
+      }
+    ]
+  },
+  {
+    "player_id": "b76290ee-272e-450a-8b24-3e55ebe9b3fd",
+    "name": "Jon Ander Olasagasti",
+    "equipo": "Levante UD",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "jonathan-clauss",
+        "id": "Player:445612bd-322f-4f38-850d-bf0355972ef4",
+        "displayName": "Jonathan Clauss",
+        "club": "OGC Nice",
+        "nationality": "fr",
+        "birthDay": "1992-09-25"
+      },
+      {
+        "slug": "jonathan-david",
+        "id": "Player:05f7df07-61d2-45a4-9dd8-6796e8646f2a",
+        "displayName": "Jonathan David",
+        "club": "Juventus FC",
+        "nationality": "ca",
+        "birthDay": "2000-01-14"
+      },
+      {
+        "slug": "jonathan-gradit",
+        "id": "Player:6c88c4f6-0375-46a4-a3e9-3cf4c47e2cd4",
+        "displayName": "Jonathan Gradit",
+        "club": "RC Lens",
+        "nationality": "fr",
+        "birthDay": "1992-11-24"
+      },
+      {
+        "slug": "jonathan-meier",
+        "id": "Player:5edad0b4-1a72-4cc8-b113-4e7131d44a84",
+        "displayName": "Jonathan Meier",
+        "club": "Kilmarnock FC",
+        "nationality": "de",
+        "birthDay": "1999-11-11"
+      },
+      {
+        "slug": "jonathan-burkardt",
+        "id": "Player:ce77c00e-a129-4e86-a541-5bf5c00c9c74",
+        "displayName": "Jonathan Burkardt",
+        "club": "Eintracht Frankfurt",
+        "nationality": "de",
+        "birthDay": "2000-07-11"
+      },
+      {
+        "slug": "jonas-karner",
+        "id": "Player:75c61082-4d6a-4991-abd0-f68cd681ef8b",
+        "displayName": "Jonas Karner",
+        "club": "TSV Egger Glas Hartberg",
+        "nationality": "at",
+        "birthDay": "2004-09-28"
+      },
+      {
+        "slug": "jonas-adjei-adjetey",
+        "id": "Player:8e12cb34-7c47-4fef-9f07-f74fc4fc0fa2",
+        "displayName": "Jonas Adjetey",
+        "club": "VfL Wolfsburg",
+        "nationality": "gh",
+        "birthDay": "2003-12-13"
+      },
+      {
+        "slug": "jonah-benedict-sticker",
+        "id": "Player:7cc7bafc-579f-4ec2-a906-cd8e3bf8fe01",
+        "displayName": "Jonah Sticker",
+        "club": "SC Paderborn 07",
+        "nationality": "de",
+        "birthDay": "2004-05-08"
+      }
+    ]
+  },
+  {
+    "player_id": "d4932652-c975-4031-a092-6e0ae5867c54",
+    "name": "Roger Brugué",
+    "equipo": "Levante UD",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "royer-caicedo",
+        "id": "Player:2954e424-34f3-404e-878b-72310f38c0b7",
+        "displayName": "Royer Caicedo",
+        "club": "Cercle Brugge KSV",
+        "nationality": "co",
+        "birthDay": "2006-05-05"
+      },
+      {
+        "slug": "morgan-rogers",
+        "id": "Player:1e159bda-fa60-4add-9a92-5a10d3a7ed7b",
+        "displayName": "Morgan Rogers",
+        "club": "Chelsea FC",
+        "nationality": "gb-eng",
+        "birthDay": "2002-07-26"
+      },
+      {
+        "slug": "roger-hinojo-estrada",
+        "id": "Player:82649466-22ee-419c-aab7-bc3fb0788c91",
+        "displayName": "Roger Hinojo",
+        "club": "RCD Espanyol de Barcelona",
+        "nationality": "es",
+        "birthDay": "2005-02-21"
+      }
+    ]
+  },
+  {
+    "player_id": "b3dfd12f-d260-458b-adb3-7e54fd62a708",
+    "name": "Chupete",
+    "equipo": "Málaga CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": []
+  },
+  {
+    "player_id": "82b85620-a674-4d36-ac1d-ad0823d9f747",
+    "name": "Eneko Jauregi",
+    "equipo": "Málaga CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "eneko-satrustegui-plano",
+        "id": "Player:cb2f2132-38d9-4ca3-a5c2-af2d8ebe0b7f",
+        "displayName": "Eneko Satrústegui",
+        "club": null,
+        "nationality": "es",
+        "birthDay": "1990-09-25"
+      },
+      {
+        "slug": "eneko-ortiz",
+        "id": "Player:0db1b8dc-8024-4c9c-ba54-6ee9b2166436",
+        "displayName": "Eneko Ortiz",
+        "club": "Villarreal CF II",
+        "nationality": "es",
+        "birthDay": "2003-05-26"
+      }
+    ]
+  },
+  {
+    "player_id": "fcc4e153-fb99-4043-83b8-15ee19e48b07",
+    "name": "Juanpe Jiménez",
+    "equipo": "Málaga CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "juan-pedro-jimenez-melero",
+        "id": "Player:8567bb26-8fc0-4738-a850-2b47724013c8",
+        "displayName": "Juanpe",
+        "club": "Gamba Osaka",
+        "nationality": "es",
+        "birthDay": "1996-03-31"
+      },
+      {
+        "slug": "juan-pedro-ramirez-lopez",
+        "id": "Player:a278b0e2-dd08-445c-8349-1fa4b0c2a396",
+        "displayName": "Juanpe",
+        "club": "Atlético San Luis",
+        "nationality": "es",
+        "birthDay": "1991-04-30"
+      }
+    ]
+  },
+  {
+    "player_id": "5dff5739-5f68-4ee4-b25c-d19bac2dcbf3",
+    "name": "Rafael Garrido Hierro",
+    "equipo": "Málaga CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "rafael-pires-monteiro",
+        "id": "Player:ec955c94-786b-42d9-9b06-404dac83fbd4",
+        "displayName": "Rafael",
+        "club": "São Paulo FC",
+        "nationality": "br",
+        "birthDay": "1989-06-23"
+      }
+    ]
+  },
+  {
+    "player_id": "d9a6d7f4-fead-4d2e-a274-50a36f503fd8",
+    "name": "Rafita Garrido",
+    "equipo": "Málaga CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "rafael-garrido-hierro",
+        "id": "Player:8b354cfc-ea6e-4056-809c-75a3585c7679",
+        "displayName": "Rafita",
+        "club": "Málaga CF",
+        "nationality": "es",
+        "birthDay": "2004-11-09"
+      }
+    ]
+  },
+  {
+    "player_id": "2b96901f-fe49-47b1-9dc5-10994e1abac0",
+    "name": "J. Alberto López",
+    "equipo": "Racing de Santander",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "tino-jukic",
+        "id": "Player:4b696fc7-8efd-480a-948e-15071c4c3be9",
+        "displayName": "Tino Jukić",
+        "club": "NK Lokomotiva Zagreb",
+        "nationality": "hr",
+        "birthDay": "2001-10-10"
+      },
+      {
+        "slug": "wolke-janssens",
+        "id": "Player:afa09f22-e4dd-4e24-a7f7-75567923aac1",
+        "displayName": "Wolke Janssens",
+        "club": "Sint-Truidense VV",
+        "nationality": "be",
+        "birthDay": "1995-01-11"
+      },
+      {
+        "slug": "seung-won-jung",
+        "id": "Player:57557c1a-352f-4607-afc0-c758c97e79e4",
+        "displayName": "Jeong Seung-Won",
+        "club": "FC Seoul",
+        "nationality": "kr",
+        "birthDay": "1997-02-27"
+      },
+      {
+        "slug": "johannes-schenk",
+        "id": "Player:606e789e-dc97-4fd0-af98-313010d8f94d",
+        "displayName": "Johannes Schenk",
+        "club": "Waasland-Beveren",
+        "nationality": "de",
+        "birthDay": "2003-01-13"
+      },
+      {
+        "slug": "robert-jan-vanwesemael",
+        "id": "Player:7d224647-f3ea-4163-b7c8-f68adaac571f",
+        "displayName": "Robert-Jan Vanwesemael",
+        "club": "Sint-Truidense VV",
+        "nationality": "be",
+        "birthDay": "2002-03-26"
+      },
+      {
+        "slug": "tobias-lund-jensen",
+        "id": "Player:cb5bc48d-e039-44b4-acb5-ee0e45799f6c",
+        "displayName": "Tobias Lund Jensen",
+        "club": "SV Guntamatic Ried",
+        "nationality": "dk",
+        "birthDay": "2006-02-10"
+      },
+      {
+        "slug": "vitezslav-jaros",
+        "id": "Player:e848067d-ab65-4170-9a71-51edf21b1ab9",
+        "displayName": "Vítězslav Jaroš",
+        "club": "Liverpool FC",
+        "nationality": "cz",
+        "birthDay": "2001-07-23"
+      },
+      {
+        "slug": "reece-james",
+        "id": "Player:88775618-59ee-49be-8320-b53134fff0de",
+        "displayName": "Reece James",
+        "club": "Chelsea FC",
+        "nationality": "gb-eng",
+        "birthDay": "1999-12-08"
+      },
+      {
+        "slug": "jhon-adolfo-arias-andrade",
+        "id": "Player:daf38765-26ca-4d51-aa51-67d8d480341d",
+        "displayName": "Jhon Arias",
+        "club": "SE Palmeiras",
+        "nationality": "co",
+        "birthDay": "1997-09-21"
+      }
+    ]
+  },
+  {
+    "player_id": "6dc11d01-d4bd-4b40-9abe-0ec3305ce54f",
+    "name": "Manu Hernando",
+    "equipo": "Racing de Santander",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "manuel-jorge-silva",
+        "id": "Player:142fc5aa-0dbd-4854-9845-765a59389c6b",
+        "displayName": "Manu",
+        "club": "SL Benfica",
+        "nationality": "pt",
+        "birthDay": "2001-06-12"
+      }
+    ]
+  },
+  {
+    "player_id": "0dc10885-6269-483a-979c-9878c9b633f9",
+    "name": "Sergio Canales",
+    "equipo": "Racing de Santander",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "sergio-carreira-vilarino",
+        "id": "Player:bf9c801e-5986-46eb-a353-b769cd970b34",
+        "displayName": "Sergio Carreira",
+        "club": "RC Celta",
+        "nationality": "es",
+        "birthDay": "2000-10-13"
+      },
+      {
+        "slug": "sergio-gomez-martin",
+        "id": "Player:2574373b-8b5e-49f0-bc45-027ad2fe67bb",
+        "displayName": "Sergio Gómez",
+        "club": "Real Sociedad",
+        "nationality": "es",
+        "birthDay": "2000-09-04"
+      },
+      {
+        "slug": "sergio-bermejo-lillo",
+        "id": "Player:62c5bea8-9326-42a7-a83d-8ec39d9e2101",
+        "displayName": "Sergio Bermejo",
+        "club": "Gil Vicente FC",
+        "nationality": "es",
+        "birthDay": "1997-08-17"
+      },
+      {
+        "slug": "sergio-martinez-montero",
+        "id": "Player:b42e9a18-8e0a-4025-8b25-353f0d701b81",
+        "displayName": "Sergio Martínez",
+        "club": "Real Racing Club de Santander",
+        "nationality": "es",
+        "birthDay": "2007-05-15"
+      },
+      {
+        "slug": "sergio-barcia-laranxeira",
+        "id": "Player:b98f8761-8879-404c-8f7b-5a77bdfc8bf6",
+        "displayName": "Sergio Barcia",
+        "club": "Sporting Braga",
+        "nationality": "es",
+        "birthDay": "2000-12-31"
+      },
+      {
+        "slug": "sergio-akieme-rodriguez",
+        "id": "Player:30524bb1-dce0-4ad8-be15-66e90a964137",
+        "displayName": "Sergio Akieme",
+        "club": "Stade de Reims",
+        "nationality": "es",
+        "birthDay": "1997-12-16"
+      },
+      {
+        "slug": "sergio-oregel-jr",
+        "id": "Player:669f2832-0cd4-4ccb-b5cb-4bf99529d498",
+        "displayName": "Sergio Oregel",
+        "club": "Chicago Fire FC",
+        "nationality": "us",
+        "birthDay": "2005-05-16"
+      }
+    ]
+  },
+  {
+    "player_id": "105f1b70-78da-4d3d-a5be-d43498ec2bb8",
+    "name": "Alexandre Zurawski",
+    "equipo": "Rayo Vallecano",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "alexandre-corredera-alardi",
+        "id": "Player:c97390fd-4c98-4bcf-8b71-713f540fd998",
+        "displayName": "Alexandre",
+        "club": "Real Sporting de Gijón",
+        "nationality": "es",
+        "birthDay": "1996-03-19"
+      }
+    ]
+  },
+  {
+    "player_id": "46d1a1fd-c8a4-4961-abb8-43f972b94858",
+    "name": "Dani Cárdenas",
+    "equipo": "Rayo Vallecano",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "daniel-ballard",
+        "id": "Player:17b8a4e5-b375-485d-a91e-f2c0736d979b",
+        "displayName": "Daniel Ballard",
+        "club": "Sunderland AFC",
+        "nationality": "gb-nir",
+        "birthDay": "1999-09-22"
+      },
+      {
+        "slug": "daniel-happe",
+        "id": "Player:b57929ce-4ccd-4b12-90db-a62b5618005e",
+        "displayName": "Daniel Happe",
+        "club": "Aberdeen FC",
+        "nationality": "gb-eng",
+        "birthDay": "1998-09-28"
+      },
+      {
+        "slug": "daniel-finlayson",
+        "id": "Player:5552ca37-5426-48d0-8e69-3a883f4529ec",
+        "displayName": "Daniel Finlayson",
+        "club": "Saint Johnstone FC",
+        "nationality": "gb-nir",
+        "birthDay": "2001-01-19"
+      },
+      {
+        "slug": "dani-van-loenen",
+        "id": "Player:faaa785a-66e9-486a-88c6-da8fa3e8fa51",
+        "displayName": "Dani van Loenen",
+        "club": "HFC ADO Den Haag",
+        "nationality": "nl",
+        "birthDay": "2007-02-12"
+      },
+      {
+        "slug": "daniel-martin-rodriguez",
+        "id": "Player:6e67a14a-995a-4f1f-b57a-f70aa0e1ca3a",
+        "displayName": "Dani Martín",
+        "club": "Levante UD",
+        "nationality": "es",
+        "birthDay": "2005-09-26"
+      },
+      {
+        "slug": "danilo-teodoro-soares",
+        "id": "Player:20579a00-dca3-40f2-a44b-1d1b22712764",
+        "displayName": "Danilo Soares",
+        "club": "SC Austria Lustenau",
+        "nationality": "br",
+        "birthDay": "1991-10-29"
+      },
+      {
+        "slug": "daniel-kofi-kyereh",
+        "id": "Player:01dfc8b6-a674-441f-a44e-bf91674ce2d3",
+        "displayName": "Daniel-Kofi Kyereh",
+        "club": "VfL Osnabrück",
+        "nationality": "gh",
+        "birthDay": "1996-03-08"
+      },
+      {
+        "slug": "daniel-olmo-carvajal",
+        "id": "Player:8609e9eb-39dd-4e11-85ac-7fece849581d",
+        "displayName": "Dani Olmo",
+        "club": "FC Barcelona",
+        "nationality": "es",
+        "birthDay": "1998-05-07"
+      },
+      {
+        "slug": "daniel-armando-fonseca-da-silva-banjaqui",
+        "id": "Player:83afbd5d-8897-42b8-ae01-1b46235cadc9",
+        "displayName": "Daniel Banjaqui",
+        "club": "SL Benfica",
+        "nationality": "pt",
+        "birthDay": "2008-03-24"
+      }
+    ]
+  },
+  {
+    "player_id": "b47a2756-1b3d-497e-8ec4-73bc6634405b",
+    "name": "S. José",
+    "equipo": "Rayo Vallecano",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "josue-yayra-doke",
+        "id": "Player:50fc8a41-3fb5-47c4-82f7-74d2f85a5f4a",
+        "displayName": "Josué Doke",
+        "club": "JK Narva Trans",
+        "nationality": "tg",
+        "birthDay": "2004-04-20"
+      },
+      {
+        "slug": "savio-moreira-de-oliveira",
+        "id": "Player:d5333691-076b-4b1b-b1c2-6a0b3db660d9",
+        "displayName": "Sávio",
+        "club": "Tottenham Hotspur FC",
+        "nationality": "br",
+        "birthDay": "2004-04-10"
+      },
+      {
+        "slug": "ismaila-sarr",
+        "id": "Player:7a184849-7a81-4654-9c18-25f1e77c30e6",
+        "displayName": "Ismaïla Sarr",
+        "club": "Crystal Palace FC",
+        "nationality": "sn",
+        "birthDay": "1998-02-25"
+      },
+      {
+        "slug": "johannes-schenk",
+        "id": "Player:606e789e-dc97-4fd0-af98-313010d8f94d",
+        "displayName": "Johannes Schenk",
+        "club": "Waasland-Beveren",
+        "nationality": "de",
+        "birthDay": "2003-01-13"
+      },
+      {
+        "slug": "callum-styles",
+        "id": "Player:b388dc5a-6d72-4e09-887f-315d127e6083",
+        "displayName": "Callum Styles",
+        "club": "West Bromwich Albion FC",
+        "nationality": "hu",
+        "birthDay": "2000-03-27"
+      },
+      {
+        "slug": "samuel-essende",
+        "id": "Player:a94d49e1-bf28-4957-96a8-0fc94f95a949",
+        "displayName": "Samuel Essende",
+        "club": "BSC Young Boys",
+        "nationality": "cd",
+        "birthDay": "1998-01-23"
+      },
+      {
+        "slug": "matte-smets",
+        "id": "Player:f8b1e237-8e50-456d-8e79-18861dc17bd5",
+        "displayName": "Matte Smets",
+        "club": "KRC Genk",
+        "nationality": "be",
+        "birthDay": "2004-01-04"
+      },
+      {
+        "slug": "sergino-dest",
+        "id": "Player:a84b0663-87a7-4c97-87c0-9d06d7111c95",
+        "displayName": "Sergiño Dest",
+        "club": "PSV Eindhoven",
+        "nationality": "us",
+        "birthDay": "2000-11-03"
+      },
+      {
+        "slug": "yann-sommer",
+        "id": "Player:4f8fed4b-8ce9-49fa-baa5-ae5ceebd3a96",
+        "displayName": "Yann Sommer",
+        "club": "Club Brugge KV",
+        "nationality": "ch",
+        "birthDay": "1988-12-17"
+      },
+      {
+        "slug": "david-soria-solis",
+        "id": "Player:869f385b-5f17-4212-a29f-d0c2b5cbd624",
+        "displayName": "David Soria",
+        "club": "Getafe CF",
+        "nationality": "es",
+        "birthDay": "1993-04-04"
+      }
+    ]
+  },
+  {
+    "player_id": "8ed3b33d-0602-466e-bc93-8c0f854e7406",
+    "name": "Kike García",
+    "equipo": "RCD Espanyol",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "enrique-jesus-salas-valiente",
+        "id": "Player:e90e6e6c-d3cb-4c06-bf28-d9251cf84fe9",
+        "displayName": "Kike Salas",
+        "club": "Sevilla FC",
+        "nationality": "es",
+        "birthDay": "2002-04-23"
+      },
+      {
+        "slug": "enrique-barja-afonso",
+        "id": "Player:580a586e-bc74-495f-a528-5da8e34d5e42",
+        "displayName": "Kike Barja",
+        "club": "CA Osasuna",
+        "nationality": "es",
+        "birthDay": "1997-04-01"
+      }
+    ]
+  },
+  {
+    "player_id": "df216cb7-939b-47b9-8470-749ab4d334b3",
+    "name": "Urko González",
+    "equipo": "RCD Espanyol",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "urko-gonzalez-de-zarate-quiros",
+        "id": "Player:d1e69af1-78d0-4c4d-a41d-8be101189245",
+        "displayName": "Urko González De Zarate",
+        "club": "RCD Espanyol de Barcelona",
+        "nationality": "es",
+        "birthDay": "2001-03-20"
+      }
+    ]
+  },
+  {
+    "player_id": "b67cdb77-3f1a-463b-a664-6995917384b5",
+    "name": "Abde Ezzalzouli",
+    "equipo": "Real Betis",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "abdessamad-ezzalzouli",
+        "id": "Player:f61f38ec-c4cd-4b3a-b72f-e892743c9dad",
+        "displayName": "Abde",
+        "club": "Real Betis",
+        "nationality": "ma",
+        "birthDay": "2001-12-17"
+      }
+    ]
+  },
+  {
+    "player_id": "c5410bac-f463-4ff9-aef5-4fdbbe2783f1",
+    "name": "Héctor Bellerín",
+    "equipo": "Real Betis",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "hector-kyprianou",
+        "id": "Player:3b7fe8fb-92fb-4477-ad30-b669ce5da1f5",
+        "displayName": "Hector Kyprianou",
+        "club": "Watford FC",
+        "nationality": "cy",
+        "birthDay": "2001-05-27"
+      },
+      {
+        "slug": "hector-fort-garcia",
+        "id": "Player:740766c9-b501-4cad-a052-e0c36e34aab8",
+        "displayName": "Héctor Fort",
+        "club": "FC Barcelona",
+        "nationality": "es",
+        "birthDay": "2006-08-02"
+      },
+      {
+        "slug": "hector-hernandez-marrero",
+        "id": "Player:15ee18a7-7f8f-4504-8496-2081fba9e53a",
+        "displayName": "Héctor Hernández",
+        "club": "Gil Vicente FC",
+        "nationality": "es",
+        "birthDay": "1995-09-14"
+      }
+    ]
+  },
+  {
+    "player_id": "50f07b7a-1bb1-41a1-b077-e81e1af69a34",
+    "name": "José Antonio Morante",
+    "equipo": "Real Betis",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "joe-rankin-costello",
+        "id": "Player:dca2008a-9a59-44ec-aa48-7d77a2597f0c",
+        "displayName": "Joseph Rankin-Costello",
+        "club": "Charlton Athletic FC",
+        "nationality": "gb-eng",
+        "birthDay": "1999-07-26"
+      },
+      {
+        "slug": "jose-maria-gimenez-de-vargas",
+        "id": "Player:a4575b34-530b-4bc4-b189-d410f8f29b5e",
+        "displayName": "José María Giménez",
+        "club": "Atlético de Madrid",
+        "nationality": "uy",
+        "birthDay": "1995-01-20"
+      },
+      {
+        "slug": "joe-ward",
+        "id": "Player:f5ea9ef8-ac47-4bfd-aa35-14dc9c09585f",
+        "displayName": "Joseph Ward",
+        "club": "Derby County FC",
+        "nationality": "gb-eng",
+        "birthDay": "1995-08-22"
+      },
+      {
+        "slug": "jose-pedro-formoso-neto",
+        "id": "Player:60c31c83-515d-42b6-a910-517d784f2d2f",
+        "displayName": "José Neto",
+        "club": "SL Benfica",
+        "nationality": "pt",
+        "birthDay": "2008-04-19"
+      },
+      {
+        "slug": "joseph-kalulu-kyatengwa",
+        "id": "Player:abc32a45-c3c3-4a75-9c3f-65f73a87a906",
+        "displayName": "Joseph Kalulu",
+        "club": "Angers SCO",
+        "nationality": "fr",
+        "birthDay": "2004-11-29"
+      },
+      {
+        "slug": "joseph-brooks-bevan",
+        "id": "Player:e795e07f-9099-42ec-88cf-06ac86a64f7d",
+        "displayName": "Joseph Bevan",
+        "club": "Dundee FC",
+        "nationality": "gb-sct",
+        "birthDay": "2004-07-15"
+      },
+      {
+        "slug": "jose-martinez-marsa",
+        "id": "Player:1291016c-fdfb-441d-b700-915256828a99",
+        "displayName": "José Marsà",
+        "club": "YR KV Mechelen",
+        "nationality": "es",
+        "birthDay": "2002-03-04"
+      },
+      {
+        "slug": "jose-miguel-reis-melro",
+        "id": "Player:15b5c7a9-06d1-44ae-a391-9c438bfbf87f",
+        "displayName": "José Melro",
+        "club": "CS Marítimo Funchal",
+        "nationality": "pt",
+        "birthDay": "2004-05-26"
+      }
+    ]
+  },
+  {
+    "player_id": "e5dcd794-959d-41c4-b88d-74275bd82e3a",
+    "name": "Brahim Díaz",
+    "equipo": "Real Madrid",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "brahim-abdelkader-diaz",
+        "id": "Player:45936f9b-ed00-4868-9404-bdd6b79e6d81",
+        "displayName": "Brahim",
+        "club": "Real Madrid",
+        "nationality": "ma",
+        "birthDay": "1999-08-03"
+      }
+    ]
+  },
+  {
+    "player_id": "cb3cda2a-2376-4746-9260-9199c97e082c",
+    "name": "Rodrygo Goes 4.º",
+    "equipo": "Real Madrid",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "rodrygo-silva-de-goes",
+        "id": "Player:0136fab6-8db7-44a2-b0e1-553832938f93",
+        "displayName": "Rodrygo",
+        "club": "Real Madrid",
+        "nationality": "br",
+        "birthDay": "2001-01-09"
+      }
+    ]
+  },
+  {
+    "player_id": "c013362f-85cd-4259-9bf4-c7222f7c9d92",
+    "name": "Aihen Muñoz",
+    "equipo": "Real Sociedad",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "aihen-munoz-capellan",
+        "id": "Player:674d1624-8b4c-45da-bc3a-73c7c4c6b3f4",
+        "displayName": "Aihen",
+        "club": "Real Sociedad",
+        "nationality": "es",
+        "birthDay": "1997-08-16"
+      }
+    ]
+  },
+  {
+    "player_id": "c86642a9-e93b-4c59-8bd9-8d1d15c621d4",
+    "name": "Álvaro Odriozola",
+    "equipo": "Real Sociedad",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "alvaro-fernandez-carreras",
+        "id": "Player:8445cc45-0575-4885-93be-13f084a7336e",
+        "displayName": "Álvaro Carreras",
+        "club": "Real Madrid",
+        "nationality": "es",
+        "birthDay": "2003-03-23"
+      },
+      {
+        "slug": "alvaro-daniel-rodriguez-munoz",
+        "id": "Player:ae165315-0530-4ae8-9842-95366a5b7922",
+        "displayName": "Álvaro Rodríguez",
+        "club": "AFC Bournemouth",
+        "nationality": "uy",
+        "birthDay": "2004-07-14"
+      },
+      {
+        "slug": "alvaro-fidalgo-fernandez",
+        "id": "Player:93a8fd1d-6bcf-43b2-a50e-4c37107357d5",
+        "displayName": "Álvaro Fidalgo",
+        "club": "Real Betis",
+        "nationality": "mx",
+        "birthDay": "1997-04-09"
+      },
+      {
+        "slug": "alvaro-cortes-moyano",
+        "id": "Player:362e23c1-eb6b-4846-95c1-2ca2de931aef",
+        "displayName": "Álvaro Cortés",
+        "club": "FC Barcelona",
+        "nationality": "es",
+        "birthDay": "2005-03-17"
+      },
+      {
+        "slug": "alvaro-fernandez-llorente",
+        "id": "Player:55d25a64-cb39-4214-ac57-37c96610d223",
+        "displayName": "Álvaro Fernández",
+        "club": "Real Club Deportivo de La Coruña",
+        "nationality": "es",
+        "birthDay": "1998-04-13"
+      },
+      {
+        "slug": "alvaro-borja-morata-martin",
+        "id": "Player:fa48702b-d2ad-4abe-a606-5392c9bf6793",
+        "displayName": "Álvaro Morata",
+        "club": "Calcio Como",
+        "nationality": "es",
+        "birthDay": "1992-10-23"
+      },
+      {
+        "slug": "alvaro-valles-rosa",
+        "id": "Player:e6d2b718-315b-482d-965e-02e3854702b5",
+        "displayName": "Álvaro Valles",
+        "club": "Real Betis",
+        "nationality": "es",
+        "birthDay": "1997-07-25"
+      }
+    ]
+  },
+  {
+    "player_id": "66cb3568-b89c-444e-9686-60d9fb333a6e",
+    "name": "Beñat Turrientes",
+    "equipo": "Real Sociedad",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "benat-gerenabarrena-zendoia",
+        "id": "Player:2dcb8c65-59b6-4702-b45d-617d55a6ecdf",
+        "displayName": "Beñat Gerenabarrena",
+        "club": "Athletic Club",
+        "nationality": "es",
+        "birthDay": "2003-03-29"
+      },
+      {
+        "slug": "benat-prados-diaz",
+        "id": "Player:630295c6-8a01-4b2d-8461-e00af00dddf5",
+        "displayName": "Beñat Prados",
+        "club": "Athletic Club",
+        "nationality": "es",
+        "birthDay": "2001-02-08"
+      }
+    ]
+  },
+  {
+    "player_id": "0b0f93e7-6a46-4fc1-8d5c-a08b1f262448",
+    "name": "Igor Zubeldia",
+    "equipo": "Real Sociedad",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "igor-julio-dos-santos-de-paulo",
+        "id": "Player:79161d67-8917-48bb-90cb-9bc5caba8f98",
+        "displayName": "Igor",
+        "club": "Brighton & Hove Albion FC",
+        "nationality": "br",
+        "birthDay": "1998-02-07"
+      }
+    ]
+  },
+  {
+    "player_id": "93e0a63b-e9c8-4669-9ef8-49939ce14510",
+    "name": "Mikel Oyarzabal",
+    "equipo": "Real Sociedad",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "william-mikelbrencis",
+        "id": "Player:c09acbde-1d62-44b4-84ac-e061734e8128",
+        "displayName": "William Mikelbrencis",
+        "club": null,
+        "nationality": "fr",
+        "birthDay": "2004-02-25"
+      },
+      {
+        "slug": "mikel-johan-gogorza-kruger-johnsen",
+        "id": "Player:a2a6b611-e142-4c15-9d65-40610e048896",
+        "displayName": "Mikel Krüger-Johnsen",
+        "club": "FC Midtjylland",
+        "nationality": "dk",
+        "birthDay": "2006-09-27"
+      },
+      {
+        "slug": "mikel-jauregizar-alboniga",
+        "id": "Player:ed625ccc-da0e-451d-bd7d-c1ef548b3bc8",
+        "displayName": "Mikel Jauregizar",
+        "club": "Athletic Club",
+        "nationality": "es",
+        "birthDay": "2003-11-13"
+      },
+      {
+        "slug": "mikel-rodriguez-ulacia",
+        "id": "Player:3d69aedb-4578-40f2-9290-db2e9eef78b0",
+        "displayName": "Mikel Rodríguez",
+        "club": "D. Alavés",
+        "nationality": "es",
+        "birthDay": "2002-04-03"
+      }
+    ]
+  },
+  {
+    "player_id": "007102f5-1a2d-43f5-a78a-271814a25395",
+    "name": "Take Kubo",
+    "equipo": "Real Sociedad",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "takefusa-kubo",
+        "id": "Player:17d26117-8bea-484b-a523-09dbc3ef7229",
+        "displayName": "Take",
+        "club": "Real Sociedad",
+        "nationality": "jp",
+        "birthDay": "2001-06-04"
+      }
+    ]
+  },
+  {
+    "player_id": "880bc2e5-1dad-409e-b65c-311e7872b4e1",
+    "name": "Alfonso González",
+    "equipo": "Sevilla FC",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "alfonso-herrero-peinador",
+        "id": "Player:e713d6f3-f65b-40e3-a25f-2b052f7960a3",
+        "displayName": "Alfonso Herrero",
+        "club": "Málaga CF",
+        "nationality": "es",
+        "birthDay": "1994-04-21"
+      },
+      {
+        "slug": "luis-alfonso-espino-garcia",
+        "id": "Player:b72bda92-0612-496c-aafa-784f2b3c3f67",
+        "displayName": "Alfonso Espino",
+        "club": "Racing Club de Avellaneda",
+        "nationality": "uy",
+        "birthDay": "1992-01-05"
+      },
+      {
+        "slug": "alfonso-daniel-barco-del-solar",
+        "id": "Player:2c1a29f2-15d5-4218-8ef4-5dff8276e7de",
+        "displayName": "Alfonso Barco",
+        "club": "HNK Rijeka",
+        "nationality": "pe",
+        "birthDay": "2001-12-07"
+      },
+      {
+        "slug": "alfonso-pastor-vacas",
+        "id": "Player:f6643e7a-38d9-40e4-8ab5-1ea4e158138e",
+        "displayName": "Alfonso Pastor",
+        "club": "CS Marítimo Funchal",
+        "nationality": "es",
+        "birthDay": "2000-10-04"
+      },
+      {
+        "slug": "alfonso-pedraza-sag",
+        "id": "Player:8dba8f40-e5c3-4d8f-9dee-7677096c255c",
+        "displayName": "Alfonso Pedraza",
+        "club": "SS Lazio",
+        "nationality": "es",
+        "birthDay": "1996-04-09"
+      },
+      {
+        "slug": "alfonso-cristian-parot-rojas",
+        "id": "Player:4564fb57-36ea-4807-b466-7a7031fc1373",
+        "displayName": "Alfonso Parot",
+        "club": "Club Deportes Limache",
+        "nationality": "cl",
+        "birthDay": "1989-10-15"
+      }
+    ]
+  },
+  {
+    "player_id": "6a651cc7-5179-46c7-9d51-1ec2e3dc1679",
+    "name": "Joaquín Oso",
+    "equipo": "Sevilla FC",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "joaquin-sanchez-rodriguez",
+        "id": "Player:3fd14b2d-70ab-4887-97a1-bdefbb19ba59",
+        "displayName": "Joaquín",
+        "club": null,
+        "nationality": "es",
+        "birthDay": "1981-07-21"
+      }
+    ]
+  },
+  {
+    "player_id": "2060e950-fe1f-4c20-b9d9-535a502d5229",
+    "name": "L. García",
+    "equipo": "Sevilla FC",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "lillian-rao-lisoa",
+        "id": "Player:768026a6-4d05-444e-9b71-d198f6e39e28",
+        "displayName": "Lillian Rao-Lisoa",
+        "club": "Angers SCO",
+        "nationality": "fr",
+        "birthDay": "2000-06-16"
+      },
+      {
+        "slug": "lucas-buades",
+        "id": "Player:9225aa3d-8454-4fe7-8e15-f72964cc7899",
+        "displayName": "Lucas Buades",
+        "club": "Le Mans FC",
+        "nationality": "fr",
+        "birthDay": "1997-12-28"
+      },
+      {
+        "slug": "liam-delap",
+        "id": "Player:2f5758f0-03c8-433f-a6a3-f3f39b5708ad",
+        "displayName": "Liam Delap",
+        "club": "Chelsea FC",
+        "nationality": "gb-eng",
+        "birthDay": "2003-02-08"
+      },
+      {
+        "slug": "florentino-ibrain-morris-luis",
+        "id": "Player:2c0e43a2-68b1-47bc-88bc-250e12a1f248",
+        "displayName": "Florentino Luís",
+        "club": "Ipswich Town FC",
+        "nationality": "pt",
+        "birthDay": "1999-08-19"
+      },
+      {
+        "slug": "alfie-david-lloyd",
+        "id": "Player:7fe4281d-e7b2-4e15-af0b-d24ff2c7f295",
+        "displayName": "Alfie Lloyd",
+        "club": "Queens Park Rangers FC",
+        "nationality": "gb-eng",
+        "birthDay": "2003-04-30"
+      },
+      {
+        "slug": "luiz-lucio-reis-junior",
+        "id": "Player:bcde87ce-727b-4063-8c5c-212e27eb1ee5",
+        "displayName": "Luíz Júnior",
+        "club": "Villarreal CF",
+        "nationality": "br",
+        "birthDay": "2001-01-14"
+      },
+      {
+        "slug": "lorenzo-amatucci",
+        "id": "Player:09e10f90-a843-4739-9936-fabba503d12f",
+        "displayName": "Lorenzo Amatucci",
+        "club": "Real Club Deportivo de La Coruña",
+        "nationality": "it",
+        "birthDay": "2004-02-05"
+      },
+      {
+        "slug": "loris-karius",
+        "id": "Player:0bf38a67-18bf-42c2-ad1a-307f07d42060",
+        "displayName": "Loris Karius",
+        "club": "FC Schalke 04",
+        "nationality": "de",
+        "birthDay": "1993-06-22"
+      },
+      {
+        "slug": "lucca-kiaba-mounganga",
+        "id": "Player:7d675c30-2277-467d-a097-884d4ec976cf",
+        "displayName": "Lucca Kiaba Mounganga",
+        "club": "KRC Genk",
+        "nationality": "be",
+        "birthDay": "2008-06-27"
+      }
+    ]
+  },
+  {
+    "player_id": "ea359cce-fb80-4a6c-a1f9-3a0b496b3363",
+    "name": "Marcos do Nascimento Teixeira",
+    "equipo": "Sevilla FC",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "marcos-lavin-rodriguez",
+        "id": "Player:fcda6f16-6daf-4903-9e16-10a77a966b9f",
+        "displayName": "Marcos Lavín",
+        "club": "Academico de Viseu FC",
+        "nationality": "es",
+        "birthDay": "1996-09-02"
+      },
+      {
+        "slug": "marcos-leonardo-santos-almeida",
+        "id": "Player:08c1677f-13d2-4eb7-b4b2-cc6916d2c0c9",
+        "displayName": "Marcos Leonardo",
+        "club": "AFC Ajax",
+        "nationality": "br",
+        "birthDay": "2003-05-02"
+      },
+      {
+        "slug": "marcos-senesi",
+        "id": "Player:4316e376-da26-469a-9f03-e1144e8018b1",
+        "displayName": "Marcos Senesi",
+        "club": "Tottenham Hotspur FC",
+        "nationality": "ar",
+        "birthDay": "1997-05-10"
+      },
+      {
+        "slug": "marcos-johan-lopez-lanfranco",
+        "id": "Player:00dc6629-2b64-4ca1-94c5-416207f8cccc",
+        "displayName": "Marcos López",
+        "club": "FC København",
+        "nationality": "pe",
+        "birthDay": "1999-11-20"
+      },
+      {
+        "slug": "marcos-hernan-peano",
+        "id": "Player:544180c8-e273-4241-9627-1c32312cf1cf",
+        "displayName": "Marcos Peano",
+        "club": "RAAL La Louvière",
+        "nationality": "ar",
+        "birthDay": "1998-10-15"
+      },
+      {
+        "slug": "marcos-llorente-moreno",
+        "id": "Player:c76cffc6-6c64-4ea2-b395-686885b5ae0a",
+        "displayName": "Marcos Llorente",
+        "club": "Atlético de Madrid",
+        "nationality": "es",
+        "birthDay": "1995-01-30"
+      }
+    ]
+  },
+  {
+    "player_id": "deb857fc-1ee9-49f6-ad2c-4243fe69ac1b",
+    "name": "Nico Guillén",
+    "equipo": "Sevilla FC",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "nicolo-tresoldi",
+        "id": "Player:2df02b04-9522-48c6-a4d7-d2e798a6036b",
+        "displayName": "Nicolò Tresoldi",
+        "club": "Club Brugge KV",
+        "nationality": "de",
+        "birthDay": "2004-08-20"
+      },
+      {
+        "slug": "nico-o-reilly",
+        "id": "Player:35594f6a-6d94-4eee-bd92-b50339f71b5e",
+        "displayName": "Nico O'Reilly",
+        "club": "Manchester City FC",
+        "nationality": "gb-eng",
+        "birthDay": "2005-03-21"
+      },
+      {
+        "slug": "nicolai-remberg",
+        "id": "Player:3c99f8a4-a622-4b0a-8327-e8de8b79ec1a",
+        "displayName": "Nicolai Remberg",
+        "club": "Hamburger SV",
+        "nationality": "de",
+        "birthDay": "2000-06-19"
+      },
+      {
+        "slug": "nico-schlotterbeck",
+        "id": "Player:acbf1cf9-8019-406c-b174-6e753102f509",
+        "displayName": "Nico Schlotterbeck",
+        "club": "Borussia Dortmund",
+        "nationality": "de",
+        "birthDay": "1999-12-01"
+      },
+      {
+        "slug": "nicolas-jackson",
+        "id": "Player:d594a684-a076-4481-9592-abb0db25faaf",
+        "displayName": "Nicolas Jackson",
+        "club": "Chelsea FC",
+        "nationality": "sn",
+        "birthDay": "2001-06-20"
+      },
+      {
+        "slug": "nicolas-lemaitre",
+        "id": "Player:c3df858d-114e-4d38-9c04-925cc07c73ea",
+        "displayName": "Nicolas Lemaître",
+        "club": "Stade Rennais F.C.",
+        "nationality": "fr",
+        "birthDay": "1997-01-12"
+      },
+      {
+        "slug": "nicolas-gonzalez-iglesias",
+        "id": "Player:54310794-5cf7-47a7-9a69-71cfa22683a2",
+        "displayName": "Nico González",
+        "club": "Newcastle United FC",
+        "nationality": "es",
+        "birthDay": "2002-01-03"
+      }
+    ]
+  },
+  {
+    "player_id": "86913131-6efc-4784-9bbe-bbb059c20d4e",
+    "name": "Odisseas Vlachodimos",
+    "equipo": "Sevilla FC",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "odisseas-vlachodimos",
+        "id": "Player:8d1d0f25-d649-4577-b651-da76334a9a77",
+        "displayName": "Odysseas",
+        "club": "Sevilla FC",
+        "nationality": "gr",
+        "birthDay": "1994-04-26"
+      }
+    ]
+  },
+  {
+    "player_id": "4f9e55f3-8b6c-4a62-8bec-9e2dfed3c298",
+    "name": "Odysseas Vlachodimos",
+    "equipo": "Sevilla FC",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "odisseas-vlachodimos",
+        "id": "Player:8d1d0f25-d649-4577-b651-da76334a9a77",
+        "displayName": "Odysseas",
+        "club": "Sevilla FC",
+        "nationality": "gr",
+        "birthDay": "1994-04-26"
+      }
+    ]
+  },
+  {
+    "player_id": "87b6b03a-15e9-440d-9140-10b8131351be",
+    "name": "Gamón",
+    "equipo": "Valencia CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "ilya-gaponov",
+        "id": "Player:c83866ea-b854-459f-90af-9e01e6a57b2c",
+        "displayName": "Ilya Gaponov",
+        "club": "FK Fakel Voronezh",
+        "nationality": "ru",
+        "birthDay": "1997-10-25"
+      }
+    ]
+  },
+  {
+    "player_id": "3899b42d-deb2-41f1-982f-0a3c08ecb545",
+    "name": "José Luis García Vayá",
+    "equipo": "Valencia CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "joe-rankin-costello",
+        "id": "Player:dca2008a-9a59-44ec-aa48-7d77a2597f0c",
+        "displayName": "Joseph Rankin-Costello",
+        "club": "Charlton Athletic FC",
+        "nationality": "gb-eng",
+        "birthDay": "1999-07-26"
+      },
+      {
+        "slug": "jose-maria-gimenez-de-vargas",
+        "id": "Player:a4575b34-530b-4bc4-b189-d410f8f29b5e",
+        "displayName": "José María Giménez",
+        "club": "Atlético de Madrid",
+        "nationality": "uy",
+        "birthDay": "1995-01-20"
+      },
+      {
+        "slug": "joe-ward",
+        "id": "Player:f5ea9ef8-ac47-4bfd-aa35-14dc9c09585f",
+        "displayName": "Joseph Ward",
+        "club": "Derby County FC",
+        "nationality": "gb-eng",
+        "birthDay": "1995-08-22"
+      },
+      {
+        "slug": "jose-pedro-formoso-neto",
+        "id": "Player:60c31c83-515d-42b6-a910-517d784f2d2f",
+        "displayName": "José Neto",
+        "club": "SL Benfica",
+        "nationality": "pt",
+        "birthDay": "2008-04-19"
+      },
+      {
+        "slug": "joseph-kalulu-kyatengwa",
+        "id": "Player:abc32a45-c3c3-4a75-9c3f-65f73a87a906",
+        "displayName": "Joseph Kalulu",
+        "club": "Angers SCO",
+        "nationality": "fr",
+        "birthDay": "2004-11-29"
+      },
+      {
+        "slug": "joseph-brooks-bevan",
+        "id": "Player:e795e07f-9099-42ec-88cf-06ac86a64f7d",
+        "displayName": "Joseph Bevan",
+        "club": "Dundee FC",
+        "nationality": "gb-sct",
+        "birthDay": "2004-07-15"
+      },
+      {
+        "slug": "jose-martinez-marsa",
+        "id": "Player:1291016c-fdfb-441d-b700-915256828a99",
+        "displayName": "José Marsà",
+        "club": "YR KV Mechelen",
+        "nationality": "es",
+        "birthDay": "2002-03-04"
+      },
+      {
+        "slug": "jose-miguel-reis-melro",
+        "id": "Player:15b5c7a9-06d1-44ae-a391-9c438bfbf87f",
+        "displayName": "José Melro",
+        "club": "CS Marítimo Funchal",
+        "nationality": "pt",
+        "birthDay": "2004-05-26"
+      }
+    ]
+  },
+  {
+    "player_id": "4677f6e6-e372-4264-b10e-4c31734c975c",
+    "name": "José Luis Gayà",
+    "equipo": "Valencia CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "joe-rankin-costello",
+        "id": "Player:dca2008a-9a59-44ec-aa48-7d77a2597f0c",
+        "displayName": "Joseph Rankin-Costello",
+        "club": "Charlton Athletic FC",
+        "nationality": "gb-eng",
+        "birthDay": "1999-07-26"
+      },
+      {
+        "slug": "jose-maria-gimenez-de-vargas",
+        "id": "Player:a4575b34-530b-4bc4-b189-d410f8f29b5e",
+        "displayName": "José María Giménez",
+        "club": "Atlético de Madrid",
+        "nationality": "uy",
+        "birthDay": "1995-01-20"
+      },
+      {
+        "slug": "joe-ward",
+        "id": "Player:f5ea9ef8-ac47-4bfd-aa35-14dc9c09585f",
+        "displayName": "Joseph Ward",
+        "club": "Derby County FC",
+        "nationality": "gb-eng",
+        "birthDay": "1995-08-22"
+      },
+      {
+        "slug": "jose-pedro-formoso-neto",
+        "id": "Player:60c31c83-515d-42b6-a910-517d784f2d2f",
+        "displayName": "José Neto",
+        "club": "SL Benfica",
+        "nationality": "pt",
+        "birthDay": "2008-04-19"
+      },
+      {
+        "slug": "joseph-kalulu-kyatengwa",
+        "id": "Player:abc32a45-c3c3-4a75-9c3f-65f73a87a906",
+        "displayName": "Joseph Kalulu",
+        "club": "Angers SCO",
+        "nationality": "fr",
+        "birthDay": "2004-11-29"
+      },
+      {
+        "slug": "joseph-brooks-bevan",
+        "id": "Player:e795e07f-9099-42ec-88cf-06ac86a64f7d",
+        "displayName": "Joseph Bevan",
+        "club": "Dundee FC",
+        "nationality": "gb-sct",
+        "birthDay": "2004-07-15"
+      },
+      {
+        "slug": "jose-martinez-marsa",
+        "id": "Player:1291016c-fdfb-441d-b700-915256828a99",
+        "displayName": "José Marsà",
+        "club": "YR KV Mechelen",
+        "nationality": "es",
+        "birthDay": "2002-03-04"
+      },
+      {
+        "slug": "jose-miguel-reis-melro",
+        "id": "Player:15b5c7a9-06d1-44ae-a391-9c438bfbf87f",
+        "displayName": "José Melro",
+        "club": "CS Marítimo Funchal",
+        "nationality": "pt",
+        "birthDay": "2004-05-26"
+      }
+    ]
+  },
+  {
+    "player_id": "39ba5510-d662-462e-86a6-5e77b97ad87b",
+    "name": "Luis Rioja",
+    "equipo": "Valencia CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "luis-engelns",
+        "id": "Player:ad7b6b29-7ab9-4492-a4d9-d858595d16fa",
+        "displayName": "Luis Engelns",
+        "club": "TSG Hoffenheim",
+        "nationality": "de",
+        "birthDay": "2007-03-11"
+      },
+      {
+        "slug": "luis-miguel-cruz-hernandez",
+        "id": "Player:717acc5f-8f61-4aaa-8bde-4dd1373af649",
+        "displayName": "Luismi Cruz",
+        "club": "Real Club Deportivo de La Coruña",
+        "nationality": "es",
+        "birthDay": "2001-05-23"
+      },
+      {
+        "slug": "florentino-ibrain-morris-luis",
+        "id": "Player:2c0e43a2-68b1-47bc-88bc-250e12a1f248",
+        "displayName": "Florentino Luís",
+        "club": "Ipswich Town FC",
+        "nationality": "pt",
+        "birthDay": "1999-08-19"
+      },
+      {
+        "slug": "luis-fernando-diaz-marulanda",
+        "id": "Player:c4941284-8223-4f87-81e3-3a3ac9910d80",
+        "displayName": "Luis Díaz",
+        "club": "FC Bayern München",
+        "nationality": "co",
+        "birthDay": "1997-01-13"
+      },
+      {
+        "slug": "luis-henrique-barros-lopes",
+        "id": "Player:92cb847a-dfd8-4d82-8dea-83a8d5c89c21",
+        "displayName": "Luís 'Duk' Lopes",
+        "club": "Atlas FC de Guadalajara",
+        "nationality": "cv",
+        "birthDay": "2000-02-16"
+      },
+      {
+        "slug": "luis-seifert",
+        "id": "Player:1999407d-6881-4c01-9848-cf1ff9696bdb",
+        "displayName": "Luis Seifert",
+        "club": "SV 07 Elversberg",
+        "nationality": "de",
+        "birthDay": "2004-01-26"
+      },
+      {
+        "slug": "luis-hemir-silva-semedo",
+        "id": "Player:632c2620-916e-4b4c-bee1-3dc716960269",
+        "displayName": "Luís Semedo",
+        "club": "Sunderland AFC",
+        "nationality": "pt",
+        "birthDay": "2003-08-11"
+      },
+      {
+        "slug": "luis-manuel-da-costa-silva",
+        "id": "Player:399e391b-8cf5-4523-a61a-1047163ce1cc",
+        "displayName": "Luís Silva",
+        "club": "Academico de Viseu FC",
+        "nationality": "pt",
+        "birthDay": "1992-09-29"
+      }
+    ]
+  },
+  {
+    "player_id": "b233b955-644a-4735-8438-4f02967db107",
+    "name": "Rubén Iranzo",
+    "equipo": "Valencia CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "ruben-sanchez-saez",
+        "id": "Player:473c9d46-1871-460f-a42e-7864735f9308",
+        "displayName": "Rubén Sánchez",
+        "club": "RCD Espanyol de Barcelona",
+        "nationality": "es",
+        "birthDay": "2001-02-04"
+      },
+      {
+        "slug": "ruben-muller",
+        "id": "Player:7bd070cd-df53-491c-a6f7-853bbddd700e",
+        "displayName": "Ruben Müller",
+        "club": "SC Paderborn 07",
+        "nationality": "de",
+        "birthDay": "2005-08-24"
+      },
+      {
+        "slug": "ruben-santos-gato-alves-dias",
+        "id": "Player:c2420580-d3f9-45fb-a995-2338d1b606fc",
+        "displayName": "Rúben Dias",
+        "club": "Manchester City FC",
+        "nationality": "pt",
+        "birthDay": "1997-05-14"
+      },
+      {
+        "slug": "ruben-aguilar",
+        "id": "Player:db2d82c6-288d-4fb1-99bb-6ca67ff2d294",
+        "displayName": "Ruben Aguilar",
+        "club": "RC Lens",
+        "nationality": "fr",
+        "birthDay": "1993-04-26"
+      },
+      {
+        "slug": "ruben-van-bommel",
+        "id": "Player:c513a572-37a0-426d-b3da-44ae2e79ea3f",
+        "displayName": "Ruben van Bommel",
+        "club": "PSV Eindhoven",
+        "nationality": "nl",
+        "birthDay": "2004-08-03"
+      },
+      {
+        "slug": "orlando-ruben-yanez-alabart",
+        "id": "Player:c6519e2a-4e35-4e17-b018-d9d4449debe7",
+        "displayName": "Rubén Yáñez",
+        "club": "Real Sporting de Gijón",
+        "nationality": "es",
+        "birthDay": "1993-10-12"
+      },
+      {
+        "slug": "ruben-blanco-veiga",
+        "id": "Player:481e58bc-f351-473e-8070-577f227d335b",
+        "displayName": "Rubén Blanco",
+        "club": "Yokohama F. Marinos",
+        "nationality": "es",
+        "birthDay": "1995-07-25"
+      },
+      {
+        "slug": "ruben-da-rocha-rodrigues",
+        "id": "Player:06c27c7f-dbea-44f2-9e68-8a3cc30471a7",
+        "displayName": "Ruben Rodrigues",
+        "club": "Bolton Wanderers FC",
+        "nationality": "pt",
+        "birthDay": "1996-08-02"
+      }
+    ]
+  },
+  {
+    "player_id": "6563b89a-6b74-4bf2-b326-16377caff8f9",
+    "name": "Umar Sadiq",
+    "equipo": "Valencia CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "umar-abubakar",
+        "id": "Player:40fb9a33-4478-4583-b636-a3035c557f80",
+        "displayName": "Umar Abubakar",
+        "club": "FC Famalicão",
+        "nationality": "ng",
+        "birthDay": "2006-02-15"
+      }
+    ]
+  },
+  {
+    "player_id": "cd91d887-0709-4e0a-a007-bc22702149fa",
+    "name": "Dani Requena",
+    "equipo": "Villarreal CF",
+    "reason": "weak",
+    "best": null,
+    "candidates": [
+      {
+        "slug": "daniel-ballard",
+        "id": "Player:17b8a4e5-b375-485d-a91e-f2c0736d979b",
+        "displayName": "Daniel Ballard",
+        "club": "Sunderland AFC",
+        "nationality": "gb-nir",
+        "birthDay": "1999-09-22"
+      },
+      {
+        "slug": "daniel-happe",
+        "id": "Player:b57929ce-4ccd-4b12-90db-a62b5618005e",
+        "displayName": "Daniel Happe",
+        "club": "Aberdeen FC",
+        "nationality": "gb-eng",
+        "birthDay": "1998-09-28"
+      },
+      {
+        "slug": "daniel-finlayson",
+        "id": "Player:5552ca37-5426-48d0-8e69-3a883f4529ec",
+        "displayName": "Daniel Finlayson",
+        "club": "Saint Johnstone FC",
+        "nationality": "gb-nir",
+        "birthDay": "2001-01-19"
+      },
+      {
+        "slug": "dani-van-loenen",
+        "id": "Player:faaa785a-66e9-486a-88c6-da8fa3e8fa51",
+        "displayName": "Dani van Loenen",
+        "club": "HFC ADO Den Haag",
+        "nationality": "nl",
+        "birthDay": "2007-02-12"
+      },
+      {
+        "slug": "daniel-martin-rodriguez",
+        "id": "Player:6e67a14a-995a-4f1f-b57a-f70aa0e1ca3a",
+        "displayName": "Dani Martín",
+        "club": "Levante UD",
+        "nationality": "es",
+        "birthDay": "2005-09-26"
+      },
+      {
+        "slug": "danilo-teodoro-soares",
+        "id": "Player:20579a00-dca3-40f2-a44b-1d1b22712764",
+        "displayName": "Danilo Soares",
+        "club": "SC Austria Lustenau",
+        "nationality": "br",
+        "birthDay": "1991-10-29"
+      },
+      {
+        "slug": "daniel-kofi-kyereh",
+        "id": "Player:01dfc8b6-a674-441f-a44e-bf91674ce2d3",
+        "displayName": "Daniel-Kofi Kyereh",
+        "club": "VfL Osnabrück",
+        "nationality": "gh",
+        "birthDay": "1996-03-08"
+      },
+      {
+        "slug": "daniel-olmo-carvajal",
+        "id": "Player:8609e9eb-39dd-4e11-85ac-7fece849581d",
+        "displayName": "Dani Olmo",
+        "club": "FC Barcelona",
+        "nationality": "es",
+        "birthDay": "1998-05-07"
+      },
+      {
+        "slug": "daniel-armando-fonseca-da-silva-banjaqui",
+        "id": "Player:83afbd5d-8897-42b8-ae01-1b46235cadc9",
+        "displayName": "Daniel Banjaqui",
+        "club": "SL Benfica",
+        "nationality": "pt",
+        "birthDay": "2008-03-24"
+      }
+    ]
+  }
+]

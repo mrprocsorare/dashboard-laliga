@@ -10,6 +10,38 @@ export type { SorareCardPrice, SorarePlayerData } from "@/lib/sorare-types";
  * Components y route handlers; nunca contiene el cliente GraphQL ni hace
  * llamadas externas al abrir una pantalla.
  */
+/**
+ * Resuelve, para un conjunto de `player_id`, el slug de Sorare verificado a
+ * través del puente genérico `player_source_ids`. Solo devuelve slugs de
+ * mapeos `matched` y verificados; el resto (manual_review/not_found) no
+ * aporta identidad Sorare.
+ *
+ * Devuelve `external_slug` (no `external_player_id`): el cache
+ * (`sorare_player_cache`) está indexado por slug, y el `id` estable vive en
+ * `external_player_id`.
+ *
+ * NOTA: hoy solo la fuente 'sorare' escribe en `player_source_ids`, así que
+ * filtrar por `status='matched'` + `is_verified=true` es suficiente y exacto.
+ */
+export async function getSorareSlugByPlayerIds(
+  playerIds: string[],
+): Promise<Map<string, string>> {
+  const result = new Map<string, string>();
+  if (!playerIds.length) return result;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("player_source_ids")
+    .select("player_id, external_slug")
+    .eq("status", "matched")
+    .eq("is_verified", true)
+    .not("external_slug", "is", null)
+    .in("player_id", playerIds);
+  for (const row of (data ?? []) as Array<{ player_id: string; external_slug: string }>) {
+    result.set(row.player_id, row.external_slug);
+  }
+  return result;
+}
+
 export async function getSorareData(slugs: string[]): Promise<Map<string, SorarePlayerData>> {
   const uniqueSlugs = [...new Set(slugs.map((slug) => slug.trim()).filter(Boolean))];
   const result = new Map<string, SorarePlayerData>();

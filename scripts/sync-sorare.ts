@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-import { eq, inArray } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "../database/schema";
@@ -27,7 +27,6 @@ import {
 type Db = ReturnType<typeof drizzle>;
 type LocalRow = LocalSorarePlayer & {
   teamId: string;
-  sorareSlug: string | null;
   canonicalName: string | null;
 };
 
@@ -37,6 +36,7 @@ function searchName(row: LocalRow): string {
 
 function candidateFromResponse(player: SorarePlayerResponse): SorareCandidate {
   return {
+    id: player.id ?? null,
     slug: player.slug,
     displayName: player.displayName,
     firstName: player.firstName,
@@ -58,53 +58,45 @@ function localFromRow(row: LocalRow): LocalSorarePlayer {
   };
 }
 
-function mappingValues(
-  row: LocalRow,
-  decision: ReturnType<typeof decideSorareMatch>,
-  now: Date,
-) {
-  const candidate = decision.candidate;
-  return {
-    playerId: row.id,
-    // Un candidato dudoso queda documentado en `candidates` y no ocupa el
-    // slug de compatibilidad ni la unicidad del mapping.
-    sorareSlug: decision.status === "matched" ? candidate?.slug ?? null : null,
-    displayName: candidate?.displayName ?? null,
-    firstName: candidate?.firstName ?? null,
-    lastName: candidate?.lastName ?? null,
-    birthDay: candidate?.birthDay ?? null,
-    nationality: candidate?.nationality ?? null,
-    activeClubName: candidate?.activeClubName ?? null,
-    activeClubSlug: candidate?.activeClubSlug ?? null,
-    matchingMethod: decision.method,
-    confidence: decision.confidence,
-    status: decision.status,
-    reason: decision.reason,
-    candidates: decision.candidates.slice(0, 8).map((item) => ({
-      slug: item.slug,
-      displayName: item.displayName,
-      birthDay: item.birthDay,
-      activeClubName: item.activeClubName,
-      confidence: item.confidence,
-      evidence: item.evidence,
-    })),
-    lastVerifiedAt: decision.status === "matched" ? now : null,
-    identityExpiresAt: decision.status === "matched" ? new Date(now.getTime() + SORARE_IDENTITY_TTL_MS) : null,
-    updatedAt: now,
-  };
+async function getSorareSourceId(db: Db): Promise<string> {
+  const rows = await db
+    .select({ id: schema.sources.id })
+    .from(schema.sources)
+    .where(eq(schema.sources.slug, "sorare"))
+    .limit(1);
+  if (!rows.length) {
+    throw new Error("Fuente 'sorare' no encontrada en `sources`. Ejecuta db:migrate + db:seed.");
+  }
+  return rows[0].id;
 }
 
-async function upsertMapping(db: Db, row: LocalRow, decision: ReturnType<typeof decideSorareMatch>): Promise<void> {
+/**
+ * Escribe un mapeo en el puente genérico `player_source_ids`. Nunca toca
+ * `players.sorare_slug` (legacy): la identidad Sorare vive en el puente.
+ * Si el slug resultante ya está asignado a OTRO jugador, se deja en
+ * `manual_review` (nunca se fuerza una asociación dudosa).
+ */
+async function upsertSourceId(
+  db: Db,
+  row: LocalRow,
+  decision: ReturnType<typeof decideSorareMatch>,
+  sourceId: string,
+): Promise<void> {
   const now = new Date();
-  let effectiveDecision = decision;
+  let effective = decision;
   if (decision.status === "matched" && decision.candidate) {
     const occupied = await db
-      .select({ playerId: schema.sorarePlayerMappings.playerId })
-      .from(schema.sorarePlayerMappings)
-      .where(eq(schema.sorarePlayerMappings.sorareSlug, decision.candidate.slug))
-      .limit(1);
-    if (occupied[0] && occupied[0].playerId !== row.id) {
-      effectiveDecision = {
+      .select({ playerId: schema.playerSourceIds.playerId })
+      .from(schema.playerSourceIds)
+      .where(
+        and(
+          eq(schema.playerSourceIds.sourceId, sourceId),
+          eq(schema.playerSourceIds.externalSlug, decision.candidate.slug),
+        ),
+      )
+      .limit(5);
+    if (occupied.some((o) => o.playerId !== row.id)) {
+      effective = {
         ...decision,
         status: "manual_review",
         method: "review_required",
@@ -112,16 +104,38 @@ async function upsertMapping(db: Db, row: LocalRow, decision: ReturnType<typeof 
       };
     }
   }
+  const candidate = effective.candidate;
+  const base = {
+    // Identidad estable de Sorare (relay id). El slug queda en externalSlug.
+    externalPlayerId: effective.status === "matched" ? candidate?.id ?? null : null,
+    externalSlug: candidate?.slug ?? null,
+    externalName: candidate?.displayName ?? null,
+    externalDob: candidate?.birthDay ?? null,
+    externalClub: candidate?.activeClubName ?? null,
+    confidence: effective.confidence,
+    matchMethod: effective.method,
+    isVerified: effective.status === "matched",
+    status: effective.status,
+    candidates: effective.candidates.slice(0, 8).map((item) => ({
+      slug: item.slug,
+      displayName: item.displayName,
+      birthDay: item.birthDay,
+      activeClubName: item.activeClubName,
+      confidence: item.confidence,
+      evidence: item.evidence,
+    })),
+    reason: effective.reason,
+    lastVerifiedAt: effective.status === "matched" ? now : null,
+    identityExpiresAt: effective.status === "matched" ? new Date(now.getTime() + SORARE_IDENTITY_TTL_MS) : null,
+    updatedAt: now,
+  };
   await db
-    .insert(schema.sorarePlayerMappings)
-    .values(mappingValues(row, effectiveDecision, now))
+    .insert(schema.playerSourceIds)
+    .values({ playerId: row.id, sourceId, ...base })
     .onConflictDoUpdate({
-      target: schema.sorarePlayerMappings.playerId,
-      set: mappingValues(row, effectiveDecision, now),
+      target: [schema.playerSourceIds.playerId, schema.playerSourceIds.sourceId],
+      set: base,
     });
-  if (effectiveDecision.status === "matched" && effectiveDecision.candidate) {
-    await db.update(schema.players).set({ sorareSlug: effectiveDecision.candidate.slug }).where(eq(schema.players.id, row.id));
-  }
 }
 
 function summary(rows: LocalRow[], mappingStatus: Map<string, string>): void {
@@ -240,13 +254,13 @@ async function main() {
   const force = process.argv.includes("--force");
   const pool = new Pool({ connectionString });
   const db = drizzle(pool, { schema });
+  const sourceId = await getSorareSourceId(db);
   const now = Date.now();
   const rows = (await db
     .select({
       id: schema.players.id,
       name: schema.players.name,
       teamId: schema.players.teamId,
-      sorareSlug: schema.players.sorareSlug,
       dateOfBirth: schema.players.dateOfBirth,
       nationality: schema.players.nationality,
       canonicalName: schema.players.canonicalName,
@@ -254,24 +268,24 @@ async function main() {
     })
     .from(schema.players)
     .innerJoin(schema.teams, eq(schema.players.teamId, schema.teams.id))) as LocalRow[];
-  const mappings = await db.select().from(schema.sorarePlayerMappings);
+  const mappings = await db
+    .select()
+    .from(schema.playerSourceIds)
+    .where(eq(schema.playerSourceIds.sourceId, sourceId));
   const mappingByPlayer = new Map(mappings.map((mapping) => [mapping.playerId, mapping]));
   const client = new SorareApiClient();
   const status = new Map<string, string>();
   const assignedSlugByPlayer = new Map<string, string>();
+  for (const m of mappings) if (m.externalSlug) assignedSlugByPlayer.set(m.playerId, m.externalSlug);
   const [syncRun] = apply
     ? await db.insert(schema.sorareSyncRuns).values({ playersTotal: rows.length }).returning({ id: schema.sorareSyncRuns.id })
     : [{ id: null as string | null }];
-  for (const row of rows) if (row.sorareSlug) assignedSlugByPlayer.set(row.id, row.sorareSlug);
 
   console.log(`${apply ? "[apply]" : "[dry-run]"} Procesando ${rows.length} jugadores de ${new Set(rows.map((row) => row.teamId)).size} equipos.`);
   const slugsToVerify = rows
-    .filter((row) => row.sorareSlug)
-    .filter((row) => {
-      const expiresAt = mappingByPlayer.get(row.id)?.identityExpiresAt?.getTime() ?? 0;
-      return force || mappingByPlayer.get(row.id)?.status !== "matched" || expiresAt <= now;
-    })
-    .map((row) => row.sorareSlug as string);
+    .map((row) => ({ row, m: mappingByPlayer.get(row.id) }))
+    .filter(({ m }) => m && m.status === "matched" && (force || (m.identityExpiresAt?.getTime() ?? 0) <= now))
+    .map(({ m }) => m!.externalSlug as string);
   const verified = new Map<string, SorarePlayerResponse>();
   try {
     for (const player of await client.getPlayers(slugsToVerify)) verified.set(player.slug, player);
@@ -279,18 +293,22 @@ async function main() {
     console.warn(`[sync] verificación de slugs detenida: ${error instanceof Error ? error.message : String(error)}`);
   }
 
-  for (const row of rows.filter((item) => item.sorareSlug && verified.has(item.sorareSlug))) {
-    const decision = decideSorareMatch(localFromRow(row), [candidateFromResponse(verified.get(row.sorareSlug!)!)]);
+  for (const row of rows.filter((r) => {
+    const m = mappingByPlayer.get(r.id);
+    return m && m.externalSlug && verified.has(m.externalSlug);
+  })) {
+    const slug = mappingByPlayer.get(row.id)!.externalSlug!;
+    const decision = decideSorareMatch(localFromRow(row), [candidateFromResponse(verified.get(slug)!)]);
     status.set(row.id, decision.status);
     if (decision.status === "matched" && decision.candidate) assignedSlugByPlayer.set(row.id, decision.candidate.slug);
-    if (apply) await upsertMapping(db, row, decision);
+    if (apply) await upsertSourceId(db, row, decision, sourceId);
   }
 
   if (process.argv.includes("--probe-slugs")) {
     const probeRows = rows.filter((row) => {
-      const old = mappingByPlayer.get(row.id);
+      const m = mappingByPlayer.get(row.id);
       const current = status.get(row.id);
-      return !row.sorareSlug && current !== "matched" && (force || !old || old.status !== "matched");
+      return !m?.externalSlug && current !== "matched" && (force || !m || m.status !== "matched");
     });
     const probeSlugs = [...new Set(probeRows.flatMap(slugVariants))];
     const probeResponses = new Map<string, SorarePlayerResponse>();
@@ -309,7 +327,7 @@ async function main() {
       const decision = decideSlugProbeMatch(localFromRow(row), candidates, variants);
       status.set(row.id, decision.status);
       if (decision.status === "matched" && decision.candidate) assignedSlugByPlayer.set(row.id, decision.candidate.slug);
-      if (apply) await upsertMapping(db, row, decision);
+      if (apply) await upsertSourceId(db, row, decision, sourceId);
     }
   }
 
@@ -322,10 +340,10 @@ async function main() {
     );
   };
   const reviewRows = rows.filter((row) => {
-    const old = mappingByPlayer.get(row.id);
+    const m = mappingByPlayer.get(row.id);
     const current = status.get(row.id);
     const needsReview = current === undefined || current === "manual_review" || current === "not_found";
-    return needsReview && (force || !old || old.status === "manual_review" || old.status === "not_found");
+    return needsReview && (force || !m || m.status === "manual_review" || m.status === "not_found");
   });
   const pending = [...reviewRows].sort((left, right) => Number(isAbbreviated(right)) - Number(isAbbreviated(left)));
   const candidateMap = new Map<string, SorareCandidate[]>();
@@ -339,13 +357,13 @@ async function main() {
     const decision = decideSorareMatch(localFromRow(row), candidateMap.get(row.id) ?? []);
     status.set(row.id, decision.status);
     if (decision.status === "matched" && decision.candidate) assignedSlugByPlayer.set(row.id, decision.candidate.slug);
-    if (apply) await upsertMapping(db, row, decision);
+    if (apply) await upsertSourceId(db, row, decision, sourceId);
   }
 
   for (const row of rows) {
     if (!status.has(row.id)) {
-      const old = mappingByPlayer.get(row.id);
-      status.set(row.id, old?.status ?? (row.sorareSlug ? "manual_review" : "not_found"));
+      const m = mappingByPlayer.get(row.id);
+      status.set(row.id, m?.status ?? (m?.externalSlug ? "manual_review" : "not_found"));
     }
   }
 

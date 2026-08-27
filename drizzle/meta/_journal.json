@@ -57,6 +57,27 @@
       "when": 1787237780514,
       "tag": "0007_tranquil_onslaught",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1787639765773,
+      "tag": "0008_player_source_ids",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1787641273251,
+      "tag": "0009_player_source_external_slug",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1787643026834,
+      "tag": "0010_dapper_forgotten_one",
+      "breakpoints": true
     }
   ]
 }

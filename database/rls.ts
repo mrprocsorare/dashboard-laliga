@@ -26,6 +26,7 @@ const TABLES = [
   "sorare_player_mappings",
   "sorare_player_cache",
   "sorare_sync_runs",
+  "player_source_ids",
 ];
 
 async function main() {

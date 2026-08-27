@@ -10,25 +10,28 @@ const MAX_RETRIES = 3;
 export const SORARE_PLAYER_QUERY = `
   query SorarePlayers($slugs: [String!]) {
     players(slugs: $slugs) {
-      slug
-      displayName
-      firstName
-      lastName
-      birthDay
-      country { code }
-      activeClub { name slug }
-      playerGameScores(last: 5) { score }
-      classic: lowestPriceAnyCard(inSeason: false, rarity: limited) {
+      ... on Player {
+        id
         slug
-        publicMinPrices { eurCents }
-        liveSingleSaleOffer { senderSide { amounts { eurCents } } }
-        latestEnglishAuction { bestBid { amounts { eurCents } } }
-      }
-      inSeason: lowestPriceAnyCard(inSeason: true, rarity: limited) {
-        slug
-        publicMinPrices { eurCents }
-        liveSingleSaleOffer { senderSide { amounts { eurCents } } }
-        latestEnglishAuction { bestBid { amounts { eurCents } } }
+        displayName
+        firstName
+        lastName
+        birthDay
+        country { code }
+        activeClub { name slug }
+        playerGameScores(last: 5) { score }
+        classic: lowestPriceAnyCard(inSeason: false, rarity: limited) {
+          slug
+          publicMinPrices { eurCents }
+          liveSingleSaleOffer { senderSide { amounts { eurCents } } }
+          latestEnglishAuction { bestBid { amounts { eurCents } } }
+        }
+        inSeason: lowestPriceAnyCard(inSeason: true, rarity: limited) {
+          slug
+          publicMinPrices { eurCents }
+          liveSingleSaleOffer { senderSide { amounts { eurCents } } }
+          latestEnglishAuction { bestBid { amounts { eurCents } } }
+        }
       }
     }
   }
@@ -46,7 +49,7 @@ export const SORARE_SEARCH_QUERY = `
             birthDay
             country { code }
             activeClub { name slug }
-            ... on Player { slug }
+            ... on Player { id slug }
           }
         }
       }
@@ -73,6 +76,7 @@ export interface SorarePlayerResponse extends SorareCandidate {
 }
 
 interface RawSorarePlayerResponse extends Omit<SorarePlayerResponse, "nationality" | "activeClubName" | "activeClubSlug"> {
+  id?: string | null;
   nationality?: string | null;
   country?: { code: string } | null;
   activeClub?: { name: string; slug: string } | null;
@@ -135,6 +139,7 @@ function positivePrice(card: SorareCardResponse | null): number | null {
 export function toSorarePlayerResponse(value: RawSorarePlayerResponse): SorarePlayerResponse {
   return {
     ...value,
+    id: value.id ?? null,
     nationality: value.nationality ?? value.country?.code ?? null,
     activeClubName: value.activeClubName ?? value.activeClub?.name ?? null,
     activeClubSlug: value.activeClubSlug ?? value.activeClub?.slug ?? null,
@@ -294,6 +299,7 @@ export class SorareApiClient {
           if (player?.slug) {
             candidates.set(player.slug, {
               ...player,
+              id: player.id ?? null,
               nationality: player.nationality ?? player.country?.code ?? null,
               activeClubName: player.activeClubName ?? player.activeClub?.name ?? null,
               activeClubSlug: player.activeClubSlug ?? player.activeClub?.slug ?? null,

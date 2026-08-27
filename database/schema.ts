@@ -12,6 +12,7 @@ import {
   primaryKey,
   uuid,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 /**
  * Enumerados compartidos.
@@ -442,6 +443,60 @@ export const sorareSyncRuns = pgTable(
   (t) => [index("sorare_sync_runs_started_idx").on(t.startedAt)],
 );
 
+/**
+ * Puente genérico de identidad entre `players` (identidad canónica del
+ * dashboard) y cualquier fuente externa. Cada fila enlaza un `player_id`
+ * con un `external_player_id` (p. ej. el slug de Sorare) bajo una fuente
+ * concreta (`sources`). Sustituye a la tabla específica `sorare_player_mappings`
+ * como fuente de verdad, de modo que otras fuentes (alineaciones, stats API)
+ * puedan enchufarse por el mismo mecanismo.
+ *
+ * - `status` (reusa el enum `sorare_mapping_status`) distingue `matched`
+ *   (verificado), `manual_review` (dudoso, nunca auto-asociado) y `not_found`.
+ * - `is_verified` = true solo para `matched` de alta confianza (exact/high).
+ *   `medium/low` quedan en `manual_review`.
+ * - (player_id, source_id) es PK: un jugador tiene a lo sumo un mapeo por
+ *   fuente. (source_id, external_player_id) es único: un external id no puede
+ *   estar asignado a dos jugadores distintos.
+ */
+export const playerSourceIds = pgTable(
+  "player_source_ids",
+  {
+    playerId: uuid("player_id")
+      .notNull()
+      .references(() => players.id, { onDelete: "cascade" }),
+    sourceId: uuid("source_id")
+      .notNull()
+      .references(() => sources.id, { onDelete: "cascade" }),
+    /** Identidad estable de la fuente (p. ej. Sorare relay `id`). No depende del slug. */
+    externalPlayerId: text("external_player_id"),
+    /** Slug de la fuente (p. ej. slug de Sorare). Denormalizado para lookup de cache. */
+    externalSlug: text("external_slug"),
+    externalName: text("external_name"),
+    externalDob: text("external_dob"),
+    externalClub: text("external_club"),
+    confidence: real("confidence"),
+    matchMethod: text("match_method").notNull().default("not_found"),
+    isVerified: boolean("is_verified").notNull().default(false),
+    status: sorareMappingStatusEnum("status").notNull().default("not_found"),
+    candidates: jsonb("candidates").$type<unknown[]>(),
+    reason: text("reason"),
+    lastVerifiedAt: timestamp("last_verified_at", { withTimezone: true }),
+    identityExpiresAt: timestamp("identity_expires_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.playerId, t.sourceId] }),
+    uniqueIndex("player_source_ids_source_ext_idx").on(t.sourceId, t.externalPlayerId),
+    uniqueIndex("player_source_ids_source_slug_idx")
+      .on(t.sourceId, t.externalSlug)
+      .where(sql`${t.status} = 'matched'`),
+    index("player_source_ids_status_idx").on(t.status),
+    index("player_source_ids_expiry_idx").on(t.identityExpiresAt),
+  ],
+);
+
 export type Source = typeof sources.$inferSelect;
 export type Team = typeof teams.$inferSelect;
 export type Player = typeof players.$inferSelect;
@@ -450,3 +505,4 @@ export type MatchOdds = typeof matchOdds.$inferSelect;
 export type SorarePlayerMapping = typeof sorarePlayerMappings.$inferSelect;
 export type SorarePlayerCache = typeof sorarePlayerCache.$inferSelect;
 export type SorareSyncRun = typeof sorareSyncRuns.$inferSelect;
+export type PlayerSourceId = typeof playerSourceIds.$inferSelect;

@@ -1,0 +1,810 @@
+[
+  {
+    "player_id": "c8ce73a1-8dd2-492c-b939-8c28d161bbe3",
+    "sorare_player_id": "Player:947b2af3-b433-4de1-b7d9-f88022a020a2",
+    "sorare_slug": "carlos-dotor-gonzalez",
+    "confidence": 0.7,
+    "verification_source": "sorare_api",
+    "notes": "club=Málaga CF; ns=1.00"
+  },
+  {
+    "player_id": "f437e9c9-44e2-47cb-9954-bfce7b14e87a",
+    "sorare_player_id": "Player:e03e4594-1a3d-4b8d-b78a-2c0ef70aa53f",
+    "sorare_slug": "unai-nunez-gestoso",
+    "confidence": 0.7,
+    "verification_source": "sorare_api",
+    "notes": "club=RCD Espanyol de Barcelona; ns=1.00"
+  },
+  {
+    "player_id": "607263ba-2939-4291-b312-8581c23c04f0",
+    "sorare_player_id": "Player:fa2465a9-b418-4fe9-afc7-e6b66e96eb2c",
+    "sorare_slug": "gustavo-hidalgo-albarracin",
+    "confidence": 0.7,
+    "verification_source": "sorare_api",
+    "notes": "club=NK Istra 1961; ns=1.00"
+  },
+  {
+    "player_id": "68fe3217-4572-42fa-8b1c-82b8eaef62bd",
+    "sorare_player_id": "Player:3504c326-59f5-4e29-9e44-656c944d983f",
+    "sorare_slug": "ronald-federico-araujo-da-silva",
+    "confidence": 0.7,
+    "verification_source": "sorare_api",
+    "notes": "club=Liverpool FC; ns=1.00"
+  },
+  {
+    "player_id": "4b8b7b6e-cd3f-4407-a96f-23ecc539aa0b",
+    "sorare_player_id": "Player:299de674-9efe-4db9-a786-ba372585fac1",
+    "sorare_slug": "babatunde-jimoh-akinsola",
+    "confidence": 0.7,
+    "verification_source": "sorare_api",
+    "notes": "club=AVS; ns=1.00"
+  },
+  {
+    "player_id": "64d8748d-8565-4a65-a8df-7193254d1697",
+    "sorare_player_id": "Player:6e6d8232-1484-4561-bb42-c0c6c3faae86",
+    "sorare_slug": "vinicius-jose-paixao-de-oliveira-junior",
+    "confidence": 0.75,
+    "verification_source": "sorare_api",
+    "notes": "club=Real Madrid; ns=1.00"
+  },
+  {
+    "player_id": "cb47e728-a96f-4dd4-9faf-cb21397c623e",
+    "sorare_player_id": "Player:2f2ba7b1-1a1a-45cb-8fa3-b4553618f1b9",
+    "sorare_slug": "arnau-tenas-urena",
+    "confidence": 0.7,
+    "verification_source": "sorare_api",
+    "notes": "club=RCD Mallorca; ns=1.00"
+  },
+  {
+    "player_id": "b5c11ca7-de58-4e1c-aa7b-5c553546fc27",
+    "sorare_player_id": "Player:0bf2c0c2-51c7-48ba-bc52-3f5be19d3a7f",
+    "sorare_slug": "diego-jose-conde-alcolado",
+    "confidence": 0.7,
+    "verification_source": "sorare_api",
+    "notes": "club=Real Betis; ns=1.00"
+  },
+  {
+    "player_id": "0cf4e53c-0af7-404d-825b-886bfa14ee2f",
+    "sorare_player_id": "Player:ac6fd5a6-41e2-4098-8fbf-9dee3d2676ed",
+    "sorare_slug": "thiago-cruz-fernandez",
+    "confidence": 0.7,
+    "verification_source": "sorare_api",
+    "notes": "club=Levante UD; ns=1.00"
+  },
+  {
+    "player_id": "79e556fb-5de5-42f9-b902-355af5f94be6",
+    "sorare_player_id": "Player:ecd0be56-be89-4d58-a441-3a22ece40f19",
+    "sorare_slug": "alejandro-padilla-perez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Athletic Club; dob=2003-09-01"
+  },
+  {
+    "player_id": "3b105631-1a10-4ec1-a5ef-cd93824080bc",
+    "sorare_player_id": "Player:7d091fd0-18f2-4a40-b502-8fb43dcbc395",
+    "sorare_slug": "andoni-gorosabel-espinosa",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Athletic Club; dob=1996-08-04"
+  },
+  {
+    "player_id": "291838f7-a589-4a17-bd02-ac436cb60061",
+    "sorare_player_id": "Player:a0175075-db8f-4e43-a0e7-1df62eb20315",
+    "sorare_slug": "iker-monreal-agundez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Athletic Club; dob=2005-07-03"
+  },
+  {
+    "player_id": "83bc3f7a-7c26-4faa-92f2-933bdcb748c2",
+    "sorare_player_id": "Player:aa42e3aa-c422-4c7b-83d2-7f5219b13375",
+    "sorare_slug": "inaki-williams-arthuer",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Athletic Club; dob=1994-06-15; legacy slug coincide"
+  },
+  {
+    "player_id": "c756c1d6-ccc0-4cbf-8caa-d45cf624c777",
+    "sorare_player_id": "Player:dfe75b72-1766-4b59-a955-938e3ec2de86",
+    "sorare_slug": "jesus-areso-blanco",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Athletic Club; dob=1999-07-02"
+  },
+  {
+    "player_id": "2d1c77eb-86e1-4574-92e1-f9f87ada9ee6",
+    "sorare_player_id": "Player:f8bd2447-33ae-42c0-8b41-36a1d331240b",
+    "sorare_slug": "robert-navarro-munoz",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Athletic Club; dob=2002-04-12"
+  },
+  {
+    "player_id": "af66ad36-727e-48ca-8cd5-740b52d0aab2",
+    "sorare_player_id": "Player:70eb273f-8f0e-4f20-9167-56577aecc32d",
+    "sorare_slug": "yeray-alvarez-lopez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Athletic Club; dob=1995-01-24"
+  },
+  {
+    "player_id": "26c6d69b-2a7e-479d-bc7e-07336150f134",
+    "sorare_player_id": "Player:411f6a6a-f9c0-4e31-9e6e-40c07863fc75",
+    "sorare_slug": "yuri-berchiche-izeta",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Athletic Club; dob=1990-02-10"
+  },
+  {
+    "player_id": "d2a836c4-c716-46da-b81a-41e69b5ae278",
+    "sorare_player_id": "Player:a064329b-4a27-492b-9466-1984593f0418",
+    "sorare_slug": "alexander-sorloth",
+    "confidence": 0.9,
+    "verification_source": "legacy_slug",
+    "notes": "legacy slug; club=Atlético de Madrid; dob=1995-12-05"
+  },
+  {
+    "player_id": "81ad7029-6141-4ec0-a86a-a09cdcd1fe31",
+    "sorare_player_id": "Player:450228bf-5e39-4ecb-990a-e61e10017f7a",
+    "sorare_slug": "abderrahman-rebbach",
+    "confidence": 0.9,
+    "verification_source": "legacy_slug",
+    "notes": "legacy slug; club=D. Alavés; dob=1998-08-11"
+  },
+  {
+    "player_id": "c0150e31-ac62-4fba-8bff-31d36e1453d0",
+    "sorare_player_id": "Player:a472d0c6-a19c-43e3-a92f-ecd1986808a5",
+    "sorare_slug": "xanet-olaiz-ibarzabal",
+    "confidence": 0.9,
+    "verification_source": "legacy_slug",
+    "notes": "legacy slug; club=D. Alavés; dob=2005-07-18"
+  },
+  {
+    "player_id": "995c6cb9-cfa2-4601-a5cc-dd1c94f46dac",
+    "sorare_player_id": "Player:aa67abd4-5fa5-4d8c-92d6-0a0156e8f323",
+    "sorare_slug": "umaru-konare-tounkara",
+    "confidence": 0.9,
+    "verification_source": "legacy_slug",
+    "notes": "legacy slug; club=Elche CF; dob=2004-08-10"
+  },
+  {
+    "player_id": "df216cb7-939b-47b9-8470-749ab4d334b3",
+    "sorare_player_id": "Player:d1e69af1-78d0-4c4d-a41d-8be101189245",
+    "sorare_slug": "urko-gonzalez-de-zarate-quiros",
+    "confidence": 0.9,
+    "verification_source": "legacy_slug",
+    "notes": "legacy slug; club=RCD Espanyol (traspaso desde Real Sociedad); dob=2001-03-20"
+  },
+  {
+    "player_id": "cb3cda2a-2376-4746-9260-9199c97e082c",
+    "sorare_player_id": "Player:0136fab6-8db7-44a2-b0e1-553832938f93",
+    "sorare_slug": "rodrygo-silva-de-goes",
+    "confidence": 0.9,
+    "verification_source": "legacy_slug",
+    "notes": "legacy slug; club=Real Madrid; dob=2001-01-09"
+  },
+  {
+    "player_id": "ea359cce-fb80-4a6c-a1f9-3a0b496b3363",
+    "sorare_player_id": "Player:5220daa3-d6f7-4faf-a988-2c6b43f2ff81",
+    "sorare_slug": "marcos-do-nascimento-teixeira",
+    "confidence": 0.9,
+    "verification_source": "legacy_slug",
+    "notes": "legacy slug; club=Sevilla FC; dob=1996-06-05"
+  },
+  {
+    "player_id": "4677f6e6-e372-4264-b10e-4c31734c975c",
+    "sorare_player_id": "Player:b214d389-7cf5-4d04-9201-388fde9b2eee",
+    "sorare_slug": "jose-luis-gaya-pena",
+    "confidence": 0.9,
+    "verification_source": "legacy_slug",
+    "notes": "legacy slug; club=Valencia CF; dob=1995-05-25"
+  },
+  {
+    "player_id": "de83041e-9389-4492-a689-a11b6f78f40c",
+    "sorare_player_id": "Player:676c3591-5e7e-425a-9bcb-fdb78fd7a92b",
+    "sorare_slug": "joao-lucas-de-souza-cardoso",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Atlético de Madrid; dob=2001-09-20"
+  },
+  {
+    "player_id": "f933bb6a-a3e2-4775-9534-5a2314ea9592",
+    "sorare_player_id": "Player:31400050-9f64-486e-bdf0-807233d556c5",
+    "sorare_slug": "aimar-oroz-huarte",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=CA Osasuna; dob=2001-11-27"
+  },
+  {
+    "player_id": "ffefcce8-5521-4e2f-9cb7-5160dc331d2d",
+    "sorare_player_id": "Player:6bd08393-5f02-4487-b965-b5880c2e2730",
+    "sorare_slug": "diego-rico-salguero",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=CA Osasuna; dob=1993-02-23"
+  },
+  {
+    "player_id": "53bcde51-6436-4930-9eb0-e67d84a42997",
+    "sorare_player_id": "Player:37690c4e-330a-40a9-8c98-f798b6b9e6cf",
+    "sorare_slug": "flavien-enzo-boyomos",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=CA Osasuna; dob=2001-10-07"
+  },
+  {
+    "player_id": "1beabbbe-7b74-40db-a969-278f62c46a73",
+    "sorare_player_id": "Player:b541c9a2-0cf8-46b1-9f95-c06b845e68bb",
+    "sorare_slug": "jorge-herrando-oroz",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=CA Osasuna; dob=2001-02-28"
+  },
+  {
+    "player_id": "16618a0e-4f74-4b12-918e-7f1c981ca543",
+    "sorare_player_id": "Player:944d030a-0ac7-40b6-be7b-0e70a73885e8",
+    "sorare_slug": "jorge-resurreccion-merodio",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Atlético de Madrid; dob=1992-01-08"
+  },
+  {
+    "player_id": "9250b4cf-9e69-4586-b017-7b7de142fe96",
+    "sorare_player_id": "Player:6ae16e2c-a41d-4ee6-bf7f-60f8e2507d9e",
+    "sorare_slug": "mauro-echegoyen-berrozpe",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=CA Osasuna; dob=2005-03-03"
+  },
+  {
+    "player_id": "563f187e-e29f-4ac5-8a9f-3650c82d32ec",
+    "sorare_player_id": "Player:edeb2cbd-af66-46f1-9b4b-105c37d3a859",
+    "sorare_slug": "adrian-de-la-fuente",
+    "confidence": 0.9,
+    "verification_source": "sorare_api",
+    "notes": "club=Levante UD; dob=1999-02-26; name=Adrián de la Fuente"
+  },
+  {
+    "player_id": "105f1b70-78da-4d3d-a5be-d43498ec2bb8",
+    "sorare_player_id": "Player:ceffae4e-e1fb-4369-a13f-deee80dff563",
+    "sorare_slug": "alexandre-zurawski",
+    "confidence": 0.9,
+    "verification_source": "sorare_api",
+    "notes": "club=Rayo Vallecano; dob=1998-04-01; name=Alexandre Zurawski"
+  },
+  {
+    "player_id": "93e0a63b-e9c8-4669-9ef8-49939ce14510",
+    "sorare_player_id": "Player:30766122-83f1-4c7d-9a04-251274aa00f7",
+    "sorare_slug": "mikel-oyarzabal-ugarte",
+    "confidence": 0.9,
+    "verification_source": "sorare_api",
+    "notes": "club=Real Sociedad; dob=1997-04-21; name=Mikel Oyarzabal"
+  },
+  {
+    "player_id": "3899b42d-deb2-41f1-982f-0a3c08ecb545",
+    "sorare_player_id": "Player:86e61515-c775-4f75-8cdf-5706c5e97702",
+    "sorare_slug": "jose-luis-garcia-vaya",
+    "confidence": 0.9,
+    "verification_source": "sorare_api",
+    "notes": "club=Valencia CF; dob=1998-08-11; name=José Luis García Vayá"
+  },
+  {
+    "player_id": "01c7dcb1-a659-4105-a064-925c31b0150b",
+    "sorare_player_id": "Player:891c1687-28a5-48a7-98ee-bc11dff57952",
+    "sorare_slug": "pedro-gonzalez-lopez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=FC Barcelona; dob=2002-11-25"
+  },
+  {
+    "player_id": "e5dcd794-959d-41c4-b88d-74275bd82e3a",
+    "sorare_player_id": "Player:45936f9b-ed00-4868-9404-bdd6b79e6d81",
+    "sorare_slug": "brahim-abdelkader-diaz",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Real Madrid; dob=1999-08-03"
+  },
+  {
+    "player_id": "b67cdb77-3f1a-463b-a664-6995917384b5",
+    "sorare_player_id": "Player:f61f38ec-c4cd-4b3a-b72f-e892743c9dad",
+    "sorare_slug": "abdessamad-ezzalzouli",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Real Betis; dob=2001-12-17"
+  },
+  {
+    "player_id": "c5410bac-f463-4ff9-aef5-4fdbbe2783f1",
+    "sorare_player_id": "Player:701febbf-eef9-4c38-a5bd-74d80f0894a9",
+    "sorare_slug": "hector-bellerin-moruno",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Real Betis; dob=1995-03-19"
+  },
+  {
+    "player_id": "007102f5-1a2d-43f5-a78a-271814a25395",
+    "sorare_player_id": "Player:17d26117-8bea-484b-a523-09dbc3ef7229",
+    "sorare_slug": "takefusa-kubo",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Real Sociedad; dob=2001-06-04"
+  },
+  {
+    "player_id": "0dc10885-6269-483a-979c-9878c9b633f9",
+    "sorare_player_id": "Player:c1b86be3-9be2-447a-9906-fed624e0de83",
+    "sorare_slug": "sergio-canales-madrazo",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Real Racing Club de Santander; dob=1991-02-16"
+  },
+  {
+    "player_id": "69954e10-6417-40a0-917c-803918868be7",
+    "sorare_player_id": "Player:8e9fa211-05ab-4314-8782-5ee36abdcd92",
+    "sorare_slug": "fermin-lopez-martin",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=FC Barcelona; dob=2003-05-11"
+  },
+  {
+    "player_id": "482015dc-71c7-41f2-8176-7ac49b14f4fc",
+    "sorare_player_id": "Player:bec40a89-7b2c-4e7c-8022-b7241abe0bc8",
+    "sorare_slug": "juan-miguel-jimenez-lopez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Getafe CF; dob=1993-05-20"
+  },
+  {
+    "player_id": "0629b2cb-b9d4-4950-91e1-430ae5c3fb76",
+    "sorare_player_id": "Player:994bc30e-0e17-4095-b155-8470292d7054",
+    "sorare_slug": "johan-andres-mojica-palacio",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Getafe CF; dob=1992-08-21"
+  },
+  {
+    "player_id": "ca487670-a5da-4ee7-aac5-00e1d203c27d",
+    "sorare_player_id": "Player:9b5c0320-70f1-47a3-b876-66922681ef4e",
+    "sorare_slug": "abdelkabir-abqar",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Getafe CF; dob=1999-03-10"
+  },
+  {
+    "player_id": "c013362f-85cd-4259-9bf4-c7222f7c9d92",
+    "sorare_player_id": "Player:674d1624-8b4c-45da-bc3a-73c7c4c6b3f4",
+    "sorare_slug": "aihen-munoz-capellan",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Real Sociedad; dob=1997-08-16"
+  },
+  {
+    "player_id": "c86642a9-e93b-4c59-8bd9-8d1d15c621d4",
+    "sorare_player_id": "Player:15889990-7b1c-4e06-9cf4-6162aa0788c5",
+    "sorare_slug": "alvaro-odriozola-arzallus",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Real Sociedad; dob=1995-12-14"
+  },
+  {
+    "player_id": "66cb3568-b89c-444e-9686-60d9fb333a6e",
+    "sorare_player_id": "Player:1d57687c-293b-4176-b975-62d54ff72c2e",
+    "sorare_slug": "benat-turrientes-imaz",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Real Sociedad; dob=2002-01-31"
+  },
+  {
+    "player_id": "39ba5510-d662-462e-86a6-5e77b97ad87b",
+    "sorare_player_id": "Player:b8a20ec5-5f3f-4e82-8fa4-56d5240d948c",
+    "sorare_slug": "luis-jesus-rioja-gonzalez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Valencia CF; dob=1993-10-16"
+  },
+  {
+    "player_id": "6563b89a-6b74-4bf2-b326-16377caff8f9",
+    "sorare_player_id": "Player:c42227ee-40a9-43f5-a767-2389e3199df7",
+    "sorare_slug": "umar-sadiq-mesbah",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Valencia CF; dob=1997-02-02"
+  },
+  {
+    "player_id": "b233b955-644a-4735-8438-4f02967db107",
+    "sorare_player_id": "Player:4db4010f-d87f-4a6e-b0e2-43c160dd06b8",
+    "sorare_slug": "ruben-iranzo-lendinez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Valencia CF Mestalla; dob=2003-03-14"
+  },
+  {
+    "player_id": "880bc2e5-1dad-409e-b65c-311e7872b4e1",
+    "sorare_player_id": "Player:151c589c-c062-4ddd-adbc-cc1a39c7c3f9",
+    "sorare_slug": "alfonso-gonzalez-martinez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Sevilla FC; dob=1999-05-04"
+  },
+  {
+    "player_id": "deb857fc-1ee9-49f6-ad2c-4243fe69ac1b",
+    "sorare_player_id": "Player:b22b4ed5-7b96-4309-9fe2-477c79a8453a",
+    "sorare_slug": "nicolas-guillen-peguero",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Sevilla FC; dob=2008-01-30"
+  },
+  {
+    "player_id": "86913131-6efc-4784-9bbe-bbb059c20d4e",
+    "sorare_player_id": "Player:8d1d0f25-d649-4577-b651-da76334a9a77",
+    "sorare_slug": "odisseas-vlachodimos",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Sevilla FC; dob=1994-04-26"
+  },
+  {
+    "player_id": "0b0f93e7-6a46-4fc1-8d5c-a08b1f262448",
+    "sorare_player_id": "Player:7770e9ff-1640-4b0d-848f-08e53d4da793",
+    "sorare_slug": "igor-zubeldia-elorza",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Real Sociedad; dob=1997-03-30"
+  },
+  {
+    "player_id": "8ed3b33d-0602-466e-bc93-8c0f854e7406",
+    "sorare_player_id": "Player:0cc268fe-9b43-4052-9718-b846489d2f44",
+    "sorare_slug": "enrique-garcia-martinez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=RCD Espanyol; dob=1989-11-25"
+  },
+  {
+    "player_id": "6dc11d01-d4bd-4b40-9abe-0ec3305ce54f",
+    "sorare_player_id": "Player:769c634c-cceb-447c-8e60-9c23e89d5867",
+    "sorare_slug": "jose-manuel-hernando-riol",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Racing de Santander; dob=1998-07-19"
+  },
+  {
+    "player_id": "46d1a1fd-c8a4-4961-abb8-43f972b94858",
+    "sorare_player_id": "Player:c992de20-0ea5-4622-9715-3df35d970ee4",
+    "sorare_slug": "daniel-cardenas-lindez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Rayo Vallecano; dob=1997-03-28"
+  },
+  {
+    "player_id": "90e3fc54-2fe7-4e61-abaa-aba2e4a38ca1",
+    "sorare_player_id": "Player:eb325eb4-ce64-40eb-b309-220e79180ec8",
+    "sorare_slug": "alejandro-primo-hernandez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Levante UD; dob=2004-07-10"
+  },
+  {
+    "player_id": "a201028f-f6f6-40e1-8957-d951ee72e382",
+    "sorare_player_id": "Player:ad6250e7-3656-4bdd-93b8-530e9da901ed",
+    "sorare_slug": "ivan-romero-de-avila-araque",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Levante UD; dob=2001-04-10"
+  },
+  {
+    "player_id": "b76290ee-272e-450a-8b24-3e55ebe9b3fd",
+    "sorare_player_id": "Player:919cd208-fe2e-4379-89b4-f5f39459cc70",
+    "sorare_slug": "jon-ander-olasagasti-imizcoz",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Levante UD; dob=2000-08-16"
+  },
+  {
+    "player_id": "d4932652-c975-4031-a092-6e0ae5867c54",
+    "sorare_player_id": "Player:2d9fae9a-3e82-4e03-a066-0d5f3051cc06",
+    "sorare_slug": "roger-brugue-ayguade",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Levante UD; dob=1996-11-04"
+  },
+  {
+    "player_id": "82b85620-a674-4d36-ac1d-ad0823d9f747",
+    "sorare_player_id": "Player:09b69118-65b8-4821-98e8-fba40e34080c",
+    "sorare_slug": "eneko-jauregi-escobar",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Málaga CF; dob=1996-07-13"
+  },
+  {
+    "player_id": "78e4f4e9-d0e8-40f5-98ce-5a01e962fcbb",
+    "sorare_player_id": "Player:ae43c71b-2523-4c08-9f43-35bb8cdf1e83",
+    "sorare_slug": "karl-edouard-blaise-etta-eyong",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Levante UD; dob=2003-10-14"
+  },
+  {
+    "player_id": "625bb085-ca29-4c37-b521-ad8057b5c6f0",
+    "sorare_player_id": "Player:f32d76b3-fa38-480c-ac6a-9f81f255e81d",
+    "sorare_slug": "inigo-ruiz-de-galarreta-etxeberria",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Athletic Club; dob=1993-08-06"
+  },
+  {
+    "player_id": "6a7715e7-9eef-4ded-9443-163c3e0e25df",
+    "sorare_player_id": "Player:39d46077-67d7-407f-a759-a978b7fcc5d8",
+    "sorare_slug": "aleix-febas-perez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Celta de Vigo; dob=1996-02-02"
+  },
+  {
+    "player_id": "60b5a8d2-7eaa-4d61-9aab-b7a0dd7de91f",
+    "sorare_player_id": "Player:3b18f29f-37dc-4189-a9cf-ac7bae806127",
+    "sorare_slug": "javier-galan-gil",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Celta de Vigo; dob=1994-11-19"
+  },
+  {
+    "player_id": "12d8e70f-e081-4dc6-a138-2f58d46d2647",
+    "sorare_player_id": "Player:322b80e1-775d-42ff-a9e1-f05d0f9204dc",
+    "sorare_slug": "ander-guevara-lajo",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=D. Alavés; dob=1997-07-07"
+  },
+  {
+    "player_id": "126ca8f5-05e7-4404-a5d1-2a0438767b6b",
+    "sorare_player_id": "Player:4b45d096-597d-415a-87b0-52b08798258e",
+    "sorare_slug": "carlos-nahuel-benavidez-protesoni",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=D. Alavés; dob=1998-03-30"
+  },
+  {
+    "player_id": "b8cccccd-f123-4294-9748-5c2ea455bbdb",
+    "sorare_player_id": "Player:4b45d096-597d-415a-87b0-52b08798258e",
+    "sorare_slug": "carlos-nahuel-benavidez-protesoni",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=D. Alavés; dob=1998-03-30"
+  },
+  {
+    "player_id": "fe05644d-c06c-423b-9f53-7abe54a9ced5",
+    "sorare_player_id": "Player:23554bfb-39b9-48c1-a7f7-bb640d09ffd1",
+    "sorare_slug": "jonathan-castro-otto",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=D. Alavés; dob=1994-03-03"
+  },
+  {
+    "player_id": "d0d687e5-63ed-476a-9a41-3243724bb48d",
+    "sorare_player_id": "Player:59b413d0-4324-4ea2-98dd-05a56836b30e",
+    "sorare_slug": "lander-pinillos-wilson",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=D. Alavés; dob=2003-10-06"
+  },
+  {
+    "player_id": "a33ddd8e-ae4d-4e7e-8441-41169257f0fe",
+    "sorare_player_id": "Player:c0c62009-be18-4936-85b9-00eb2e7083fd",
+    "sorare_slug": "jesus-lazaro-owono-ngua-akeng",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Alavés (cedido FC Andorra); dob=2001-03-01"
+  },
+  {
+    "player_id": "210e6713-b021-4394-9500-269e6bcbbed8",
+    "sorare_player_id": "Player:d6676e9c-b9ca-426c-b792-6556cd7ddb94",
+    "sorare_slug": "youssef-enriquez-lekhedim",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=D. Alavés; dob=2005-10-07"
+  },
+  {
+    "player_id": "ec65f9e4-683e-411f-b0ab-911db9a4493c",
+    "sorare_player_id": "Player:9189a231-0bfb-4073-b79d-a0d8b69146a8",
+    "sorare_slug": "sergio-adrian-flores-reyes",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=D. Alavés; dob=1995-02-12"
+  },
+  {
+    "player_id": "adb25425-b74a-4d6f-92df-846dd3a85395",
+    "sorare_player_id": "Player:1c4262e5-70c4-4f2f-a331-ced648ca8551",
+    "sorare_slug": "rafael-fernandez-rodriguez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=CA Osasuna; dob=2004-05-02"
+  },
+  {
+    "player_id": "c8453287-2b63-40d0-b14d-a80c38f7274b",
+    "sorare_player_id": "Player:0a7d8797-c1a7-40ba-a09c-93715d37b420",
+    "sorare_slug": "german-parreno-boix",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Deportivo La Coruña; dob=1993-02-16"
+  },
+  {
+    "player_id": "05dbfd4a-e79e-45ec-97b9-02ef25546f79",
+    "sorare_player_id": "Player:78a5d64c-7c8f-49de-ab74-8c380ebfea7e",
+    "sorare_slug": "jose-angel-jurado-de-la-torre",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Deportivo La Coruña; dob=1992-06-21"
+  },
+  {
+    "player_id": "08b128cf-58db-4584-8356-09a688e89280",
+    "sorare_player_id": "Player:6a7f79e7-2407-4812-bec1-b0f411e7f416",
+    "sorare_slug": "noe-carrillo-collazo",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Deportivo La Coruña; dob=2006-12-28"
+  },
+  {
+    "player_id": "61412d05-5b8b-43e4-a135-b195d511379e",
+    "sorare_player_id": "Player:e8af6ba0-fcd3-431c-b999-7d5be3868148",
+    "sorare_slug": "ricardo-rodriguez-gil-carcedo",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Deportivo La Coruña; dob=1997-09-25"
+  },
+  {
+    "player_id": "ef496035-d232-4a74-ac7f-b20523d6e481",
+    "sorare_player_id": "Player:e5d58e16-3329-41b5-a6cf-5083988f3742",
+    "sorare_slug": "pedro-bigas-rigo",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Elche CF; dob=1990-05-15"
+  },
+  {
+    "player_id": "dc2e5581-fdce-4302-aa65-f7de9d879e6c",
+    "sorare_player_id": "Player:265025b7-910b-4a36-b5f1-ba3da9a6f764",
+    "sorare_slug": "javier-morcillo-rodrigalvarez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Elche CF; dob=2006-03-15"
+  },
+  {
+    "player_id": "6edbac5a-348a-414c-ab10-6cb977b81d6a",
+    "sorare_player_id": "Player:4f174465-64b1-452a-a31b-1bcb1478ee94",
+    "sorare_slug": "jose-antonio-morente-oliva",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Elche CF; dob=1996-12-04"
+  },
+  {
+    "player_id": "16842807-d1d2-4922-997d-4bc82cb1e05d",
+    "sorare_player_id": "Player:39452b30-11d6-4cfc-ab73-193c0729655c",
+    "sorare_slug": "owen-bosch-lopez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Elche CF; dob=2007-10-25"
+  },
+  {
+    "player_id": "013c81a3-c1cb-458a-af43-48174ff77c93",
+    "sorare_player_id": "Player:bd1eb390-9a20-40e4-b6de-008c8d1e088f",
+    "sorare_slug": "albert-constantin-niculaesei-plesca",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Elche CF; dob=2008-03-26"
+  },
+  {
+    "player_id": "14939835-8269-40cc-8a7b-64043fa22f29",
+    "sorare_player_id": "Player:bfbaf841-dea6-4436-925d-985cc6d8607e",
+    "sorare_slug": "daniel-requena-sanchez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Levante UD; dob=2004-02-12"
+  },
+  {
+    "player_id": "cd91d887-0709-4e0a-a007-bc22702149fa",
+    "sorare_player_id": "Player:bfbaf841-dea6-4436-925d-985cc6d8607e",
+    "sorare_slug": "daniel-requena-sanchez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Villarreal CF; dob=2004-02-12"
+  },
+  {
+    "player_id": "fcc4e153-fb99-4043-83b8-15ee19e48b07",
+    "sorare_player_id": "Player:8567bb26-8fc0-4738-a850-2b47724013c8",
+    "sorare_slug": "juan-pedro-jimenez-melero",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Málaga CF; dob=1996-03-31"
+  },
+  {
+    "player_id": "50f07b7a-1bb1-41a1-b077-e81e1af69a34",
+    "sorare_player_id": "Player:5c0d3497-eaaf-4d54-9691-93d0e4042d7c",
+    "sorare_slug": "jose-antonio-morante-antunez",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Real Betis; dob=2007-06-28"
+  },
+  {
+    "player_id": "d9a6d7f4-fead-4d2e-a274-50a36f503fd8",
+    "sorare_player_id": "Player:8b354cfc-ea6e-4056-809c-75a3585c7679",
+    "sorare_slug": "rafael-garrido-hierro",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Málaga CF; dob=2004-11-09"
+  },
+  {
+    "player_id": "5dff5739-5f68-4ee4-b25c-d19bac2dcbf3",
+    "sorare_player_id": "Player:8b354cfc-ea6e-4056-809c-75a3585c7679",
+    "sorare_slug": "rafael-garrido-hierro",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Málaga CF; dob=2004-11-09"
+  },
+  {
+    "player_id": "f0476c0d-21b3-4986-8cf3-d4d46579c4dd",
+    "sorare_player_id": "Player:0408f6ee-662a-4538-aef3-0274ecc8957f",
+    "sorare_slug": "john-nwankwo-donald-okeh",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Elche CF; dob=2000-09-25"
+  },
+  {
+    "player_id": "6a651cc7-5179-46c7-9d51-1ec2e3dc1679",
+    "sorare_player_id": "Player:b203eca5-726b-4a78-a0fe-c4f0d76b7067",
+    "sorare_slug": "joaquin-martinez-gauna",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Sevilla FC; dob=2003-07-09"
+  },
+  {
+    "player_id": "4f9e55f3-8b6c-4a62-8bec-9e2dfed3c298",
+    "sorare_player_id": "Player:8d1d0f25-d649-4577-b651-da76334a9a77",
+    "sorare_slug": "odisseas-vlachodimos",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Sevilla FC; dob=1994-04-26; fila duplicada de Odisseas Vlachodimos"
+  },
+  {
+    "player_id": "fb933811-a456-4fcd-bd75-e7e15f8c32b1",
+    "sorare_player_id": "Player:8519142a-e478-46d7-a627-d51b1f0fff07",
+    "sorare_slug": "elijah-gift-izobodo-john",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Athletic Club; dob=2006-06-11"
+  },
+  {
+    "player_id": "a6b6d4cd-48b4-463b-ace3-cf2179c96e0c",
+    "sorare_player_id": "Player:4a364ca5-1d08-4adc-a0f0-9a75e9fd1a1c",
+    "sorare_slug": "jorge-dominguez-lituba",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Atlético de Madrid; dob=2009-12-21"
+  },
+  {
+    "player_id": "fe4d5c3d-f0c9-4edc-8ec8-9beab95b3326",
+    "sorare_player_id": "Player:d9de31a9-8f3b-4386-8e39-dbd672eaf1f3",
+    "sorare_slug": "jean-yves-valou",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Getafe CF; dob=2005-12-22"
+  },
+  {
+    "player_id": "b3dfd12f-d260-458b-adb3-7e54fd62a708",
+    "sorare_player_id": "Player:5c35b874-6d76-446b-8bf5-46fea29a0107",
+    "sorare_slug": "carlos-ruiz-rubio",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Málaga CF; dob=2004-08-24"
+  },
+  {
+    "player_id": "87b6b03a-15e9-440d-9140-10b8131351be",
+    "sorare_player_id": "Player:0efcce24-c691-4c01-81d3-0dfb68a55513",
+    "sorare_slug": "rodrigo-gamon-martin",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=Valencia CF; dob=2008-07-04"
+  },
+  {
+    "player_id": "bfc14baa-638f-4c5e-8718-706d411a84cf",
+    "sorare_player_id": "Player:23554bfb-39b9-48c1-a7f7-bb640d09ffd1",
+    "sorare_slug": "jonathan-castro-otto",
+    "confidence": 0.9,
+    "verification_source": "websearch",
+    "notes": "club=D. Alavés; dob=1994-03-03"
+  }
+]

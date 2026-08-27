@@ -28,6 +28,8 @@
     "audit:sorare-mapping": "tsx scripts/audit-sorare-mapping.ts",
     "sync:sorare": "tsx scripts/sync-sorare.ts",
     "audit:sorare": "tsx scripts/audit-sorare.ts",
+    "export:sorare-notfound": "tsx scripts/export-sorare-notfound.ts",
+    "import:sorare-verified": "tsx scripts/import-sorare-verified.ts",
     "import:sorare-review": "tsx scripts/import-sorare-review.ts"
   },
   "dependencies": {

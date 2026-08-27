@@ -9,6 +9,8 @@ export interface LocalSorarePlayer {
 }
 
 export interface SorareCandidate {
+  /** Identificador estable de Sorare (relay global id). No cambia si el slug cambia. */
+  id?: string | null;
   slug: string;
   displayName: string;
   firstName: string;

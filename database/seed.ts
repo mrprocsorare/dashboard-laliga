@@ -15,6 +15,7 @@ const SOURCES = [
   { slug: "jornadaperfecta", name: "JornadaPerfecta", baseUrl: "https://www.jornadaperfecta.com" },
   { slug: "biwenger", name: "Biwenger", baseUrl: "https://biwenger.as.com" },
   { slug: "comuniate", name: "Comuniate", baseUrl: "https://www.comuniate.com" },
+  { slug: "sorare", name: "Sorare", baseUrl: "https://sorare.com" },
 ];
 
 /**

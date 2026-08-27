@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "../database/schema";
@@ -10,21 +10,29 @@ async function main() {
   if (!connectionString) throw new Error("Falta DATABASE_URL");
   const pool = new Pool({ connectionString });
   const db = drizzle(pool, { schema });
+  const sorareSource = await db
+    .select({ id: schema.sources.id })
+    .from(schema.sources)
+    .where(eq(schema.sources.slug, "sorare"))
+    .limit(1);
+  const sourceId = sorareSource[0]?.id ?? null;
   const rows = await db
     .select({
       playerId: schema.players.id,
       playerName: schema.players.name,
-      legacySlug: schema.players.sorareSlug,
       teamName: schema.teams.name,
-      status: schema.sorarePlayerMappings.status,
-      slug: schema.sorarePlayerMappings.sorareSlug,
-      reason: schema.sorarePlayerMappings.reason,
-      confidence: schema.sorarePlayerMappings.confidence,
-      lastVerifiedAt: schema.sorarePlayerMappings.lastVerifiedAt,
+      status: schema.playerSourceIds.status,
+      slug: schema.playerSourceIds.externalPlayerId,
+      reason: schema.playerSourceIds.reason,
+      confidence: schema.playerSourceIds.confidence,
+      lastVerifiedAt: schema.playerSourceIds.lastVerifiedAt,
     })
     .from(schema.players)
     .innerJoin(schema.teams, eq(schema.players.teamId, schema.teams.id))
-    .leftJoin(schema.sorarePlayerMappings, eq(schema.players.id, schema.sorarePlayerMappings.playerId));
+    .leftJoin(
+      schema.playerSourceIds,
+      and(eq(schema.players.id, schema.playerSourceIds.playerId), eq(schema.playerSourceIds.sourceId, sourceId as string)),
+    );
   const teamStats = new Map<string, { total: number; matched: number; pending: number; notFound: number }>();
   const doubtful = rows.filter((row) => row.status !== "matched");
   for (const row of rows) {
@@ -53,8 +61,8 @@ async function main() {
       playerId: row.playerId,
       playerName: row.playerName,
       team: row.teamName,
-      status: row.status ?? (row.legacySlug ? "manual_review" : "not_found"),
-      slug: row.slug ?? row.legacySlug,
+      status: row.status ?? "not_found",
+      slug: row.slug,
       reason: row.reason ?? "sin_mapping",
       confidence: row.confidence,
       lastVerifiedAt: row.lastVerifiedAt?.toISOString() ?? null,
