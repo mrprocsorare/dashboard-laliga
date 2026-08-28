@@ -296,7 +296,9 @@ async function main() {
 
   for (const row of rows.filter((r) => {
     const m = mappingByPlayer.get(r.id);
-    return m && m.externalSlug && verified.has(m.externalSlug);
+    // Nunca downgradeamos un match ya verificado (manual o auto): confiamos en
+    // la verificación previa y en el indice parcial que impide duplicados.
+    return m && m.externalSlug && verified.has(m.externalSlug) && !m.isVerified;
   })) {
     const slug = mappingByPlayer.get(row.id)!.externalSlug!;
     const decision = decideSorareMatch(localFromRow(row), [candidateFromResponse(verified.get(slug)!)]);
