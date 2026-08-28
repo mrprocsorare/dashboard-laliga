@@ -132,7 +132,7 @@ function externalTeamSlug(raw: string): string | null {
 function extractThreeWay(
   event: OddsApiEvent,
 ): { bookmaker: OddsBookmaker; probabilities: { home: number; draw: number; away: number } } | null {
-  const candidates = event.bookmakers
+  const candidates = (event.bookmakers ?? [])
     .map((bookmaker) => ({ bookmaker, market: bookmaker.markets.find((m) => m.key === "h2h") }))
     .filter((v): v is { bookmaker: OddsBookmaker; market: OddsMarket } => Boolean(v.market));
   const ordered = [...candidates].sort((a, b) => {
@@ -154,8 +154,26 @@ function extractThreeWay(
 
 export async function fetchLaLigaOdds(apiKey = process.env.ODDS_API_KEY): Promise<OddsApiEvent[]> {
   if (!apiKey) throw new Error("Falta ODDS_API_KEY");
-  const url = `${API_BASE}/sports/${SPORT_KEY}/odds?regions=eu&markets=h2h&oddsFormat=decimal&apiKey=${encodeURIComponent(apiKey)}`;
-  return fetchJson<OddsApiEvent[]>(url);
+  const base = `${API_BASE}/sports/${SPORT_KEY}`;
+  // El tier gratuito puede no devolver cuotas h2h ni la región eu. Probamos
+  // varias variantes y, como último recurso, /events (solo fixtures) para
+  // garantizar que los partidos se muestren aunque no haya probabilidades.
+  const candidates = [
+    `${base}/odds?regions=eu,uk,us&markets=h2h&oddsFormat=decimal&apiKey=${encodeURIComponent(apiKey)}`,
+    `${base}/odds?regions=us&markets=h2h&oddsFormat=decimal&apiKey=${encodeURIComponent(apiKey)}`,
+    `${base}/events?apiKey=${encodeURIComponent(apiKey)}`,
+  ];
+  let lastError: unknown;
+  for (const url of candidates) {
+    try {
+      const events = await fetchJson<OddsApiEvent[]>(url);
+      if (Array.isArray(events) && events.length > 0) return events;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  if (lastError) throw lastError;
+  return [];
 }
 
 /** Devuelve eventos ordenados; cada bloque cronológico de 10 partidos es una jornada. */
