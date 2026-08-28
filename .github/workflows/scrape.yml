@@ -15,14 +15,24 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
 
       - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
 
+      - name: Cache de node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Instalar dependencias
-        run: npm ci
+        run: npm ci --prefer-offline --no-audit
 
       - name: Ejecutar pipeline de scraping
         env:

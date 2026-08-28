@@ -27,6 +27,7 @@ const TABLES = [
   "sorare_player_cache",
   "sorare_sync_runs",
   "player_source_ids",
+  "unmatched_forecasts",
 ];
 
 async function main() {

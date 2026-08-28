@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { SorareApiClient, SorareBudgetExceededError, SORARE_PLAYER_QUERY } from "../lib/sorare-client";
+import { SorareApiClient, SorareBudgetExceededError, SORARE_PLAYER_QUERY, priceFromSorareCard } from "../lib/sorare-client";
 import { decideSorareMatch, decideSlugProbeMatch, type SorareCandidate } from "../lib/sorare-matching";
 import { slugVariants } from "../lib/sorare-slugs";
 import { sorareRefreshPlan } from "../lib/sorare-sync-policy";
@@ -122,6 +122,10 @@ describe("cliente Sorare con límites", () => {
     expect(SORARE_PLAYER_QUERY).not.toContain("game {");
   });
 
+  it("pide receiverSide (precio pedido) en la oferta de venta", () => {
+    expect(SORARE_PLAYER_QUERY).toContain("liveSingleSaleOffer { senderSide { amounts { eurCents } } receiverSide { amounts { eurCents } } }");
+  });
+
   it("agrupa jugadores en lotes de 20 y deduplica consultas iguales", async () => {
     const calls: string[] = [];
     const client = new SorareApiClient({
@@ -187,6 +191,44 @@ describe("TTL independiente", () => {
       inSeasonExpiresAt: new Date(now + 10_000),
     }, now);
     expect(plan).toEqual({ scores: false, classic: true, inSeason: false });
+  });
+});
+
+describe("precio de carta Sorare", () => {
+  it("usa receiverSide (precio pedido) cuando publicMinPrices es null y senderSide vale 0", () => {
+    const card = {
+      slug: "x",
+      publicMinPrices: null,
+      liveSingleSaleOffer: {
+        senderSide: { amounts: { eurCents: 0 } },
+        receiverSide: { amounts: { eurCents: 180 } },
+      },
+      latestEnglishAuction: null,
+    } as unknown as Parameters<typeof priceFromSorareCard>[0];
+    expect(priceFromSorareCard(card)).toBe(180);
+  });
+
+  it("usa el bestBid de la subasta cuando no hay oferta de venta", () => {
+    const card = {
+      slug: "x",
+      publicMinPrices: null,
+      liveSingleSaleOffer: null,
+      latestEnglishAuction: { bestBid: { amounts: { eurCents: 1524 } } },
+    } as unknown as Parameters<typeof priceFromSorareCard>[0];
+    expect(priceFromSorareCard(card)).toBe(1524);
+  });
+
+  it("ignora precios en 0 y devuelve null", () => {
+    const card = {
+      slug: "x",
+      publicMinPrices: { eurCents: 0 },
+      liveSingleSaleOffer: {
+        senderSide: { amounts: { eurCents: 0 } },
+        receiverSide: { amounts: { eurCents: 0 } },
+      },
+      latestEnglishAuction: { bestBid: { amounts: { eurCents: 0 } } },
+    } as unknown as Parameters<typeof priceFromSorareCard>[0];
+    expect(priceFromSorareCard(card)).toBeNull();
   });
 });
 

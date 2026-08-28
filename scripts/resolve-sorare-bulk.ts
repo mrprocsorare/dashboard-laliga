@@ -2,6 +2,16 @@ import "dotenv/config";
 import { readFileSync, writeFileSync } from "node:fs";
 import { SorareApiClient, SORARE_PLAYER_QUERY, toSorarePlayerResponse } from "../lib/sorare-client";
 
+interface BulkMapping {
+  player_id: string;
+  sorare_player_id?: string | null;
+  sorare_slug?: string | null;
+  confidence?: number;
+  verification_source?: string;
+  notes?: string;
+  [key: string]: unknown;
+}
+
 const csvPath = "data/sorare/not_found_sorare_2026-08-25T07-53-26-760Z.csv";
 const mapPath = "data/sorare/verified_mappings.json";
 
@@ -82,18 +92,21 @@ async function main() {
   const clubByPid = new Map(csv.map((r) => [r.player_id, r.equipo]));
   const nameByPid = new Map(csv.map((r) => [r.player_id, r.nombre]));
 
-  const existing: any[] = JSON.parse(readFileSync(mapPath, "utf8"));
+  const existing: BulkMapping[] = JSON.parse(readFileSync(mapPath, "utf8"));
   const resolved = new Set(existing.map((m) => m.player_id));
 
   const slugs = Object.keys(GUESS);
   const chunks: string[][] = [];
   for (let i = 0; i < slugs.length; i += 25) chunks.push(slugs.slice(i, i + 25));
 
-  const added: any[] = [];
+  const added: BulkMapping[] = [];
   const reviewed = new Set<string>();
   for (const chunk of chunks) {
-    const data: any = await client.request(SORARE_PLAYER_QUERY, { slugs: chunk });
-    const players = (data.players ?? []).filter(Boolean).map((p: any) => toSorarePlayerResponse(p));
+    const data = await client.request<{ players: Array<Parameters<typeof toSorarePlayerResponse>[0]> }>(
+      SORARE_PLAYER_QUERY,
+      { slugs: chunk },
+    );
+    const players = (data.players ?? []).filter(Boolean).map((p) => toSorarePlayerResponse(p));
     for (const p of players) {
       const pids = GUESS[p.slug] ?? [];
       const expected = (pids.map((id: string) => clubByPid.get(id)).filter(Boolean)) as string[];

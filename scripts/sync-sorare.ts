@@ -241,8 +241,9 @@ function price(card: SorarePlayerResponse["classic"]): number | null {
   if (!card) return null;
   const values = [
     card.publicMinPrices?.eurCents,
-    card.liveSingleSaleOffer?.senderSide.amounts.eurCents,
-    card.latestEnglishAuction?.bestBid?.amounts.eurCents,
+    card.liveSingleSaleOffer?.receiverSide?.amounts?.eurCents,
+    card.liveSingleSaleOffer?.senderSide?.amounts?.eurCents,
+    card.latestEnglishAuction?.bestBid?.amounts?.eurCents,
   ];
   return values.find((value): value is number => typeof value === "number" && value > 0) ?? null;
 }

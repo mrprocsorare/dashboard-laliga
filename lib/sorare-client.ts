@@ -23,13 +23,13 @@ export const SORARE_PLAYER_QUERY = `
         classic: lowestPriceAnyCard(inSeason: false, rarity: limited) {
           slug
           publicMinPrices { eurCents }
-          liveSingleSaleOffer { senderSide { amounts { eurCents } } }
+          liveSingleSaleOffer { senderSide { amounts { eurCents } } receiverSide { amounts { eurCents } } }
           latestEnglishAuction { bestBid { amounts { eurCents } } }
         }
         inSeason: lowestPriceAnyCard(inSeason: true, rarity: limited) {
           slug
           publicMinPrices { eurCents }
-          liveSingleSaleOffer { senderSide { amounts { eurCents } } }
+          liveSingleSaleOffer { senderSide { amounts { eurCents } } receiverSide { amounts { eurCents } } }
           latestEnglishAuction { bestBid { amounts { eurCents } } }
         }
       }
@@ -65,7 +65,10 @@ interface GraphqlPayload<T> {
 interface SorareCardResponse {
   slug: string;
   publicMinPrices: { eurCents: number | null } | null;
-  liveSingleSaleOffer: { senderSide: { amounts: { eurCents: number | null } } } | null;
+  liveSingleSaleOffer: {
+    senderSide: { amounts: { eurCents: number | null } } | null;
+    receiverSide: { amounts: { eurCents: number | null } } | null;
+  } | null;
   latestEnglishAuction: { bestBid: { amounts: { eurCents: number | null } } | null } | null;
 }
 
@@ -130,8 +133,9 @@ function positivePrice(card: SorareCardResponse | null): number | null {
   if (!card) return null;
   const values = [
     card.publicMinPrices?.eurCents,
-    card.liveSingleSaleOffer?.senderSide.amounts.eurCents,
-    card.latestEnglishAuction?.bestBid?.amounts.eurCents,
+    card.liveSingleSaleOffer?.receiverSide?.amounts?.eurCents,
+    card.liveSingleSaleOffer?.senderSide?.amounts?.eurCents,
+    card.latestEnglishAuction?.bestBid?.amounts?.eurCents,
   ];
   return values.find((value): value is number => typeof value === "number" && value > 0) ?? null;
 }
