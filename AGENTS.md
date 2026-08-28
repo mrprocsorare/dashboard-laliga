@@ -18,7 +18,10 @@
 - **Cobertura final** (tras import + sync normal): 558 jugadores totales, **490 matched (87.8%)**, 7 manual_review, 61 not_found (residual = duplicados misma-persona + coaches/youth/ambiguos sin perfil Sorare).
 - **Precios en caché**: 434/485 slugs matcheados tienen precio Classic/In-Season; los 51 restantes son jugadores sin lista de mercado activa en Sorare (null real, no bug).
 - **Workflows GitHub Actions optimizados**: `scrape-fuentes` cada 15 min (`*/15 * * * *`), cache `node_modules`, `fetch-depth: 1`, `timeout 15`. `sorare.yml` y `odds.yml` con cache + `fetch-depth: 1`.
-- **Auditoría completa en verde**: `lint` 0 errores, `typecheck` OK, `test` 119/119, `build` (5 rutas) OK.
+- **Auditoría completa en verde**: `lint` 0 errores, `typecheck` OK, `test` 117/117, `build` (5 rutas) OK.
+- **Biwenger eliminada**: fuente no fiable. Fuera del registro de scrapers, del catálogo de `seed.ts` y de la BD (al salir del catálogo, `seed.ts` la borra en cascade con sus forecasts/eventos). Sus datos ya no inflan el consenso.
+- **Bug de consenso de alineaciones corregido**: `services/persist.ts` marca como NO titular (prob 0) a los jugadores del roster que la fuente deja de listar en su alineación probable, evitando que filas antiguas congeladas inflen el consenso (caso Balde/FCB: pasó de ~alto a 0% tras re-scrape).
+- **Próxima Jornada corregida**: `lib/odds.ts` agrupa partidos en jornadas por proximidad temporal (hueco > 3 días) en vez de `floor(index/10)`; `lib/data.ts`(`getJornadaData`) elige la jornada futura más próxima (no la de menor número guardado, que podía ser ya pasada). Requiere `ODDS_API_KEY` (solo en CI) para refrescar `match_odds`.
 
 ### In Progress
 - Ninguno. Pipeline completo y estable.

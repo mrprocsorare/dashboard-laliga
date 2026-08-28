@@ -166,6 +166,22 @@ export async function fetchAndNormalizeLaLigaOdds(pool: Pool): Promise<MatchOdds
   const teamMap = new Map(teams.map((t) => [t.slug, t.id]));
   const sorted = [...events].sort((a, b) => a.commence_time.localeCompare(b.commence_time));
 
+  // Agrupamos en jornadas por proximidad temporal: LaLiga juega cada ronda a
+  // lo largo de unos pocos días, y entre rondas hay un hueco mayor. Un nuevo
+  // bloque (jornada) empieza cuando el partido actual está más de
+  // ROUND_GAP_MS por delante del anterior. Esto es robusto aunque la ventana
+  // de la API comience a mitad de una jornada (no asume 10 partidos exactos).
+  const ROUND_GAP_MS = 3 * 24 * 60 * 60 * 1000;
+  let round = 0;
+  let prevTime: number | null = null;
+  const matchdayByIndex = new Map<number, number>();
+  sorted.forEach((event, index) => {
+    const t = new Date(event.commence_time).getTime();
+    if (prevTime === null || t - prevTime > ROUND_GAP_MS) round += 1;
+    matchdayByIndex.set(index, round);
+    prevTime = t;
+  });
+
   return sorted.map((event, index) => {
     const selected = extractThreeWay(event);
     return {
@@ -173,7 +189,7 @@ export async function fetchAndNormalizeLaLigaOdds(pool: Pool): Promise<MatchOdds
       homeTeamName: event.home_team,
       awayTeamName: event.away_team,
       commenceTime: new Date(event.commence_time),
-      matchday: Math.floor(index / 10) + 1,
+      matchday: matchdayByIndex.get(index) ?? 1,
       homeTeamId: teamMap.get(externalTeamSlug(event.home_team) ?? "") ?? null,
       awayTeamId: teamMap.get(externalTeamSlug(event.away_team) ?? "") ?? null,
       probabilityHomePct: selected?.probabilities.home ?? null,

@@ -239,12 +239,16 @@ export async function getJornadaData(): Promise<JornadaData> {
   const slugMap = await getSorareSlugByPlayerIds(players.map((player) => player.id));
   for (const player of players) player.sorare_slug = slugMap.get(player.id) ?? null;
 
-  const availableRounds = [...new Set(odds.map((o) => o.matchday).filter((v): v is number => v !== null))].sort(
-    (a, b) => a - b,
-  );
+  const nowMs = Date.now();
+  const upcomingOdds = odds.filter((o) => new Date(o.commence_time).getTime() >= nowMs);
+  // La "jornada actual" es la ronda futura más próxima (la que va a llegar),
+  // no la de menor número guardado en BD (que podría ser ya pasada).
+  const availableRounds = [
+    ...new Set(upcomingOdds.map((o) => o.matchday).filter((v): v is number => v !== null)),
+  ].sort((a, b) => a - b);
   const currentMatchday = availableRounds[0] ?? null;
   const nextMatchday = availableRounds[1] ?? null;
-  const selectedOdds = odds.filter(
+  const selectedOdds = upcomingOdds.filter(
     (o) => o.matchday === currentMatchday || o.matchday === nextMatchday,
   );
   const teamById = new Map(teams.map((team) => [team.id, team]));

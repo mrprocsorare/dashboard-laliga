@@ -95,6 +95,7 @@ async function persistTeam(
 
   let processed = 0;
   let unmatched = 0;
+  const reportedPlayerIds = new Set<string>();
 
   for (const forecast of team.players) {
     const result = await resolvePlayer(tx, teamId, roster, wikiRoster, forecast, sourceId, now);
@@ -103,6 +104,7 @@ async function persistTeam(
       continue;
     }
     processed += 1;
+    reportedPlayerIds.add(result);
 
     await tx
       .insert(schema.latestPlayerForecast)
@@ -125,6 +127,40 @@ async function persistTeam(
           fetchedAt: now,
         },
       });
+  }
+
+  // REGLA DE FRESCO: si la fuente entregó una alineación para este equipo,
+  // cualquier jugador del roster canónico que NO haya sido reportado se marca
+  // explícitamente como NO titular (prob 0). Sin esto, la fila "titular"
+  // anterior de un jugador que la fuente dejó de listar (lesión, baja, banquillo)
+  // quedaría congelada para siempre e inflaría el consenso. Solo se aplica
+  // cuando la fuente reportó al menos un jugador, para no borrar datos válidos
+  // si el parseo del equipo falló y devolvió vacío.
+  if (team.players.length > 0) {
+    for (const r of roster) {
+      if (reportedPlayerIds.has(r.id)) continue;
+      await tx
+        .insert(schema.latestPlayerForecast)
+        .values({
+          playerId: r.id,
+          sourceId,
+          probabilityPct: 0,
+          isCertain: false,
+          forecastType: "probable",
+          note: "No aparece en la alineación probable de la fuente",
+          fetchedAt: now,
+        })
+        .onConflictDoUpdate({
+          target: [schema.latestPlayerForecast.playerId, schema.latestPlayerForecast.sourceId],
+          set: {
+            probabilityPct: 0,
+            isCertain: false,
+            forecastType: "probable",
+            note: "No aparece en la alineación probable de la fuente",
+            fetchedAt: now,
+          },
+        });
+    }
   }
 
   for (const event of team.events) {
