@@ -129,20 +129,31 @@ async function persistTeam(
       });
   }
 
-  // REGLA DE FRESCO: si la fuente entregó una alineación para este equipo,
-  // cualquier jugador del roster canónico que NO haya sido reportado se marca
-  // explícitamente como NO titular (prob 0). Sin esto, la fila "titular"
-  // anterior de un jugador que la fuente dejó de listar (lesión, baja, banquillo)
-  // quedaría congelada para siempre e inflaría el consenso. Solo se aplica
-  // cuando la fuente reportó al menos un jugador, para no borrar datos válidos
-  // si el parseo del equipo falló y devolvió vacío.
+  // REGLA DE FRESCO (generalizada): cualquier jugador que esta fuente hubiera
+  // pronosticado con anterioridad para ESTE equipo y que NO figura en la
+  // alineación recién raspada se pone a 0 (no titular). Cubre tanto al roster
+  // canónico como a jugadores no canónicos (p. ej. fichajes que se marcharon):
+  // si la fuente ya no los lista, su % obsoleto se resetea en vez de quedar
+  // congelado inflando el consenso. Solo se aplica cuando la fuente reportó al
+  // menos un jugador, para no borrar datos válidos si el parseo falló y
+  // devolvió vacío.
   if (team.players.length > 0) {
-    for (const r of roster) {
-      if (reportedPlayerIds.has(r.id)) continue;
+    const prevForecastRows = await tx
+      .select({ playerId: schema.latestPlayerForecast.playerId })
+      .from(schema.latestPlayerForecast)
+      .innerJoin(schema.players, eq(schema.latestPlayerForecast.playerId, schema.players.id))
+      .where(
+        and(
+          eq(schema.latestPlayerForecast.sourceId, sourceId),
+          eq(schema.players.teamId, teamId),
+        ),
+      );
+    for (const row of prevForecastRows) {
+      if (reportedPlayerIds.has(row.playerId)) continue;
       await tx
         .insert(schema.latestPlayerForecast)
         .values({
-          playerId: r.id,
+          playerId: row.playerId,
           sourceId,
           probabilityPct: 0,
           isCertain: false,
