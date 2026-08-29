@@ -23,8 +23,18 @@
 - **Bug de consenso de alineaciones corregido**: `services/persist.ts` marca como NO titular (prob 0) a los jugadores del roster que la fuente deja de listar en su alineación probable, evitando que filas antiguas congeladas inflen el consenso (caso Balde/FCB: pasó de ~alto a 0% tras re-scrape).
 - **Próxima Jornada corregida**: `lib/odds.ts` agrupa partidos en jornadas por proximidad temporal (hueco > 3 días) en vez de `floor(index/10)`; `lib/data.ts`(`getJornadaData`) elige la jornada futura más próxima (no la de menor número guardado, que podía ser ya pasada). Requiere `ODDS_API_KEY` (solo en CI) para refrescar `match_odds`.
 
+### Frescura de alineaciones (commits 1fd4870, 02593cd)
+- **Bug de consenso estancado corregido**: `services/persist.ts` pone a 0% a CUALQUIER jugador que una fuente pronosticó antes y ya no lista (no solo a los del roster canónico), evitando que filas congeladas inflen el consenso.
+- **Consenso anti-desactualización**: `services/consensus.ts` fuerza el consenso a 0% cuando `nonStarterSources > starterSources` y no hay fuente `confirmed` (mayoría de fuentes excluye al jugador → probable baja/traspaso/lesión). Validado: Joaquín Oso 90% → 15% → 0%.
+- **Cron de roster semanal**: `.github/workflows/roster.yml` (`23 6 * * 1`) ejecuta `sync:roster --apply` para mantener el roster canónico fresco desde Wikipedia.
+- `sync:roster --apply` aplicado: 27 altas, 2 reactivaciones, 18 bajas. Scrape + consenso: 545 jugadores, 0 errores.
+
+### Mejoras de UI de alineaciones (pendiente de push)
+- **Indicador de exclusión por mayoría**: icono de aviso (triángulo ámbar) + tooltip "Posible baja o traspaso" en `pitch.tsx` (`PlayerNode`) para jugadores cuyo consenso fue forzado a 0% por mayoría. Helper `isExcludedByMajority` en `lib/consensus-utils.ts` (derivado de `agreement`, sin migración de BD). Cubre jornada y página de equipo.
+- **Resumen de cuotas 1X2 en el selector de partidos**: `jornada-view.tsx` muestra en cada botón de partido una barra compacta Local/Empate/Visitante con sus % y leyenda, para ver de un vistazo las probabilidades de TODOS los partidos de la jornada sin entrar en el detalle.
+
 ### In Progress
-- Ninguno. Pipeline completo y estable.
+- Ninguno. Pipeline completo y estable. (Mejoras de UI de alineaciones implementadas y pendientes de push final.)
 
 ### Blocked
 - Ninguno funcionalmente. Los 61 `not_found` restantes son intencionados (duplicados de persona ya representada + coaches/youth/ambiguos sin perfil Sorare).
@@ -64,3 +74,9 @@
 - `components/dashboard/sorare-meta.tsx`: muestra Classic / In-Season
 - `lib/sorare-types.ts`: `SorareCardPrice`, `SorarePlayerData`
 - `database/schema.ts`: `playerSourceIds` (índice parcial `WHERE status='matched'`), `sorarePlayerCache`, `players.sorareSlug` (legacy)
+- `lib/consensus-utils.ts`: `isExcludedByMajority` (deriva exclusión por mayoría del `agreement`, módulo cliente-seguro)
+- `components/dashboard/pitch.tsx`: `PlayerNode` con indicador de aviso para consenso forzado a 0%
+- `components/dashboard/jornada-view.tsx`: selector de partidos con barra de cuotas 1X2 por partido
+- `services/consensus.ts`: regla anti-desactualización (`nonStarterSources > starterSources && !confirmed` → 0%)
+- `services/persist.ts`: regla de fresco generalizada a jugadores no canónicos
+- `.github/workflows/roster.yml`: cron semanal `sync:roster --apply`

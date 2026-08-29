@@ -47,6 +47,11 @@ export function JornadaView({ matches }: { matches: JornadaMatch[] }) {
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Selector de partidos</p>
             <p className="mt-1 text-sm text-muted-foreground">Elige un partido para consultar sus alineaciones y pronóstico.</p>
+            <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
+              <span className="inline-flex items-center gap-1"><span className="size-2 rounded-sm bg-emerald-500" />Local</span>
+              <span className="inline-flex items-center gap-1"><span className="size-2 rounded-sm bg-amber-500" />Empate</span>
+              <span className="inline-flex items-center gap-1"><span className="size-2 rounded-sm bg-sky-500" />Visitante</span>
+            </div>
           </div>
           <span className="shrink-0 text-xs tabular-nums text-muted-foreground">{matches.length} partidos</span>
         </div>
@@ -61,6 +66,10 @@ export function JornadaView({ matches }: { matches: JornadaMatch[] }) {
                 <div className="flex snap-x gap-2 overflow-x-auto pb-1">
                   {roundMatches.map((match) => {
                     const active = match.odds.external_event_id === selected.odds.external_event_id;
+                    const oddsAvailable =
+                      match.odds.probability_home_pct !== null &&
+                      match.odds.probability_draw_pct !== null &&
+                      match.odds.probability_away_pct !== null;
                     return (
                       <button
                         key={match.odds.external_event_id}
@@ -80,6 +89,22 @@ export function JornadaView({ matches }: { matches: JornadaMatch[] }) {
                             <span className="truncate">{match.odds.away_team_name}</span>
                           </span>
                         </span>
+                        {oddsAvailable ? (
+                          <span className="mt-2 block">
+                            <span className="flex h-1.5 w-full overflow-hidden rounded-full bg-muted" aria-hidden>
+                              <span className="bg-emerald-500" style={{ width: `${match.odds.probability_home_pct}%` }} />
+                              <span className="bg-amber-500" style={{ width: `${match.odds.probability_draw_pct}%` }} />
+                              <span className="bg-sky-500" style={{ width: `${match.odds.probability_away_pct}%` }} />
+                            </span>
+                            <span className="mt-1 flex justify-between text-[10px] tabular-nums text-muted-foreground">
+                              <span>{match.odds.probability_home_pct}%</span>
+                              <span>{match.odds.probability_draw_pct}%</span>
+                              <span>{match.odds.probability_away_pct}%</span>
+                            </span>
+                          </span>
+                        ) : (
+                          <span className="mt-2 block text-[10px] text-muted-foreground/70">Cuotas no disponibles</span>
+                        )}
                       </button>
                     );
                   })}
