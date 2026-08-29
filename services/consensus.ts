@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { eq } from "drizzle-orm";
+import { eq, gte } from "drizzle-orm";
 import { Pool } from "pg";
 import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "../database/schema";
@@ -12,6 +12,18 @@ type Db = NodePgDatabase<typeof schema>;
  * Se usa para el campo `sources_starter` del consenso.
  */
 export const STARTER_THRESHOLD = 60;
+
+/**
+ * Ventana de frescura (en horas) para considerar una predicción de fuente en el
+ * consenso. Solo cuentan los `latest_player_forecast` con `fetched_at` posterior
+ * a `now - CONSENSUS_FRESHNESS_HOURS`. Así, las fuentes que no se han raspado
+ * recientemente (caídas, partido ya pasado, retrasos) no hunden con 0% a
+ * jugadores que las fuentes activas sí ven titulares. El consenso es la MEDIA
+ * PONDERADA de las fuentes FRESCAS que cubren el equipo; una fuente fresca que
+ * no lista al jugador aporta 0% (no lo ve titular).
+ */
+export const CONSENSUS_FRESHNESS_HOURS = 12;
+const CONSENSUS_FRESHNESS_MS = CONSENSUS_FRESHNESS_HOURS * 60 * 60 * 1000;
 
 /** Detalle por fuente que se conserva en `agreement` (nunca se ocultan discrepancias). */
 interface AgreementEntry {
@@ -68,7 +80,12 @@ export async function rebuildConsensus(
  * titular baja a ~100/N% en el consenso, en lugar de quedarse en 100%.
  */
 async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
-  // Todas las predicciones, con equipo y peso de cada fuente.
+  const freshAfter = new Date(now.getTime() - CONSENSUS_FRESHNESS_MS);
+
+  // Solo predicciones FRESCAS: ignoramos las fuentes que no se han raspado en la
+  // ventana de frescura. El denominador del consenso son las fuentes frescas
+  // que cubren el equipo; una fuente fresca que no lista al jugador aporta 0%
+  // (no lo ve titular), pero una fuente obsoleta no entra en la media.
   const forecasts = await tx
     .select({
       playerId: schema.latestPlayerForecast.playerId,
@@ -84,12 +101,12 @@ async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
     .innerJoin(
       schema.sources,
       eq(schema.latestPlayerForecast.sourceId, schema.sources.id),
-    );
+    )
+    .where(gte(schema.latestPlayerForecast.fetchedAt, freshAfter));
 
   if (!forecasts.length) return 0;
 
-  // Fuentes que cubren cada equipo (tienen al menos una predicción para ese
-  // equipo): servirán de denominador del consenso de cada jugador de ese club.
+  // Fuentes frescas que cubren cada equipo: denominador del consenso.
   const sourcesByTeam = new Map<string, Map<string, number>>();
   for (const f of forecasts) {
     const m = sourcesByTeam.get(f.teamId) ?? new Map<string, number>();
@@ -127,30 +144,16 @@ async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
     let weightedSum = 0;
     let totalWeight = 0;
     let starters = 0;
-    let starterSources = 0;
-    let nonStarterSources = 0;
     const agreement: AgreementEntry[] = [];
 
-    // Una confirmación oficial tiene prioridad: las previsiones probables
-    // antiguas o discrepantes no deben arrastrar el consenso hacia abajo.
-    const confirmedEntries = [...entries.values()].filter(
-      (entry) => entry.forecastType === "confirmed",
-    );
-    const hasConfirmed = confirmedEntries.length > 0;
-
-    // Iteramos por las fuentes que CUBREN el equipo: las que no listan al
-    // jugador aportan probabilidad 0 al consenso.
+    // Media ponderada de las fuentes frescas que cubren el equipo. Una fuente
+    // fresca que no lista al jugador aporta 0%; las fuentes obsoletas no cuentan.
     for (const [source, weight] of covering) {
       const listed = entries.get(source);
       const prob = listed ? listed.prob : 0;
-      const included = !hasConfirmed || listed?.forecastType === "confirmed";
-      if (prob > 0) starterSources++;
-      else nonStarterSources++;
-      if (included) {
-        weightedSum += prob * weight;
-        totalWeight += weight;
-        if (prob >= STARTER_THRESHOLD) starters += 1;
-      }
+      weightedSum += prob * weight;
+      totalWeight += weight;
+      if (prob >= STARTER_THRESHOLD) starters += 1;
       agreement.push({
         source,
         probability: prob,
@@ -167,25 +170,13 @@ async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
         b.probability - a.probability,
     );
 
-    const probabilityPct =
-      totalWeight > 0 ? Math.round(weightedSum / totalWeight) : 0;
-
-    // REGLA ANTI-DESACTUALIZACIÓN: si la mayoría de las fuentes que cubren el
-    // equipo NO ven al jugador como titular (no lo listan o lo dan en 0%), es
-    // muy probable que las pocas que lo siguen mostrando estén desfasadas
-    // (traspaso, lesión, baja). Se fuerza el consenso a 0 salvo que alguna
-    // fuente lo dé como CONFIRMADO.
-    const hasConfirmedStarter = [...entries.values()].some(
-      (entry) => entry.forecastType === "confirmed" && entry.prob > 0,
-    );
-    const finalProbability =
-      nonStarterSources > starterSources && !hasConfirmedStarter ? 0 : probabilityPct;
+    const probabilityPct = totalWeight > 0 ? Math.round(weightedSum / totalWeight) : 0;
 
     await tx
       .insert(schema.playerConsensus)
       .values({
         playerId,
-        probabilityPct: finalProbability,
+        probabilityPct,
         sourcesTotal: covering.size,
         sourcesConsideringStarter: starters,
         agreement,
@@ -194,7 +185,7 @@ async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
       .onConflictDoUpdate({
         target: [schema.playerConsensus.playerId],
         set: {
-          probabilityPct: finalProbability,
+          probabilityPct,
           sourcesTotal: covering.size,
           sourcesConsideringStarter: starters,
           agreement,

@@ -1,7 +1,5 @@
-import { AlertTriangle } from "lucide-react";
 import { PlayerAvatar } from "@/components/dashboard/player-avatar";
 import { cn } from "@/lib/utils";
-import { isExcludedByMajority } from "@/lib/consensus-utils";
 import type { XIPlayer } from "@/lib/data";
 import { SorareMeta } from "@/components/dashboard/sorare-meta";
 import { SorarePlayerDialog } from "@/components/dashboard/sorare-player-dialog";
@@ -63,7 +61,6 @@ export function Pitch({ xi }: { xi: XIPlayer[] }) {
 
 function PlayerNode({ player }: { player: XIPlayer }) {
   const pct = player.consensus!.probability_pct;
-  const excluded = isExcludedByMajority(player.consensus);
   const ringColor =
     pct >= 80
       ? "ring-green-400"
@@ -76,11 +73,7 @@ function PlayerNode({ player }: { player: XIPlayer }) {
       <SorarePlayerDialog player={player}>
         <span
           className="block w-full max-w-full overflow-hidden rounded-lg px-1 py-0.5 text-center transition-colors hover:bg-black/20"
-          title={
-            excluded
-              ? `${player.name} — Posible baja o traspaso: la mayoría de las fuentes no lo incluyen en el once probable.`
-              : player.name
-          }
+          title={player.name}
         >
           <span className="relative mx-auto block w-fit">
             <PlayerAvatar
@@ -94,14 +87,6 @@ function PlayerNode({ player }: { player: XIPlayer }) {
             <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 rounded bg-black/80 px-1 text-[9px] font-bold text-white tabular-nums sm:text-[10px]">
               {pct}%
             </span>
-            {excluded ? (
-              <span
-                className="absolute -right-1.5 -top-1.5 z-10 rounded-full bg-amber-400 p-0.5 text-black shadow"
-                title="Posible baja o traspaso: excluido por la mayoría de las fuentes"
-              >
-                <AlertTriangle className="size-3" />
-              </span>
-            ) : null}
           </span>
           <span className="block w-full truncate text-[9px] font-medium text-white/90 sm:text-xs">
             {player.name}

@@ -29,9 +29,11 @@
 - **Cron de roster semanal**: `.github/workflows/roster.yml` (`23 6 * * 1`) ejecuta `sync:roster --apply` para mantener el roster canónico fresco desde Wikipedia.
 - `sync:roster --apply` aplicado: 27 altas, 2 reactivaciones, 18 bajas. Scrape + consenso: 545 jugadores, 0 errores.
 
-### Mejoras de UI de alineaciones (pendiente de push)
-- **Indicador de exclusión por mayoría**: icono de aviso (triángulo ámbar) + tooltip "Posible baja o traspaso" en `pitch.tsx` (`PlayerNode`) para jugadores cuyo consenso fue forzado a 0% por mayoría. Helper `isExcludedByMajority` en `lib/consensus-utils.ts` (derivado de `agreement`, sin migración de BD). Cubre jornada y página de equipo.
-- **Resumen de cuotas 1X2 en el selector de partidos**: `jornada-view.tsx` muestra en cada botón de partido una barra compacta Local/Empate/Visitante con sus % y leyenda, para ver de un vistazo las probabilidades de TODOS los partidos de la jornada sin entrar en el detalle.
+### Mejoras de UI y algoritmo de alineaciones (pendiente de push)
+- **Consenso = media solo de fuentes frescas**: `services/consensus.ts` filtra `latest_player_forecast` por `fetched_at >= now - CONSENSUS_FRESHNESS_HOURS` (12h). El denominador del consenso son solo las fuentes frescas que cubren el equipo; una fuente fresca que no lista al jugador aporta 0%, pero una fuente obsoleta no entra en la media. Eliminada la regla anti-desactualización que forzaba a 0% y el aviso de "baja/traspaso" en el campo.
+- **Selector de partidos con cuotas 1X2**: `jornada-view.tsx` muestra en cada botón de partido una barra compacta Local/Empate/Visitante con sus % y leyenda.
+- **Lesiones/sanciones fuera del campo**: la sección "Lesiones y sanciones" de la página de equipo (`app/team/[slug]/page.tsx`) ya muestra los `player_events` de las fuentes; el aviso de baja/traspaso NO debe aparecer nunca en el `Pitch` del once inicial.
+- `selectXI` (`lib/data.ts`) ya elige siempre 11 (10 + portero) y reubica por puesto al mejor de cada posición; no necesita cambios para el criterio acordado.
 
 ### In Progress
 - Ninguno. Pipeline completo y estable. (Mejoras de UI de alineaciones implementadas y pendientes de push final.)
@@ -74,9 +76,8 @@
 - `components/dashboard/sorare-meta.tsx`: muestra Classic / In-Season
 - `lib/sorare-types.ts`: `SorareCardPrice`, `SorarePlayerData`
 - `database/schema.ts`: `playerSourceIds` (índice parcial `WHERE status='matched'`), `sorarePlayerCache`, `players.sorareSlug` (legacy)
-- `lib/consensus-utils.ts`: `isExcludedByMajority` (deriva exclusión por mayoría del `agreement`, módulo cliente-seguro)
-- `components/dashboard/pitch.tsx`: `PlayerNode` con indicador de aviso para consenso forzado a 0%
+- `components/dashboard/pitch.tsx`: `PlayerNode` muestra el % de consenso medio (sin avisos de baja/traspaso)
 - `components/dashboard/jornada-view.tsx`: selector de partidos con barra de cuotas 1X2 por partido
-- `services/consensus.ts`: regla anti-desactualización (`nonStarterSources > starterSources && !confirmed` → 0%)
+- `services/consensus.ts`: media ponderada de solo fuentes frescas (`CONSENSUS_FRESHNESS_HOURS = 12`); sin forzado a 0%
 - `services/persist.ts`: regla de fresco generalizada a jugadores no canónicos
 - `.github/workflows/roster.yml`: cron semanal `sync:roster --apply`
