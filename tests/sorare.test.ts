@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { SorareApiClient, SorareBudgetExceededError, SORARE_PLAYER_QUERY, priceFromSorareCard } from "../lib/sorare-client";
+import { describe, expect, it, vi } from "vitest";
+import { SorareApiClient, SorareBudgetExceededError, SORARE_PLAYER_QUERY, priceFromSorareCard, computePlayerPrices, type SorarePlayerResponse } from "../lib/sorare-client";
 import { decideSorareMatch, decideSlugProbeMatch, type SorareCandidate } from "../lib/sorare-matching";
 import { slugVariants } from "../lib/sorare-slugs";
 import { sorareRefreshPlan } from "../lib/sorare-sync-policy";
@@ -229,6 +229,105 @@ describe("precio de carta Sorare", () => {
       latestEnglishAuction: { bestBid: { amounts: { eurCents: 0 } } },
     } as unknown as Parameters<typeof priceFromSorareCard>[0];
     expect(priceFromSorareCard(card)).toBeNull();
+  });
+
+  it("toma el mínimo entre fuentes y descarta publicMinPrices inflado", () => {
+    const card = {
+      slug: "x",
+      publicMinPrices: { eurCents: 962 },
+      liveSingleSaleOffer: {
+        senderSide: { amounts: { eurCents: 0 } },
+        receiverSide: { amounts: { eurCents: 42 } },
+      },
+      latestEnglishAuction: { bestBid: { amounts: { eurCents: 1000 } } },
+    } as unknown as Parameters<typeof priceFromSorareCard>[0];
+    expect(priceFromSorareCard(card)).toBe(42);
+  });
+
+  it("prefiere la mejor puja de subasta por debajo de la venta directa", () => {
+    const card = {
+      slug: "x",
+      publicMinPrices: null,
+      liveSingleSaleOffer: {
+        senderSide: { amounts: { eurCents: 0 } },
+        receiverSide: { amounts: { eurCents: 1500 } },
+      },
+      latestEnglishAuction: { bestBid: { amounts: { eurCents: 800 } } },
+    } as unknown as Parameters<typeof priceFromSorareCard>[0];
+    expect(priceFromSorareCard(card)).toBe(800);
+  });
+});
+
+describe("computePlayerPrices (híbrido primaria + buscador de suelo)", () => {
+  const basePlayer = (over: Partial<SorarePlayerResponse> = {}): SorarePlayerResponse => ({
+    id: "1",
+    slug: "gorka-guruzeta",
+    displayName: "Gorka Guruzeta",
+    firstName: "Gorka",
+    lastName: "Guruzeta",
+    birthDay: "2000-01-01",
+    nationality: "es",
+    activeClubName: null,
+    activeClubSlug: null,
+    playerGameScores: null,
+    classic: null,
+    inSeason: null,
+    ...over,
+  });
+
+  const card = (over: Record<string, unknown> = {}): SorarePlayerResponse["classic"] => ({
+    slug: "card",
+    publicMinPrices: null,
+    liveSingleSaleOffer: null,
+    latestEnglishAuction: null,
+    ...over,
+  });
+
+  const directSale = (eurCents: number) => ({
+    liveSingleSaleOffer: {
+      senderSide: { amounts: { eurCents: 0 } },
+      receiverSide: { amounts: { eurCents } },
+    },
+  });
+
+  const auction = (eurCents: number) => ({ latestEnglishAuction: { bestBid: { amounts: { eurCents } } } });
+
+  it("usa la venta directa de lowestPriceAnyCard sin consultar el buscador", async () => {
+    const player = basePlayer({
+      classic: card({ ...directSale(180) }),
+      inSeason: card({ ...directSale(500) }),
+    });
+    const floor = vi.fn(async () => ({ classic: { eurCents: 42, slug: "c" }, inSeason: { eurCents: 1168, slug: "i" } }));
+    const client = { searchPlayerFloorPrices: floor } as unknown as SorareApiClient;
+    const result = await computePlayerPrices(player, client, "gorka-guruzeta");
+    expect(floor).not.toHaveBeenCalled();
+    expect(result.classic.eurCents).toBe(180);
+    expect(result.inSeason.eurCents).toBe(500);
+  });
+
+  it("recurre al buscador de suelo cuando lowestPriceAnyCard no trae venta directa (bug #644)", async () => {
+    const player = basePlayer({
+      classic: card({ ...auction(1000) }),
+      inSeason: card({ ...directSale(500) }),
+    });
+    const floor = vi.fn(async () => ({ classic: { eurCents: 42, slug: "card-308" }, inSeason: { eurCents: 1168, slug: "i" } }));
+    const client = { searchPlayerFloorPrices: floor } as unknown as SorareApiClient;
+    const result = await computePlayerPrices(player, client, "gorka-guruzeta");
+    expect(floor).toHaveBeenCalledWith("gorka-guruzeta");
+    expect(result.classic.eurCents).toBe(42);
+    expect(result.inSeason.eurCents).toBe(500);
+  });
+
+  it("usa la puja de subasta como último recurso si ni primaria ni buscador traen venta directa", async () => {
+    const player = basePlayer({
+      classic: card({ ...auction(1000) }),
+      inSeason: card({ ...auction(1200) }),
+    });
+    const floor = vi.fn(async () => ({ classic: { eurCents: null, slug: null }, inSeason: { eurCents: null, slug: null } }));
+    const client = { searchPlayerFloorPrices: floor } as unknown as SorareApiClient;
+    const result = await computePlayerPrices(player, client, "gorka-guruzeta");
+    expect(result.classic.eurCents).toBe(1000);
+    expect(result.inSeason.eurCents).toBe(1200);
   });
 });
 

@@ -8,6 +8,7 @@ import {
   SorareApiClient,
   SorareBudgetExceededError,
   SorareRateLimitError,
+  computePlayerPrices,
   type SorarePlayerResponse,
 } from "../lib/sorare-client";
 import {
@@ -172,7 +173,7 @@ function scoreValues(player: SorarePlayerResponse): { scores: number[]; average:
   };
 }
 
-async function persistPlayerData(db: Db, player: SorarePlayerResponse, refresh: { scores: boolean; classic: boolean; inSeason: boolean }): Promise<void> {
+async function persistPlayerData(db: Db, client: SorareApiClient, player: SorarePlayerResponse, refresh: { scores: boolean; classic: boolean; inSeason: boolean }): Promise<void> {
   const existing = await db
     .select()
     .from(schema.sorarePlayerCache)
@@ -181,6 +182,11 @@ async function persistPlayerData(db: Db, player: SorarePlayerResponse, refresh: 
   const old = existing[0];
   const now = new Date();
   const score = scoreValues(player);
+  const prices = refresh.classic || refresh.inSeason ? await computePlayerPrices(player, client, player.displayName ?? player.slug) : null;
+  const classicPrice = refresh.classic ? prices!.classic.eurCents : old?.classicPriceEurCents ?? null;
+  const classicSlug = refresh.classic ? prices!.classic.slug : old?.classicCardSlug ?? null;
+  const inSeasonPrice = refresh.inSeason ? prices!.inSeason.eurCents : old?.inSeasonPriceEurCents ?? null;
+  const inSeasonSlug = refresh.inSeason ? prices!.inSeason.slug : old?.inSeasonCardSlug ?? null;
   await db
     .insert(schema.sorarePlayerCache)
     .values({
@@ -197,12 +203,12 @@ async function persistPlayerData(db: Db, player: SorarePlayerResponse, refresh: 
       latestScore: score.latest,
       scoresUpdatedAt: refresh.scores ? now : old?.scoresUpdatedAt ?? now,
       scoresExpiresAt: refresh.scores ? new Date(now.getTime() + SORARE_SCORES_TTL_MS) : old?.scoresExpiresAt ?? now,
-      classicPriceEurCents: refresh.classic ? price(player.classic) : old?.classicPriceEurCents ?? null,
-      classicCardSlug: refresh.classic ? player.classic?.slug ?? null : old?.classicCardSlug ?? null,
+      classicPriceEurCents: classicPrice,
+      classicCardSlug: classicSlug,
       classicUpdatedAt: refresh.classic ? now : old?.classicUpdatedAt ?? now,
       classicExpiresAt: refresh.classic ? new Date(now.getTime() + SORARE_PRICES_TTL_MS) : old?.classicExpiresAt ?? now,
-      inSeasonPriceEurCents: refresh.inSeason ? price(player.inSeason) : old?.inSeasonPriceEurCents ?? null,
-      inSeasonCardSlug: refresh.inSeason ? player.inSeason?.slug ?? null : old?.inSeasonCardSlug ?? null,
+      inSeasonPriceEurCents: inSeasonPrice,
+      inSeasonCardSlug: inSeasonSlug,
       inSeasonUpdatedAt: refresh.inSeason ? now : old?.inSeasonUpdatedAt ?? now,
       inSeasonExpiresAt: refresh.inSeason ? new Date(now.getTime() + SORARE_PRICES_TTL_MS) : old?.inSeasonExpiresAt ?? now,
       lastError: null,
@@ -223,29 +229,18 @@ async function persistPlayerData(db: Db, player: SorarePlayerResponse, refresh: 
         latestScore: score.latest,
         scoresUpdatedAt: refresh.scores ? now : old?.scoresUpdatedAt ?? now,
         scoresExpiresAt: refresh.scores ? new Date(now.getTime() + SORARE_SCORES_TTL_MS) : old?.scoresExpiresAt ?? now,
-        classicPriceEurCents: refresh.classic ? price(player.classic) : old?.classicPriceEurCents ?? null,
-        classicCardSlug: refresh.classic ? player.classic?.slug ?? null : old?.classicCardSlug ?? null,
+        classicPriceEurCents: classicPrice,
+        classicCardSlug: classicSlug,
         classicUpdatedAt: refresh.classic ? now : old?.classicUpdatedAt ?? now,
         classicExpiresAt: refresh.classic ? new Date(now.getTime() + SORARE_PRICES_TTL_MS) : old?.classicExpiresAt ?? now,
-        inSeasonPriceEurCents: refresh.inSeason ? price(player.inSeason) : old?.inSeasonPriceEurCents ?? null,
-        inSeasonCardSlug: refresh.inSeason ? player.inSeason?.slug ?? null : old?.inSeasonCardSlug ?? null,
+        inSeasonPriceEurCents: inSeasonPrice,
+        inSeasonCardSlug: inSeasonSlug,
         inSeasonUpdatedAt: refresh.inSeason ? now : old?.inSeasonUpdatedAt ?? now,
         inSeasonExpiresAt: refresh.inSeason ? new Date(now.getTime() + SORARE_PRICES_TTL_MS) : old?.inSeasonExpiresAt ?? now,
         lastError: null,
         updatedAt: now,
       },
     });
-}
-
-function price(card: SorarePlayerResponse["classic"]): number | null {
-  if (!card) return null;
-  const values = [
-    card.publicMinPrices?.eurCents,
-    card.liveSingleSaleOffer?.receiverSide?.amounts?.eurCents,
-    card.liveSingleSaleOffer?.senderSide?.amounts?.eurCents,
-    card.latestEnglishAuction?.bestBid?.amounts?.eurCents,
-  ];
-  return values.find((value): value is number => typeof value === "number" && value > 0) ?? null;
 }
 
 async function main() {
@@ -274,7 +269,7 @@ async function main() {
     .from(schema.playerSourceIds)
     .where(eq(schema.playerSourceIds.sourceId, sourceId));
   const mappingByPlayer = new Map(mappings.map((mapping) => [mapping.playerId, mapping]));
-  const client = new SorareApiClient();
+  const client = new SorareApiClient({ budget: 1000, requestsPerMinute: 30, minIntervalMs: 2000 });
   const status = new Map<string, string>();
   const assignedSlugByPlayer = new Map<string, string>();
   for (const m of mappings) if (m.externalSlug) assignedSlugByPlayer.set(m.playerId, m.externalSlug);
@@ -389,7 +384,7 @@ async function main() {
     for (const player of dataBySlug.values()) {
       const cache = cacheBySlug.get(player.slug);
       if (apply) {
-        await persistPlayerData(db, player, sorareRefreshPlan(cache, now, force));
+        await persistPlayerData(db, client, player, sorareRefreshPlan(cache, now, force));
       }
     }
   } catch (error) {

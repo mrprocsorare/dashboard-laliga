@@ -57,6 +57,27 @@ export const SORARE_SEARCH_QUERY = `
   }
 `;
 
+/**
+ * Suelo de mercado fiable vía búsqueda ordenada por precio. `lowestPriceAnyCard`
+ * es inestable (issue #644 de Sorare: a veces devuelve una carta que no está en
+ * venta directa), así que cuando la primaria no trae venta directa usamos esta
+ * consulta, que sí lista las cartas Limited ordenadas de más barata a más cara.
+ */
+export const SORARE_SEARCH_FLOOR_QUERY = `
+  query SorareSearchFloor($query: String!, $onSaleOnly: Boolean) {
+    searchCards(query: $query, onSaleOnly: $onSaleOnly, sorts: [{ field: "price", direction: ASC }], pageSize: 50) {
+      hits {
+        card {
+          slug
+          rarityTyped
+          inSeasonEligible
+          liveSingleSaleOffer { receiverSide { amounts { eurCents } } }
+        }
+      }
+    }
+  }
+`;
+
 interface GraphqlPayload<T> {
   data?: T;
   errors?: Array<{ message?: string }>;
@@ -76,6 +97,16 @@ export interface SorarePlayerResponse extends SorareCandidate {
   playerGameScores: Array<{ score: number }> | null;
   classic: SorareCardResponse | null;
   inSeason: SorareCardResponse | null;
+}
+
+export interface SorareFloorPrice {
+  eurCents: number | null;
+  slug: string | null;
+}
+
+export interface SorareFloorPrices {
+  classic: SorareFloorPrice;
+  inSeason: SorareFloorPrice;
 }
 
 interface RawSorarePlayerResponse extends Omit<SorarePlayerResponse, "nationality" | "activeClubName" | "activeClubSlug"> {
@@ -113,6 +144,7 @@ export interface SorareClientOptions {
   budget?: number;
   requestsPerMinute?: number;
   minIntervalMs?: number;
+  requestTimeoutMs?: number;
   now?: () => number;
   sleep?: (ms: number) => Promise<void>;
 }
@@ -129,6 +161,13 @@ function retryAfterMs(value: string | null): number {
   return Number.isFinite(date) ? Math.max(0, date - Date.now()) : 60_000;
 }
 
+/**
+ * El suelo de mercado es el MÍNIMO de todas las fuentes de precio válidas.
+ * `publicMinPrices` suele venir `null` y, cuando aparece, a veces trae un
+ * valor alto obsoleto (no es el suelo real), así que usamos el mínimo en vez
+ * del "primer positivo": si una fuente está inflada, el mínimo la ignora y se
+ * queda con el precio de venta directa (`receiverSide`) o la mejor puja.
+ */
 function positivePrice(card: SorareCardResponse | null): number | null {
   if (!card) return null;
   const values = [
@@ -136,8 +175,8 @@ function positivePrice(card: SorareCardResponse | null): number | null {
     card.liveSingleSaleOffer?.receiverSide?.amounts?.eurCents,
     card.liveSingleSaleOffer?.senderSide?.amounts?.eurCents,
     card.latestEnglishAuction?.bestBid?.amounts?.eurCents,
-  ];
-  return values.find((value): value is number => typeof value === "number" && value > 0) ?? null;
+  ].filter((value): value is number => typeof value === "number" && value > 0);
+  return values.length ? Math.min(...values) : null;
 }
 
 export function toSorarePlayerResponse(value: RawSorarePlayerResponse): SorarePlayerResponse {
@@ -162,6 +201,7 @@ export class SorareApiClient {
   private readonly budget: number;
   private readonly requestsPerMinute: number;
   private readonly minIntervalMs: number;
+  private readonly requestTimeoutMs: number;
   private readonly now: () => number;
   private readonly sleep: (ms: number) => Promise<void>;
   private requestCount = 0;
@@ -180,6 +220,9 @@ export class SorareApiClient {
     );
     this.minIntervalMs = options.minIntervalMs ?? Number(
       process.env.SORARE_MIN_INTERVAL_MS ?? Math.ceil(60_000 / this.requestsPerMinute),
+    );
+    this.requestTimeoutMs = options.requestTimeoutMs ?? Number(
+      process.env.SORARE_REQUEST_TIMEOUT_MS ?? 30_000,
     );
     this.now = options.now ?? Date.now;
     this.sleep = options.sleep ?? wait;
@@ -242,6 +285,7 @@ export class SorareApiClient {
           headers,
           body: JSON.stringify({ query, variables }),
           cache: "no-store",
+          signal: AbortSignal.timeout(this.requestTimeoutMs),
         });
       } catch {
         if (attempt === MAX_RETRIES - 1) throw new SorareRequestError("fallo de red contra Sorare");
@@ -317,6 +361,44 @@ export class SorareApiClient {
     await Promise.all(workers);
     return result;
   }
+
+  /**
+   * Suelo de mercado (Limited) de un jugador usando la búsqueda ordenada por
+   * precio. Devuelve el mínimo `liveSingleSaleOffer.receiverSide` (venta directa)
+   * entre las cartas Limited, separado en clásico (no in-season) e in-season.
+   * Es el respaldo fiable frente a la inestabilidad de `lowestPriceAnyCard`.
+   */
+  async searchPlayerFloorPrices(query: string, onSaleOnly = true): Promise<SorareFloorPrices> {
+    const data = await this.request<{
+      searchCards: {
+        hits: Array<{
+          card: {
+            slug: string;
+            rarityTyped: string;
+            inSeasonEligible: boolean | null;
+            liveSingleSaleOffer: { receiverSide: { amounts: { eurCents: number | null } } } | null;
+          } | null;
+        }>;
+      };
+    }>(SORARE_SEARCH_FLOOR_QUERY, { query, onSaleOnly });
+    const hits = data.searchCards?.hits ?? [];
+    const cards = hits.map((hit) => hit.card).filter((card): card is NonNullable<typeof card> => Boolean(card));
+    const directOf = (card: typeof cards[number]): number | null => {
+      const value = card.liveSingleSaleOffer?.receiverSide?.amounts?.eurCents;
+      return typeof value === "number" && value > 0 ? value : null;
+    };
+    const limited = cards.filter((card) => card.rarityTyped === "limited");
+    const floorOf = (group: typeof limited): SorareFloorPrice => {
+      const values = group.map(directOf).filter((value): value is number => value !== null);
+      if (!values.length) return { eurCents: null, slug: null };
+      const min = Math.min(...values);
+      return { eurCents: min, slug: group.find((card) => directOf(card) === min)!.slug };
+    };
+    return {
+      classic: floorOf(limited.filter((card) => !card.inSeasonEligible)),
+      inSeason: floorOf(limited.filter((card) => card.inSeasonEligible)),
+    };
+  }
 }
 
 /** Compatibilidad para la herramienta antigua de revisión CSV. */
@@ -324,4 +406,56 @@ export async function searchSorarePlayersBatch(names: string[]): Promise<SorareC
   const client = new SorareApiClient();
   const found = await client.searchPlayers(names, 1);
   return names.map((name) => found.get(name.trim()) ?? []);
+}
+
+function directSalePrice(card: SorareCardResponse | null): number | null {
+  const value = card?.liveSingleSaleOffer?.receiverSide?.amounts?.eurCents;
+  return typeof value === "number" && value > 0 ? value : null;
+}
+
+function auctionPrice(card: SorareCardResponse | null): number | null {
+  const value = card?.latestEnglishAuction?.bestBid?.amounts?.eurCents;
+  return typeof value === "number" && value > 0 ? value : null;
+}
+
+/**
+ * Precio de suelo (Limited) de un jugador combinando dos fuentes:
+ * 1. `lowestPriceAnyCard` (barato, una sola petición): si devuelve una carta
+ *    con venta directa (`liveSingleSaleOffer.receiverSide`), ese es el suelo.
+ * 2. Si la primaria no trae venta directa — el caso del bug #644 de Sorare,
+ *    donde devuelve una carta sin listar en venta — se hace fallback a
+ *    `searchPlayerFloorPrices` (búsqueda ordenada por precio), que sí encuentra
+ *    el suelo real. Solo en último extremo se usa la puja de subasta.
+ */
+export async function computePlayerPrices(
+  player: SorarePlayerResponse,
+  client: SorareApiClient,
+  query: string,
+): Promise<SorareFloorPrices> {
+  const classicDirect = directSalePrice(player.classic);
+  const inSeasonDirect = directSalePrice(player.inSeason);
+  let classic: SorareFloorPrice =
+    classicDirect !== null
+      ? { eurCents: classicDirect, slug: player.classic?.slug ?? null }
+      : { eurCents: null, slug: null };
+  let inSeason: SorareFloorPrice =
+    inSeasonDirect !== null
+      ? { eurCents: inSeasonDirect, slug: player.inSeason?.slug ?? null }
+      : { eurCents: null, slug: null };
+  if (classic.eurCents === null || inSeason.eurCents === null) {
+    try {
+      const floor = await client.searchPlayerFloorPrices(query);
+      if (classic.eurCents === null) classic = floor.classic;
+      if (inSeason.eurCents === null) inSeason = floor.inSeason;
+    } catch {
+      /* se mantiene el valor actual y se prueba la subasta abajo */
+    }
+  }
+  if (classic.eurCents === null) {
+    classic = { eurCents: auctionPrice(player.classic), slug: player.classic?.slug ?? null };
+  }
+  if (inSeason.eurCents === null) {
+    inSeason = { eurCents: auctionPrice(player.inSeason), slug: player.inSeason?.slug ?? null };
+  }
+  return { classic, inSeason };
 }

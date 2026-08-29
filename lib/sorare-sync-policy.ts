@@ -1,6 +1,6 @@
 export const SORARE_IDENTITY_TTL_MS = 7 * 24 * 60 * 60 * 1_000;
 export const SORARE_SCORES_TTL_MS = 24 * 60 * 60 * 1_000;
-export const SORARE_PRICES_TTL_MS = 24 * 60 * 60 * 1_000;
+export const SORARE_PRICES_TTL_MS = 12 * 60 * 60 * 1_000;
 
 export interface SorareCacheFreshness {
   scoresExpiresAt: Date | null;
