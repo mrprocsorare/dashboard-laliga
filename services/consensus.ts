@@ -127,6 +127,8 @@ async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
     let weightedSum = 0;
     let totalWeight = 0;
     let starters = 0;
+    let starterSources = 0;
+    let nonStarterSources = 0;
     const agreement: AgreementEntry[] = [];
 
     // Una confirmación oficial tiene prioridad: las previsiones probables
@@ -142,6 +144,8 @@ async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
       const listed = entries.get(source);
       const prob = listed ? listed.prob : 0;
       const included = !hasConfirmed || listed?.forecastType === "confirmed";
+      if (prob > 0) starterSources++;
+      else nonStarterSources++;
       if (included) {
         weightedSum += prob * weight;
         totalWeight += weight;
@@ -166,11 +170,22 @@ async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
     const probabilityPct =
       totalWeight > 0 ? Math.round(weightedSum / totalWeight) : 0;
 
+    // REGLA ANTI-DESACTUALIZACIÓN: si la mayoría de las fuentes que cubren el
+    // equipo NO ven al jugador como titular (no lo listan o lo dan en 0%), es
+    // muy probable que las pocas que lo siguen mostrando estén desfasadas
+    // (traspaso, lesión, baja). Se fuerza el consenso a 0 salvo que alguna
+    // fuente lo dé como CONFIRMADO.
+    const hasConfirmedStarter = [...entries.values()].some(
+      (entry) => entry.forecastType === "confirmed" && entry.prob > 0,
+    );
+    const finalProbability =
+      nonStarterSources > starterSources && !hasConfirmedStarter ? 0 : probabilityPct;
+
     await tx
       .insert(schema.playerConsensus)
       .values({
         playerId,
-        probabilityPct,
+        probabilityPct: finalProbability,
         sourcesTotal: covering.size,
         sourcesConsideringStarter: starters,
         agreement,
@@ -179,7 +194,7 @@ async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
       .onConflictDoUpdate({
         target: [schema.playerConsensus.playerId],
         set: {
-          probabilityPct,
+          probabilityPct: finalProbability,
           sourcesTotal: covering.size,
           sourcesConsideringStarter: starters,
           agreement,
