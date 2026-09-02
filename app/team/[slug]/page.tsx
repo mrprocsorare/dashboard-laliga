@@ -148,7 +148,7 @@ export default async function TeamPage({
         </div>
         <Card>
           <CardContent>
-            <PlayersTable players={players} sourceMap={sourceMap} />
+            <PlayersTable players={players} sourceMap={sourceMap} teamSlug={team.slug} />
           </CardContent>
         </Card>
       </section>
@@ -202,9 +202,11 @@ export default async function TeamPage({
 function PlayersTable({
   players,
   sourceMap,
+  teamSlug,
 }: {
   players: PlayerWithConsensus[];
   sourceMap: Map<string, { name: string; baseUrl: string }>;
+  teamSlug: string;
 }) {
   return (
     <Table>
@@ -250,6 +252,7 @@ function PlayersTable({
                 <AgreementBars
                   agreement={c?.agreement ?? []}
                   sourceMap={sourceMap}
+                  teamSlug={teamSlug}
                 />
               </TableCell>
             </TableRow>

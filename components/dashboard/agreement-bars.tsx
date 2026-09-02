@@ -9,12 +9,16 @@ import { formatDateTime } from "@/lib/format";
  * fuentes con probabilidad alta se rellenan en verde. Así, de un vistazo se ve
  * qué fuentes coinciden y cuáles discrepan.
  */
+import { getSourceTeamUrl } from "@/lib/source-team-urls";
+
 export function AgreementBars({
   agreement,
   sourceMap,
+  teamSlug,
 }: {
   agreement: AgreementEntry[];
   sourceMap: Map<string, { name: string; baseUrl: string }>;
+  teamSlug?: string;
 }) {
   // Orden estable por nombre de fuente para que la barra de cada equipo sea
   // comparable visualmente (misma posición = misma fuente).
@@ -42,7 +46,7 @@ export function AgreementBars({
                 ? "bg-red-500"
                 : "bg-muted";
         const dim = pct === 0 && !confirmed;
-        const href = src?.baseUrl;
+        const href = teamSlug ? getSourceTeamUrl(a.source, teamSlug) ?? src?.baseUrl : src?.baseUrl;
 
         const inner = (
           <span className="flex items-center gap-2 text-xs">
