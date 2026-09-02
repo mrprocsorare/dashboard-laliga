@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { notInArray, inArray } from "drizzle-orm";
+import { notInArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { sources, teams } from "./schema";
@@ -59,18 +59,14 @@ async function main() {
   await db.insert(sources).values(SOURCES).onConflictDoNothing({ target: sources.slug });
   console.log(`  ${SOURCES.length} fuentes (skipped si ya existían)`);
 
-  // Elimina fuentes que ya no están en el catálogo (cascade borra sus datos).
   const canonicalSourceSlugs = SOURCES.map((s) => s.slug);
   const staleSources = await db
     .select()
     .from(sources)
     .where(notInArray(sources.slug, canonicalSourceSlugs));
   if (staleSources.length) {
-    await db
-      .delete(sources)
-      .where(inArray(sources.slug, staleSources.map((s) => s.slug)));
     console.log(
-      `  → Eliminadas ${staleSources.length} fuentes obsoletas: ${staleSources.map((s) => s.slug).join(", ")}`,
+      `  → Fuentes obsoletas detectadas (NO borradas para evitar cascade): ${staleSources.map((s) => s.slug).join(", ")} — desactívalas manualmente si procede.`,
     );
   }
 
@@ -81,8 +77,7 @@ async function main() {
   const canonicalSlugs = TEAMS.map((t) => t.slug);
   const stale = await db.select().from(teams).where(notInArray(teams.slug, canonicalSlugs));
   if (stale.length) {
-    await db.delete(teams).where(inArray(teams.slug, stale.map((t) => t.slug)));
-    console.log(`  → Eliminados ${stale.length} equipos obsoletos: ${stale.map((t) => t.slug).join(", ")}`);
+    console.log(`  → Equipos obsoletos detectados (NO borrados para evitar cascade): ${stale.map((t) => t.slug).join(", ")}`);
   } else {
     console.log("  → Sin equipos obsoletos.");
   }

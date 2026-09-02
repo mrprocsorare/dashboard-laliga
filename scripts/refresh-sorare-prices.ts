@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "../database/schema";
@@ -38,7 +38,7 @@ async function main() {
   const mappings = await db
     .select({ slug: schema.playerSourceIds.externalSlug })
     .from(schema.playerSourceIds)
-    .where(eq(schema.playerSourceIds.sourceId, sourceId));
+    .where(and(eq(schema.playerSourceIds.sourceId, sourceId), eq(schema.playerSourceIds.status, "matched")));
   const slugs = [...new Set(mappings.map((m) => m.slug).filter((s): s is string => Boolean(s)))];
   console.log(`Refrescando precios para ${slugs.length} slugs matcheados (${apply ? "apply" : "dry-run"}).`);
 

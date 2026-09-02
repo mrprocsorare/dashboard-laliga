@@ -99,7 +99,9 @@ export function parseMatchPage(
   // Subimos los ancestros desde cada campo y deduplicamos.
   const scopes: Element[] = [];
   $("div.campo-futbol").each((_, campo) => {
-    const scope = $(campo).parent().parent().parent().get(0);
+    const scope =
+      $(campo).closest("[data-lineup-export-root]").parent().get(0) ??
+      $(campo).parent().parent().parent().get(0);
     if (scope && !scopes.includes(scope)) scopes.push(scope);
   });
 

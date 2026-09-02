@@ -66,11 +66,12 @@ export function normalizeThreeWayOdds(
   const invAway = 1 / away;
   const total = invHome + invDraw + invAway;
   if (!Number.isFinite(total) || total <= 0) return null;
-  return {
-    home: Math.round((invHome / total) * 100),
-    draw: Math.round((invDraw / total) * 100),
-    away: Math.round((invAway / total) * 100),
-  };
+  const raw = [(invHome / total) * 100, (invDraw / total) * 100, (invAway / total) * 100];
+  const floored = raw.map((v) => Math.floor(v));
+  const remainder = 100 - floored.reduce((a, b) => a + b, 0);
+  const fractions = raw.map((v, i) => ({ i, frac: v - floored[i] })).sort((a, b) => b.frac - a.frac);
+  for (let k = 0; k < remainder; k++) floored[fractions[k % 3].i] += 1;
+  return { home: floored[0], draw: floored[1], away: floored[2] };
 }
 
 function fetchJson<T>(url: string): Promise<T> {

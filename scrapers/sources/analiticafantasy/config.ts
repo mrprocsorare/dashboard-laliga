@@ -15,7 +15,7 @@ export const analiticaConfig = {
   name: "Analítica Fantasy",
   baseUrl: "https://www.analiticafantasy.com",
   /** Página de la jornada vigente (los partidos de la jornada actual). */
-  indexTemplate: "/alineaciones-probables/la-liga/temporada-2026/jornada-1",
+  indexTemplate: "/alineaciones-probables/la-liga/temporada-2026",
   /** Retardo entre peticiones (ms). */
   requestDelayMs: 500,
 

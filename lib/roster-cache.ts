@@ -80,7 +80,7 @@ export async function getRosterForTeam(
   pool: Pool,
   teamSlug: string,
 ): Promise<CanonicalPlayer[]> {
-  if (!cache) await loadRosterFromDb(pool);
+  if (!cache || !isCacheFresh(cache.maxAgeMs)) await loadRosterFromDb(pool);
   if (!cache) return [];
   return cache.rosters.get(teamSlug) ?? [];
 }

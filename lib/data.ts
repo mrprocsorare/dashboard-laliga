@@ -240,12 +240,12 @@ export async function getJornadaData(): Promise<JornadaData> {
   for (const player of players) player.sorare_slug = slugMap.get(player.id) ?? null;
 
   const nowMs = Date.now();
-  const upcomingOdds = odds.filter((o) => new Date(o.commence_time).getTime() >= nowMs);
-  // La "jornada actual" es la ronda futura más próxima (la que va a llegar),
-  // no la de menor número guardado en BD (que podría ser ya pasada).
+  let upcomingOdds = odds.filter((o) => new Date(o.commence_time).getTime() >= nowMs);
+  const usedFallback = upcomingOdds.length === 0 && odds.length > 0;
+  if (usedFallback) upcomingOdds = [...odds].sort((a, b) => new Date(b.commence_time).getTime() - new Date(a.commence_time).getTime()).slice(0, 10);
   const availableRounds = [
     ...new Set(upcomingOdds.map((o) => o.matchday).filter((v): v is number => v !== null)),
-  ].sort((a, b) => a - b);
+  ].sort((a, b) => (usedFallback ? b - a : a - b));
   const currentMatchday = availableRounds[0] ?? null;
   const nextMatchday = availableRounds[1] ?? null;
   const selectedOdds = upcomingOdds.filter(

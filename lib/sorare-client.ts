@@ -173,7 +173,6 @@ function positivePrice(card: SorareCardResponse | null): number | null {
   const values = [
     card.publicMinPrices?.eurCents,
     card.liveSingleSaleOffer?.receiverSide?.amounts?.eurCents,
-    card.liveSingleSaleOffer?.senderSide?.amounts?.eurCents,
     card.latestEnglishAuction?.bestBid?.amounts?.eurCents,
   ].filter((value): value is number => typeof value === "number" && value > 0);
   return values.length ? Math.min(...values) : null;

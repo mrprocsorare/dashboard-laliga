@@ -202,8 +202,9 @@ async function rebuildPlayerConsensus(tx: Db, now: Date): Promise<number> {
 async function rebuildTeamConsensus(tx: Db, now: Date): Promise<number> {
   const teams = await tx.select({ id: schema.teams.id }).from(schema.teams);
   if (!teams.length) return 0;
+  const freshAfter = new Date(now.getTime() - CONSENSUS_FRESHNESS_MS);
 
-  // Info de equipo por fuente (coach, formación, noticias).
+  // Info de equipo por fuente (coach, formación, noticias). Solo fuentes frescas.
   const infos = await tx
     .select({
       teamId: schema.latestTeamInfo.teamId,
@@ -211,9 +212,10 @@ async function rebuildTeamConsensus(tx: Db, now: Date): Promise<number> {
       formation: schema.latestTeamInfo.formation,
       fetchedAt: schema.latestTeamInfo.fetchedAt,
     })
-    .from(schema.latestTeamInfo);
+    .from(schema.latestTeamInfo)
+    .where(gte(schema.latestTeamInfo.fetchedAt, freshAfter));
 
-  // Balón parado por fuente.
+  // Balón parado por fuente. Solo fuentes frescas.
   const pieces = await tx
     .select({
       teamId: schema.latestSetPieces.teamId,
@@ -222,7 +224,8 @@ async function rebuildTeamConsensus(tx: Db, now: Date): Promise<number> {
       freeKickTakers: schema.latestSetPieces.freeKickTakers,
       fetchedAt: schema.latestSetPieces.fetchedAt,
     })
-    .from(schema.latestSetPieces);
+    .from(schema.latestSetPieces)
+    .where(gte(schema.latestSetPieces.fetchedAt, freshAfter));
 
   const infosByTeam = groupByTeam(infos);
   const piecesByTeam = groupByTeam(pieces);

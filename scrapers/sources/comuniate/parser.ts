@@ -51,14 +51,14 @@ export function parseLineup(html: string): ParsedLineupPlayer[] {
       if (!name) return;
 
       const imgSrc = $(".cara_jugador img", el).first().attr("src") ?? "";
-      const photoUrl = imgSrc.startsWith("http")
-        ? imgSrc
-        : `https://www.comuniate.com${imgSrc}` || null;
+      const photoUrl = !imgSrc ? null : imgSrc.startsWith("http") ? imgSrc : `https://www.comuniate.com${imgSrc}`;
 
       const pctText = $(".icono_porcentaje", el).first().text().trim();
-      const probabilityPct = pctText
-        ? parseInt(pctText.replace(/[^0-9]/g, ""), 10) ?? null
-        : null;
+      const probabilityPct = (() => {
+        if (!pctText) return null;
+        const n = parseInt(pctText.replace(/[^0-9]/g, ""), 10);
+        return Number.isNaN(n) ? null : n;
+      })();
 
       players.push({
         name,

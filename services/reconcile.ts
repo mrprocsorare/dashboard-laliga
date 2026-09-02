@@ -347,7 +347,49 @@ async function mergeInto(tx: Db, leaderId: string, followerIds: string[]): Promi
     }
   }
 
-  // 4) Por último, borramos las filas duplicadas de `players`.
+  // 4) player_source_ids (Sorare + genérico): mover al líder si no existe
+  //    ya la misma (sourceId, externalSlug/externalPlayerId). Evita violar
+  //    índices parciales/únicos.
+  for (const followerId of followerIds) {
+    const followerMappings = await tx
+      .select()
+      .from(schema.playerSourceIds)
+      .where(eq(schema.playerSourceIds.playerId, followerId));
+    for (const m of followerMappings) {
+      const exists = await tx
+        .select()
+        .from(schema.playerSourceIds)
+        .where(and(eq(schema.playerSourceIds.playerId, leaderId), eq(schema.playerSourceIds.sourceId, m.sourceId)))
+        .limit(1);
+      if (!exists.length) {
+        await tx
+          .update(schema.playerSourceIds)
+          .set({ playerId: leaderId })
+          .where(and(eq(schema.playerSourceIds.playerId, followerId), eq(schema.playerSourceIds.sourceId, m.sourceId)));
+      } else {
+        await tx
+          .delete(schema.playerSourceIds)
+          .where(and(eq(schema.playerSourceIds.playerId, followerId), eq(schema.playerSourceIds.sourceId, m.sourceId)));
+      }
+    }
+  }
+
+  // 5) sorare_player_mappings legacy: igual
+  for (const followerId of followerIds) {
+    const f = await tx.select().from(schema.sorarePlayerMappings).where(eq(schema.sorarePlayerMappings.playerId, followerId)).limit(1);
+    if (!f.length) continue;
+    const exists = await tx.select().from(schema.sorarePlayerMappings).where(eq(schema.sorarePlayerMappings.playerId, leaderId)).limit(1);
+    if (!exists.length) {
+      await tx.update(schema.sorarePlayerMappings).set({ playerId: leaderId }).where(eq(schema.sorarePlayerMappings.playerId, followerId));
+    } else {
+      await tx.delete(schema.sorarePlayerMappings).where(eq(schema.sorarePlayerMappings.playerId, followerId));
+    }
+  }
+
+  // 6) unmatched_forecasts: re-asignar resolved_player_id
+  await tx.update(schema.unmatchedForecasts).set({ resolvedPlayerId: leaderId }).where(inArray(schema.unmatchedForecasts.resolvedPlayerId, followerIds));
+
+  // 7) Por último, borramos las filas duplicadas de `players`.
   await tx
     .delete(schema.players)
     .where(inArray(schema.players.id, followerIds));
