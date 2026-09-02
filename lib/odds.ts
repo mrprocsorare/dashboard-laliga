@@ -177,6 +177,8 @@ export async function fetchLaLigaOdds(apiKey = process.env.ODDS_API_KEY): Promis
   return [];
 }
 
+import { inferRealJornada } from "./laliga-calendar";
+
 /** Devuelve eventos ordenados; cada bloque cronológico de 10 partidos es una jornada. */
 export async function fetchAndNormalizeLaLigaOdds(pool: Pool): Promise<MatchOddsData[]> {
   const events = await fetchLaLigaOdds();
@@ -203,12 +205,13 @@ export async function fetchAndNormalizeLaLigaOdds(pool: Pool): Promise<MatchOdds
 
   return sorted.map((event, index) => {
     const selected = extractThreeWay(event);
+    const real = inferRealJornada(new Date(event.commence_time));
     return {
       externalEventId: event.id,
       homeTeamName: event.home_team,
       awayTeamName: event.away_team,
       commenceTime: new Date(event.commence_time),
-      matchday: matchdayByIndex.get(index) ?? 1,
+      matchday: real ?? matchdayByIndex.get(index) ?? 1,
       homeTeamId: teamMap.get(externalTeamSlug(event.home_team) ?? "") ?? null,
       awayTeamId: teamMap.get(externalTeamSlug(event.away_team) ?? "") ?? null,
       probabilityHomePct: selected?.probabilities.home ?? null,

@@ -533,7 +533,9 @@ const POSITION_MISMATCH_PENALTY = 25;
  * produce más de 5 DEF, 5 MED, 3 DEL ni dos porteros.
  */
 export function selectXI(players: PlayerWithConsensus[]): XIPlayer[] {
-  const withPc = players.filter((p) => p.consensus !== null);
+  const withPc = players.filter(
+    (p) => p.consensus !== null && p.consensus.probability_pct > 0 && p.consensus.sources_starter > 0,
+  );
   if (withPc.length === 0) return [];
 
   const sorted = [...withPc].sort(
