@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { getSorareData, getSorareSlugByPlayerIds, type SorarePlayerData } from "@/lib/sorare";
+import { inferRealJornada } from "@/lib/laliga-calendar";
 
 /**
  * Capa de datos del dashboard. Lee de Supabase con la sesión del usuario
@@ -221,7 +222,11 @@ export async function getJornadaData(): Promise<JornadaData> {
       .not("team_id", "is", null),
   ]);
 
-  const odds = (oddsRes.data ?? []) as unknown as MatchOddsRow[];
+  const rawOdds = (oddsRes.data ?? []) as unknown as MatchOddsRow[];
+  const odds = rawOdds.map((o) => ({
+    ...o,
+    matchday: inferRealJornada(new Date(o.commence_time)) ?? o.matchday,
+  }));
   const teams = (teamsRes.data ?? []) as unknown as TeamRow[];
   type RawPlayer = Omit<PlayerWithConsensus, "consensus"> & {
     team_id: string;

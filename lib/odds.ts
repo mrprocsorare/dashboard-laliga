@@ -2,6 +2,7 @@ import { Pool } from "pg";
 import { notInArray } from "drizzle-orm";
 import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "../database/schema";
+import { inferRealJornada } from "./laliga-calendar";
 
 const API_BASE = "https://api.the-odds-api.com/v4";
 const SPORT_KEY = "soccer_spain_la_liga";
@@ -176,8 +177,6 @@ export async function fetchLaLigaOdds(apiKey = process.env.ODDS_API_KEY): Promis
   if (lastError) throw lastError;
   return [];
 }
-
-import { inferRealJornada } from "./laliga-calendar";
 
 /** Devuelve eventos ordenados; cada bloque cronológico de 10 partidos es una jornada. */
 export async function fetchAndNormalizeLaLigaOdds(pool: Pool): Promise<MatchOddsData[]> {
