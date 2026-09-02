@@ -22,12 +22,16 @@ export const SORARE_PLAYER_QUERY = `
         playerGameScores(last: 5) { score }
         classic: lowestPriceAnyCard(inSeason: false, rarity: limited) {
           slug
+          rarityTyped
+          inSeasonEligible
           publicMinPrices { eurCents }
           liveSingleSaleOffer { senderSide { amounts { eurCents } } receiverSide { amounts { eurCents } } }
           latestEnglishAuction { bestBid { amounts { eurCents } } }
         }
         inSeason: lowestPriceAnyCard(inSeason: true, rarity: limited) {
           slug
+          rarityTyped
+          inSeasonEligible
           publicMinPrices { eurCents }
           liveSingleSaleOffer { senderSide { amounts { eurCents } } receiverSide { amounts { eurCents } } }
           latestEnglishAuction { bestBid { amounts { eurCents } } }
@@ -85,6 +89,8 @@ interface GraphqlPayload<T> {
 
 interface SorareCardResponse {
   slug: string;
+  rarityTyped?: string | null;
+  inSeasonEligible?: boolean | null;
   publicMinPrices: { eurCents: number | null } | null;
   liveSingleSaleOffer: {
     senderSide: { amounts: { eurCents: number | null } } | null;
@@ -431,37 +437,85 @@ function publicPrice(card: SorareCardResponse | null): number | null {
  *    `searchPlayerFloorPrices` (búsqueda ordenada por precio), que sí encuentra
  *    el suelo real. Solo en último extremo se usa la puja de subasta.
  */
+function validSalePrice(card: SorareCardResponse | null, expectInSeason: boolean): number | null {
+  if (!card) return null;
+  if (typeof card.inSeasonEligible === "boolean" && card.inSeasonEligible !== expectInSeason) return null;
+  if (card.rarityTyped && card.rarityTyped !== "limited") return null;
+  return directSalePrice(card) ?? publicPrice(card);
+}
+
+function validDirectPrice(card: SorareCardResponse | null, expectInSeason: boolean): number | null {
+  if (!card) return null;
+  if (typeof card.inSeasonEligible === "boolean" && card.inSeasonEligible !== expectInSeason) return null;
+  if (card.rarityTyped && card.rarityTyped !== "limited") return null;
+  return directSalePrice(card) ?? publicPrice(card) ?? auctionPrice(card);
+}
+
+function validCardSlug(card: SorareCardResponse | null, expectInSeason: boolean): string | null {
+  if (!card) return null;
+  if (typeof card.inSeasonEligible === "boolean" && card.inSeasonEligible !== expectInSeason) return null;
+  return card.slug ?? null;
+}
+
 export async function computePlayerPrices(
   player: SorarePlayerResponse,
   client: SorareApiClient,
   query: string,
 ): Promise<SorareFloorPrices> {
-  const classicDirect = directSalePrice(player.classic) ?? publicPrice(player.classic);
-  const inSeasonDirect = directSalePrice(player.inSeason) ?? publicPrice(player.inSeason);
-  let classic: SorareFloorPrice =
-    classicDirect !== null
-      ? { eurCents: classicDirect, slug: player.classic?.slug ?? null }
-      : { eurCents: null, slug: null };
-  let inSeason: SorareFloorPrice =
-    inSeasonDirect !== null
-      ? { eurCents: inSeasonDirect, slug: player.inSeason?.slug ?? null }
-      : { eurCents: null, slug: null };
-  if (classic.eurCents === null || inSeason.eurCents === null) {
+  const classicSalePrice = validSalePrice(player.classic, false);
+  const inSeasonSalePrice = validSalePrice(player.inSeason, true);
+  const classicValidSlug = validCardSlug(player.classic, false);
+  const inSeasonValidSlug = validCardSlug(player.inSeason, true);
+
+  const needFloor =
+    classicSalePrice === null ||
+    inSeasonSalePrice === null ||
+    (classicSalePrice !== null &&
+      inSeasonSalePrice !== null &&
+      classicSalePrice === inSeasonSalePrice &&
+      classicValidSlug === inSeasonValidSlug);
+
+  let floor: SorareFloorPrices | null = null;
+  if (needFloor) {
     try {
-      const floor = await client.searchPlayerFloorPrices(query);
-      if (classic.eurCents === null) classic = floor.classic;
-      if (inSeason.eurCents === null) inSeason = floor.inSeason;
+      floor = await client.searchPlayerFloorPrices(query);
     } catch {
-      /* se mantiene el valor actual y se prueba la subasta abajo */
+      floor = null;
     }
   }
-  if (classic.eurCents === null) {
-    const p = auctionPrice(player.classic) ?? publicPrice(player.classic);
-    classic = { eurCents: p, slug: player.classic?.slug ?? null };
+
+  const classicFloor = floor?.classic ?? { eurCents: null, slug: null };
+  const inSeasonFloor = floor?.inSeason ?? { eurCents: null, slug: null };
+
+  const classicFallbackPrice = validDirectPrice(player.classic, false);
+  const inSeasonFallbackPrice = validDirectPrice(player.inSeason, true);
+
+  let classic: SorareFloorPrice;
+  let inSeason: SorareFloorPrice;
+
+  if (classicSalePrice === null && classicFloor.eurCents !== null) {
+    classic = classicFloor;
+  } else if (classicSalePrice !== null) {
+    classic = { eurCents: classicSalePrice, slug: classicValidSlug };
+  } else if (classicFallbackPrice !== null) {
+    classic = { eurCents: classicFallbackPrice, slug: classicValidSlug };
+  } else if (classicFloor.eurCents !== null) {
+    classic = classicFloor;
+  } else {
+    classic = { eurCents: null, slug: null };
   }
-  if (inSeason.eurCents === null) {
-    const p = auctionPrice(player.inSeason) ?? publicPrice(player.inSeason);
-    inSeason = { eurCents: p, slug: player.inSeason?.slug ?? null };
+
+  if (inSeasonSalePrice === null && inSeasonFloor.eurCents !== null) {
+    inSeason = inSeasonFloor;
+  } else if (inSeasonSalePrice !== null) {
+    inSeason = { eurCents: inSeasonSalePrice, slug: inSeasonValidSlug };
+  } else if (inSeasonFallbackPrice !== null) {
+    inSeason = { eurCents: inSeasonFallbackPrice, slug: inSeasonValidSlug };
+  } else if (inSeasonFloor.eurCents !== null) {
+    inSeason = inSeasonFloor;
+  } else {
+    inSeason = { eurCents: null, slug: null };
   }
+
   return { classic, inSeason };
 }
