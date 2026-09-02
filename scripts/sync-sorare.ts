@@ -378,17 +378,21 @@ async function main() {
     const plan = sorareRefreshPlan(cache, now, force);
     return (plan.scores || plan.classic || plan.inSeason) && !verified.has(slug);
   });
+  const dataBySlug = new Map<string, SorarePlayerResponse>(verified);
   try {
-    const dataBySlug = new Map<string, SorarePlayerResponse>(verified);
     for (const player of await client.getPlayers(dataSlugs)) dataBySlug.set(player.slug, player);
-    for (const player of dataBySlug.values()) {
-      const cache = cacheBySlug.get(player.slug);
-      if (apply) {
-        await persistPlayerData(db, client, player, sorareRefreshPlan(cache, now, force));
-      }
-    }
   } catch (error) {
     console.warn(`[sync] datos de rendimiento/precios detenidos: ${error instanceof Error ? error.message : String(error)}`);
+  }
+  for (const player of dataBySlug.values()) {
+    const cache = cacheBySlug.get(player.slug);
+    if (apply) {
+      try {
+        await persistPlayerData(db, client, player, sorareRefreshPlan(cache, now, force));
+      } catch (e) {
+        console.warn(`[sync] persist ${player.slug} falló: ${e instanceof Error ? e.message : String(e)}`);
+      }
+    }
   }
 
   summary(rows, status);

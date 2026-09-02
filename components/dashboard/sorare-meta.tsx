@@ -1,11 +1,11 @@
 import type { SorarePlayerData } from "@/lib/sorare";
 
 function score(value: number | null): string {
-  return value === null ? "-" : value.toFixed(1);
+  return value === null ? "—" : value.toFixed(1);
 }
 
 function price(value: number | null): string {
-  if (value === null) return "-";
+  if (value === null) return "—";
   return new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(value / 100);
 }
 
@@ -20,7 +20,7 @@ export function SorareMeta({
   fallback?: string;
   tone?: "muted" | "light";
 }) {
-  if (!data) return <span className="text-[10px] text-muted-foreground">{fallback}</span>;
+  if (!data) return <span className="text-[10px] text-muted-foreground" title="Aún sin datos Sorare cacheados — próximo sync cada 6h">{fallback}</span>;
 
   return (
     <span
@@ -31,10 +31,10 @@ export function SorareMeta({
       }
       title="Datos persistidos de Sorare · Limited Classic e In-Season"
     >
-      <span>SO5 {score(data.averageScore)}</span>
+      <span title={data.scoresUpdatedAt ? `Actualizado ${new Date(data.scoresUpdatedAt).toLocaleDateString("es-ES")}` : undefined}>SO5 {score(data.averageScore)}</span>
       {!compact && data.latestScore !== null ? <span>últ. {score(data.latestScore)}</span> : null}
-      {!compact ? <span>Classic {price(data.classic.eurCents)}</span> : null}
-      {!compact ? <span>In-Season {price(data.inSeason.eurCents)}</span> : null}
+      {!compact ? <span title={data.classic.updatedAt ? `Classic ${new Date(data.classic.updatedAt).toLocaleDateString("es-ES")}` : undefined}>Classic {price(data.classic.eurCents)}</span> : null}
+      {!compact ? <span title={data.inSeason.updatedAt ? `In-Season ${new Date(data.inSeason.updatedAt).toLocaleDateString("es-ES")}` : undefined}>In-Season {price(data.inSeason.eurCents)}</span> : null}
     </span>
   );
 }

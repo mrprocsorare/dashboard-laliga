@@ -34,10 +34,10 @@ jobs:
       - name: Instalar dependencias
         run: npm ci --prefer-offline --no-audit
 
-      - name: Sincronizar una vez al día
+      - name: Sincronizar Sorare (identidad + precios + puntuaciones)
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           SORARE_API_KEY: ${{ secrets.SORARE_API_KEY }}
-          SORARE_REQUEST_BUDGET: 100
+          SORARE_REQUEST_BUDGET: 300
           SORARE_REQUESTS_PER_MINUTE: 30
         run: npm run sync:sorare -- --apply

@@ -417,6 +417,11 @@ function auctionPrice(card: SorareCardResponse | null): number | null {
   return typeof value === "number" && value > 0 ? value : null;
 }
 
+function publicPrice(card: SorareCardResponse | null): number | null {
+  const value = card?.publicMinPrices?.eurCents;
+  return typeof value === "number" && value > 0 ? value : null;
+}
+
 /**
  * Precio de suelo (Limited) de un jugador combinando dos fuentes:
  * 1. `lowestPriceAnyCard` (barato, una sola petición): si devuelve una carta
@@ -431,8 +436,8 @@ export async function computePlayerPrices(
   client: SorareApiClient,
   query: string,
 ): Promise<SorareFloorPrices> {
-  const classicDirect = directSalePrice(player.classic);
-  const inSeasonDirect = directSalePrice(player.inSeason);
+  const classicDirect = directSalePrice(player.classic) ?? publicPrice(player.classic);
+  const inSeasonDirect = directSalePrice(player.inSeason) ?? publicPrice(player.inSeason);
   let classic: SorareFloorPrice =
     classicDirect !== null
       ? { eurCents: classicDirect, slug: player.classic?.slug ?? null }
@@ -451,10 +456,12 @@ export async function computePlayerPrices(
     }
   }
   if (classic.eurCents === null) {
-    classic = { eurCents: auctionPrice(player.classic), slug: player.classic?.slug ?? null };
+    const p = auctionPrice(player.classic) ?? publicPrice(player.classic);
+    classic = { eurCents: p, slug: player.classic?.slug ?? null };
   }
   if (inSeason.eurCents === null) {
-    inSeason = { eurCents: auctionPrice(player.inSeason), slug: player.inSeason?.slug ?? null };
+    const p = auctionPrice(player.inSeason) ?? publicPrice(player.inSeason);
+    inSeason = { eurCents: p, slug: player.inSeason?.slug ?? null };
   }
   return { classic, inSeason };
 }
