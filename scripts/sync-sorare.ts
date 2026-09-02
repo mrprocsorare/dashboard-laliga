@@ -269,7 +269,7 @@ async function main() {
     .from(schema.playerSourceIds)
     .where(eq(schema.playerSourceIds.sourceId, sourceId));
   const mappingByPlayer = new Map(mappings.map((mapping) => [mapping.playerId, mapping]));
-  const client = new SorareApiClient({ budget: 1000, requestsPerMinute: 30, minIntervalMs: 2000 });
+  const client = new SorareApiClient({ budget: Number(process.env.SORARE_REQUEST_BUDGET ?? 300), requestsPerMinute: 30, minIntervalMs: 2000 });
   const status = new Map<string, string>();
   const assignedSlugByPlayer = new Map<string, string>();
   for (const m of mappings) if (m.externalSlug) assignedSlugByPlayer.set(m.playerId, m.externalSlug);

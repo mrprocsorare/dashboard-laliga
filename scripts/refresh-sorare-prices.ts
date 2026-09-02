@@ -42,7 +42,7 @@ async function main() {
   const slugs = [...new Set(mappings.map((m) => m.slug).filter((s): s is string => Boolean(s)))];
   console.log(`Refrescando precios para ${slugs.length} slugs matcheados (${apply ? "apply" : "dry-run"}).`);
 
-  const client = new SorareApiClient({ budget: 1000, requestsPerMinute: 30, minIntervalMs: 2000 });
+  const client = new SorareApiClient({ budget: Number(process.env.SORARE_REQUEST_BUDGET ?? 300), requestsPerMinute: 30, minIntervalMs: 2000 });
   const now = new Date();
   const expiresAt = new Date(now.getTime() + SORARE_PRICES_TTL_MS);
   let updated = 0;

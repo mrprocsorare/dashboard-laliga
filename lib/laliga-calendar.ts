@@ -1,6 +1,7 @@
 const SEASON_RANGES: Array<{ season: string; start: string; end: string }> = [
   { season: "2025-26", start: "2025-08-15", end: "2026-05-24" },
   { season: "2026-27", start: "2026-08-14", end: "2027-05-23" },
+  { season: "2027-28", start: "2027-08-13", end: "2028-05-21" },
 ];
 
 function startOfWeek(d: Date): Date {
